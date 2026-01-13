@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="Dean.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Program Head Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="responsive.css">
+  <style>
+    :root{--clr-sky:#2196f3;--clr-dark-sky:#0d47a1;--clr-bg:#1DA5DB}
+    body{background:var(--clr-bg)}
+    .side-btn{background:var(--clr-dark-sky);color:#fff}
+    .side-btn:hover{background:#09377a}
+    input,select,textarea{background:#fff;color:#000}
+    .notice{background:#fff3cd;color:#664d03;border:1px solid #ffecb5;border-radius:8px;padding:10px;margin:10px 0;display:none}
+    tr.clickable{cursor:pointer}
+    tr.clickable:hover{background:rgba(0,0,0,.04)}
+    .search-wrap{display:grid;grid-template-columns:repeat(8,minmax(140px,1fr));gap:8px;align-items:center;margin-bottom:10px}
+    .status-group{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:8px 10px;background:#eef6ff;border-radius:10px}
+    .status-group label{display:flex;gap:6px;align-items:center;font-size:.9rem;color:#0b0f19}
+    .chip{font-weight:600}
+    @media (max-width:1100px){
+      .search-wrap{grid-template-columns:1fr 1fr}
+    }
+    html, body { height: 100%; }
+    .bg-rays{
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 180vw;
+      height: 180vh;
+      pointer-events: none;
+      user-select: none;
+      z-index: -1;
+    }
+    .bg-rays .ray{position:absolute;inset:0;background:rgba(152,199,238,.623);clip-path:polygon(50% 50%, 100% 49%, 100% 51%)}
+    .bg-rays .r1{transform:rotate(0deg)} .bg-rays .r2{transform:rotate(45deg)}
+    .bg-rays .r3{transform:rotate(90deg)} .bg-rays .r4{transform:rotate(135deg)}
+    .bg-rays .r5{transform:rotate(180deg)} .bg-rays .r6{transform:rotate(225deg)}
+    .bg-rays .r7{transform:rotate(270deg)} .bg-rays .r8{transform:rotate(315deg)}
+    .sidebar{background:#1DA5DB !important;color:#fff !important;}
+    .card{background:#6ABAE6;color:#fff;border-radius:12px;padding:16px;margin-top:16px;box-shadow:0 8px 18px rgba(0,0,0,.12)}
+    #demoCard{position:relative}
+    .charts-grid{display:grid;grid-template-columns:repeat(6,minmax(220px,1fr));gap:14px}
+    .chart{background:#e6f1f7;border-radius:10px;padding:8px;min-height:240px}
+    .chart h3{color:#0b0f19;font-size:14px;margin:6px 6px 0 6px;font-weight:600}
+    .chart .holder{width:100%;height:200px}
+    @media (max-width:1400px){ .charts-grid{grid-template-columns:repeat(3,minmax(220px,1fr))} }
+    @media (max-width:900px){ .charts-grid{grid-template-columns:repeat(1,minmax(220px,1fr))} }
+    .fab{position:absolute; right:16px; bottom:16px; background:#0d47a1; color:#fff; border:0; border-radius:24px; padding:10px 14px; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,.25)}
+    .fab:hover{background:#09377a}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:50}
+    .modal .panel{
+      background:#fff;color:#0b0f19; width:min(860px,95vw);
+      border-radius:12px;padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.35);
+      border:2px solid #1DA5DB;
+    }
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .row{display:flex;gap:8px;align-items:center;margin:6px 0}
+    .panel h3{margin:2px 0 8px 0}
+    .panel label{display:flex;gap:6px;align-items:center}
+    .panel input[type="number"]{width:90px}
+    .panel .footer{display:flex;justify-content:flex-end;gap:10px;margin-top:10px}
+    .btn{background:#0d47a1;color:#fff;border:0;border-radius:8px;padding:8px 12px;cursor:pointer}
+    .btn.secondary{background:#999}
+    .small-note{font-size:.85rem;color:#555}
+    .hidden{display:none !important}
+    #exportScratch{position:fixed;left:-10000px;top:-10000px;width:700px;height:420px;visibility:hidden}
+    .inline-btn{
+      padding:6px 10px;border:0;border-radius:16px;background:#0d47a1;color:#fff;cursor:pointer;font-size:.85rem
+    }
+    .inline-btn.secondary{ background:#999 }
+    .inline-btn[disabled]{ opacity:.55; cursor:not-allowed }
+    .badge-used{display:inline-block;background:#ef5350;color:#fff;padding:4px 8px;border-radius:14px;font-size:.8rem;font-weight:700}
+    .badge-on{display:inline-block;background:#43a047;color:#fff;padding:4px 8px;border-radius:14px;font-size:.8rem;font-weight:700}
+    .fullwidth-btn{display:block;width:100%;flex:0 0 100%;text-align:center;margin-top:8px;}
+    :root { --control-h: 40px; }
+    .multiselect{ position:relative; }
+    .ms-trigger{width:100%; padding:8px 10px; border-radius:8px;border:1px solid #cfd8dc; background:#fff; color:#000; text-align:left;cursor:pointer; font:inherit;}
+    .ms-trigger.active{ outline:2px solid var(--clr-dark-sky); }
+    .ms-panel{position:absolute; top:calc(100% + 4px); left:0; right:0;background:#fff; border:1px solid #cfd8dc; border-radius:8px; padding:8px;box-shadow:0 6px 20px rgba(0,0,0,.15); display:none; z-index:20;max-height:260px; overflow:auto;}
+    .ms-panel.open{ display:block; }
+    .ms-actions{ display:flex; justify-content:space-between; gap:6px; margin-bottom:6px; }
+    .ms-actions button{border:0; background:#e3f2fd; color:#0d47a1; padding:4px 8px;border-radius:6px; cursor:pointer; font-weight:600;}
+    .ms-row{ display:flex; align-items:center; gap:8px; padding:4px 2px; }
+    .search-wrap input[type="text"],
+    .search-wrap select,
+    .search-wrap .ms-trigger,
+    .search-wrap #resetBtn {
+      height: var(--control-h);
+      line-height: calc(var(--control-h) - 2px);
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #cfd8dc;
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .search-wrap #resetBtn {
+      width: 100% !important;
+      border: 1px solid #cfd8dc;
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .search-wrap .ms-trigger,
+    .search-wrap #resetBtn{display:flex;align-items:center;height:var(--control-h);line-height:normal;}
+    .search-wrap #resetBtn{ justify-content:center; }
+    .search-wrap .ms-trigger{ justify-content:flex-start; }
+    #reportModal .panel > .row{justify-content:center;}
+    #reportModal .grid-2{display:flex;justify-content:center;gap:12px;}
+    #reportModal #pdfPane,#reportModal #excelPane{width:420px;max-width:100%;}
+    #reportModal #pdfPane .row,#reportModal #excelPane .row{justify-content:flex-start;}
+    #reportModal .small-note{text-align:center;}
+    #pdfPane h4,#pdfPane .small-note,#excelPane h4,#excelPane .small-note { display: none; }
+    #reportModal .toggle-group{display:flex; justify-content:center; gap:10px; margin:0 0 8px;}
+    #reportModal .toggle{ position:relative; }
+    #reportModal .toggle input{position:absolute; inset:0; opacity:0; pointer-events:none;}
+    #reportModal .toggle span{display:inline-block; background:#2196f3; color:#fff; font-weight:600;border-radius:10px; padding:8px 16px; cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.15);transition:background .15s ease, transform .05s ease, box-shadow .15s;}
+    #reportModal .toggle input:checked + span{ background:#0d47a1; }
+    #reportModal .toggle span:hover{ filter:brightness(0.95); }
+    #reportModal .toggle span:active{ transform:translateY(1px); }
+    .subtog{display:flex;justify-content:center;gap:8px;margin:8px 0}
+    .subtog .toggle span{padding:6px 12px}
+    .pager{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:10px 0 6px;}
+    .pager .page-info{ font-size:.9rem; color:#0b0f19; }
+    .pager .page-btn{ background:#0d47a1; color:#fff; border:0; border-radius:8px; padding:6px 10px; cursor:pointer; }
+    .pager .page-btn[disabled]{ opacity:.55; cursor:not-allowed; }
+    .chart{ overflow:hidden; }
+    .chart .holder{ width:100%; height:220px; }
+    .chart .holder > div,
+    .chart svg{ width:100% !important; height:100% !important; }
+    .demo-header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+    .demo-filter{display:flex;gap:8px;flex-wrap:wrap}
+    .demo-filter label{display:flex;align-items:center;gap:6px;background:#e3f2fd;color:#0d47a1;border:1px solid #bbdefb;border-radius:16px;padding:4px 8px;font-size:.9rem;cursor:pointer}
+    .demo-filter input[type="checkbox"]{accent-color:#0d47a1}
+    .demo-select{
+      height: var(--control-h);
+      line-height: calc(var(--control-h) - 2px);
+      padding: 8px 10px;
+      border: 1px solid #cfd8dc;
+      border-radius: 8px;
+      background: #fff;
+      color: #000;
+      font: inherit;
+    }
+
+  </style>
+  <link rel="stylesheet" href="responsive.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  
+</head>
+<body>
+
+  <div class="bg-rays" aria-hidden="true">
+    <div class="ray r1"></div><div class="ray r2"></div>
+    <div class="ray r3"></div><div class="ray r4"></div>
+    <div class="ray r5"></div><div class="ray r6"></div>
+    <div class="ray r7"></div><div class="ray r8"></div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="avatar"></div>
+    <h2 style="text-align:center">Welcome<br>Back!</h2>
+    <button class="side-btn" id="accountBtn">Account</button>
+    <button class="side-btn" id="logoutBtn">Logout</button>
+  </aside>
+
+  <main class="main">
+    <section id="listView">
+      <div id="courseNotice" class="notice"></div>
+
+      <div class="search-wrap">
+        <input id="firstInput"  type="text" placeholder="First name">
+        <input id="middleInput" type="text" placeholder="Middle name">
+        <input id="lastInput"   type="text" placeholder="Last name">
+
+        <div class="multiselect" id="yearMs">
+          <button type="button" class="ms-trigger" id="yearTrigger">Year ▾</button>
+          <div class="ms-panel" id="yearPanel"></div>
+        </div>
+        
+        <div class="multiselect" id="genMs">
+          <button type="button" class="ms-trigger" id="genTrigger">Gender ▾</button>
+          <div class="ms-panel" id="genPanel"></div>
+        </div>
+      
+        <div class="multiselect" id="courseMs">
+          <button type="button" class="ms-trigger" id="courseTrigger">Course ▾</button>
+          <div class="ms-panel" id="coursePanel"></div>
+        </div>
+        
+        <div class="multiselect" id="relMs">
+          <button type="button" class="ms-trigger" id="relTrigger">Religion ▾</button>
+          <div class="ms-panel" id="relPanel"></div>
+        </div>
+
+        <div class="multiselect" id="statusMs">
+          <button type="button" class="ms-trigger" id="statusTrigger">Student Status ▾</button>
+          <div class="ms-panel" id="statusPanel"></div>
+        </div>
+
+        
+        <div class="multiselect" id="regionMs">
+          <button type="button" class="ms-trigger" id="regionTrigger">Region ▾</button>
+          <div class="ms-panel" id="regionPanel"></div>
+        </div>
+
+        
+        <div class="multiselect" id="schedMs">
+          <button type="button" class="ms-trigger" id="schedTrigger">Class Schedule ▾</button>
+          <div class="ms-panel" id="schedPanel"></div>
+        </div>
+
+        
+        <div class="multiselect" id="scholarMs">
+          <button type="button" class="ms-trigger" id="scholarTrigger">Scholarship ▾</button>
+          <div class="ms-panel" id="scholarPanel"></div>
+        </div>
+
+        <button id="resetBtn" class="side-btn" style="width:auto;padding:8px 16px;background:#999">Reset</button>
+      </div>
+
+      <div class="status-group" id="statusGroup">
+        <span class="chip">Filter by Status:</span>
+        <label><input type="checkbox" value="working"> Working Student</label>
+        <label><input type="checkbox" value="orphan"> Orphan</label>
+        <label><input type="checkbox" value="nonDavao"> Non Davao City Residence</label>
+        <label><input type="checkbox" value="scholarship"> Scholarship</label>
+        <label><input type="checkbox" value="acadPending"> Student Academic Information Request</label>
+      </div>
+
+      <table id="studTable">
+        <thead>
+          <tr>
+            <th>Student Name</th><th>Year Level</th><th>Course</th><th>Religion</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div id="pager" class="pager"></div>
+
+    </section>
+
+    
+  <section class="card" id="demoCard">
+    <div class="demo-header">
+    <h2 style="margin:0">Demographics</h2>
+    <select id="demoStatus" class="demo-select" aria-label="Student Status">
+    <option value="All Student" selected>All Student</option>
+    <option value="Currently Enrolled">Currently Enrolled</option>
+    <option value="NOT Currently Enrolled">NOT Currently Enrolled</option>
+    <option value="Inactive">Inactive</option>
+    <option value="Graduated">Graduated</option>
+  </select>
+    <div id="demoFilter" class="demo-filter"></div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart" data-demokey="age"><h3>Age (percentage)</h3><div id="agePie" class="holder"></div></div>
+    <div class="chart" data-demokey="year"><h3>Year Level (percentage)</h3><div id="yearPie" class="holder"></div></div>
+    <div class="chart" data-demokey="religion"><h3>Religion (percentage)</h3><div id="religionPie" class="holder"></div></div>
+    <div class="chart" data-demokey="working"><h3>Working Students</h3><div id="workingPie" class="holder"></div></div>
+    <div class="chart" data-demokey="finance"><h3>Breadwinner vs Self-Financing</h3><div id="financeBar" class="holder"></div></div>
+    <div class="chart" data-demokey="orphan"><h3>Orphans</h3><div id="orphanPie" class="holder"></div></div>
+    <div class="chart" data-demokey="npr"><h3>Non-Davao City Residence</h3><div id="nprPie" class="holder"></div></div>
+    <div class="chart" data-demokey="course"><h3>Course (percentage)</h3><div id="coursePie" class="holder"></div></div>
+    <div class="chart" data-demokey="gender"><h3>Gender (percentage)</h3><div id="genderPie" class="holder"></div></div>
+    <div class="chart" data-demokey="sched"><h3>Class Schedule</h3><div id="schedPie" class="holder"></div></div>
+    <div class="chart" data-demokey="regularity"><h3>Regular vs Irregular</h3><div id="regularPie" class="holder"></div></div>
+    <div class="chart" data-demokey="scholarship"><h3>Student Scholarship</h3><div id="scholarshipPie" class="holder"></div></div>
+    <div class="chart" data-demokey="govscholar"><h3>Gov't Scholarship Type</h3><div id="govScholarshipPie" class="holder"></div></div>
+    <div class="chart" data-demokey="region"><h3>Region</h3><div id="regionPie" class="holder"></div></div>
+  </div>
+
+  <button id="reportBtn" class="fab">Generate Report</button>
+</section>
+  </main>
+
+  <div id="reportModal" class="modal" role="dialog" aria-modal="true">
+    <div class="panel">
+      <h3 id="modalTitle">PDF Report</h3>
+
+      <div class="toggle-group" id="fmtToggle">
+        <label class="toggle">
+          <input type="radio" name="fmt" value="pdf" checked>
+          <span>PDF</span>
+        </label>
+        <label class="toggle">
+          <input type="radio" name="fmt" value="excel">
+          <span>Excel</span>
+        </label>
+        <label class="toggle">
+          <input type="radio" name="fmt" value="word">
+          <span>Word</span>
+        </label>
+      </div>
+
+      <div class="grid-2" style="margin-top:8px">
+
+        <div id="pdfPane">
+          <div class="row"><label><input type="checkbox" class="incDemo" value="age" checked> Age</label></div>
+          <div class="row"><label><input type="checkbox" class="incDemo" value="year" checked> Year Level</label></div>
+          <div class="row"><label><input type="checkbox" class="incDemo" value="religion" checked> Religion</label></div>
+          <div class="row"><label><input type="checkbox" class="incDemo" value="working" checked> Working Student</label></div>
+          <div class="row"><label><input type="checkbox" class="incDemo" value="finance" checked> Breadwinner vs Self-Financing</label></div>
+          <div class="row"><label><input type="checkbox" class="incDemo" value="orphan" checked> Orphan</label></div>
+          <div class="row"><label><input type="checkbox" class="incDemo" value="gender" checked> Gender</label></div>
+          <div class="row"><label><input type="checkbox" class="incDemo" value="npr" checked> Non-Davao City Residence</label></div>
+          <div class="row"><label><input type="checkbox" class="incDemo" value="sched" checked> Class Schedule</label></div>
+          <div class="row"><label><input type="checkbox" class="incDemo" value="regularity" checked> Regular vs Irregular</label></div>
+          <div class="row"><label><input type="checkbox" class="incDemo" value="scholarship" checked> Student Scholarship</label></div>
+          <div class="row"><label><input type="checkbox" class="incDemo" value="govscholar" checked> Gov't Scholarship Type</label></div>
+          <div class="row"><label><input type="checkbox" class="incDemo" value="region" checked> Region</label></div>
+          <div class="row"><label><input type="checkbox" class="incDemo" value="course" checked> Course</label></div>
+        </div>
+
+        <div id="excelPane" class="hidden">
+
+          <div class="subtog" id="xlsMode">
+            <label class="toggle">
+              <input type="radio" name="xlsmode" value="student" checked>
+              <span>Generate Student List</span>
+            </label>
+            <label class="toggle">
+              <input type="radio" name="xlsmode" value="demo">
+              <span>Generate Demographic List</span>
+            </label>
+          </div>
+
+          <div id="excelStudentPane">
+            <div class="row">
+              <label>Year:
+                <select id="rfYear"><option value="">Any</option></select>
+              </label>
+              <label>Religion:
+                <select id="rfReligion"><option value="">Any</option></select>
+              </label>
+              <label>Gender:
+                <select id="rfGender"><option value="">Any</option></select>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>Scholarship:
+                <select id="rfScholar"><option value="">Any</option></select>
+              </label>
+              <label>Class Schedule:
+                <select id="rfSchedule"><option value="">Any</option></select>
+              </label>
+              <label>Region:
+                <select id="rfRegion"><option value="">Any</option></select>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>Age Min <input id="rfAgeMin" type="number" min="0" placeholder="min"></label>
+              <label>Age Max <input id="rfAgeMax" type="number" min="0" placeholder="max"></label>
+            </div>
+
+            <div class="row">
+              <label><input id="rfWorking" type="checkbox"> Working only</label>
+              <label><input id="rfOrphan" type="checkbox"> Orphan only</label>
+              <label><input id="rfNonDavao" type="checkbox"> Non-Davao only</label>
+            </div>
+            <div class="row">
+              <label><input id="rfBreadwinner" type="checkbox"> Breadwinner only</label>
+              <label><input id="rfSelfFin" type="checkbox"> Self-Financing only</label>
+
+              <label><input id="rfRegularOnly" type="checkbox"> Regular Students only</label>
+              <label><input id="rfIrregularOnly" type="checkbox"> Irregular Students only</label>
+            </div>
+          </div>
+
+          
+          <div id="excelDemoPane" class="hidden">
+            <div style="margin:4px 0;font-weight:600">Rows by:</div>
+            <div class="row">
+              <label><input type="radio" name="demoRows" value="gender" checked> Male / Female</label>
+              <label><input type="radio" name="demoRows" value="course"> Course</label>
+            </div>
+
+            <div style="margin:8px 0 4px;font-weight:600">Columns:</div>
+            <div class="row"><label><input id="d_orphan" type="checkbox" checked> Orphan</label></div>
+            <div class="row"><label><input id="d_working" type="checkbox" checked> Working Student</label></div>
+            <div class="row"><label><input id="d_nonDavao" type="checkbox" checked> Non-Davao Residence</label></div>
+            <div class="row"><label><input id="d_breadwinner" type="checkbox"> Breadwinner</label></div>
+            <div class="row"><label><input id="d_selfFin" type="checkbox"> Self-Financing</label></div>
+            <div class="row">
+              <label><input id="d_ageCol" type="checkbox"> Age (range)</label>
+              <span id="ageRangeInputs" class="hidden" style="display:flex;gap:8px;align-items:center;margin-left:10px">
+                <label>Min <input id="d_ageMin" type="number" min="0" placeholder="min"></label>
+                <label>Max <input id="d_ageMax" type="number" min="0" placeholder="max"></label>
+              </span>
+            </div>
+            <div class="row"><label><input id="d_yearByCol" type="checkbox"> Year Level (by column)</label></div>
+            <div class="row"><label><input id="d_relByCol" type="checkbox"> Religion (by column)</label></div>
+          
+          <div class="row"><label><input id="d_scholarTypes" type="checkbox"> Scholarship (by type)</label></div>
+          <div class="row"><label><input id="d_schedCols" type="checkbox"> Class Schedules (Morning / Afternoon / Evening)</label></div>
+          <div class="row"><label><input id="d_regular" type="checkbox"> Regular Students</label></div>
+          <div class="row"><label><input id="d_irregular" type="checkbox"> Irregular Students</label></div>
+          <div class="row"><label><input id="d_regionCols" type="checkbox"> Region (by column)</label></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <button class="btn secondary" id="btnCancel">Cancel</button>
+        <button class="btn" id="btnGenerate">Generate</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="exportScratch"></div>
+
+  <script>
+    const API_BASE = 'https://af0d37568cde.ngrok-free.app';
+    google.charts.load('current', {'packages':['corechart','bar']});
+    const BANNER_URL = 'public/Header.PNG';
+
+    const course = '(ALL COURSES)'; 
+
+    const q = s => document.querySelector(s);
+
+    
+    const msYear   = { trigger: q('#yearTrigger'),   panel: q('#yearPanel'),   set: new Set(), label: 'Year' };
+    const msGen    = { trigger: q('#genTrigger'),    panel: q('#genPanel'),    set: new Set(), label: 'Gender' };   // NEW
+    const msCourse = { trigger: q('#courseTrigger'), panel: q('#coursePanel'), set: new Set(), label: 'Course' };   // NEW
+    const msRel    = { trigger: q('#relTrigger'),    panel: q('#relPanel'),    set: new Set(), label: 'Religion' };
+    const msStatus = { trigger: q('#statusTrigger'), panel: q('#statusPanel'), set: new Set(), label: 'Student Status' };
+    const msRegion  = { trigger: q('#regionTrigger'),  panel: q('#regionPanel'),  set: new Set(), label: 'Region' };
+    const msSched   = { trigger: q('#schedTrigger'),   panel: q('#schedPanel'),   set: new Set(), label: 'Class Schedule' };
+    const msScholar = { trigger: q('#scholarTrigger'), panel: q('#scholarPanel'), set: new Set(), label: 'Scholarship' };
+
+    const $first = q('#firstInput');
+    const $middle = q('#middleInput');
+    const $last = q('#lastInput');
+    const $tbody = q('#studTable tbody');
+    const $notice = q('#courseNotice');
+    const $statusGroup = q('#statusGroup');
+
+    const $modal = q('#reportModal');
+    const $rfYear = q('#rfYear');
+    const $rfReligion = q('#rfReligion');
+    const $rfGender = q('#rfGender');
+    const $pdfPane = q('#pdfPane');
+    const $excelPane = q('#excelPane');
+    const $modalTitle = q('#modalTitle');
+
+    let currentPage = 1;
+    const PAGE_SIZE = 10;
+    let currentFiltered = [];
+
+    let allStudents = [];
+    const aiFlagsByAccount = new Map();
+    let pendingMap = new Map();
+
+    const editUsedMap = new Map();
+    let editOpen = false;
+
+    const YEAR_OPTIONS = ["1st Year","2nd Year","3rd Year","4th Year"];
+    const RELIGION_OPTIONS = ["Catholic","Christian","Church of Christ","Islam","Jehovah's Witnesses","None","Others","Phil. Indep","Roman Catholic","Iglesia ni Cristo","Philippine Independent Church","Seventh-day Adventist","Bible Baptist Church","United Church of Christ in the Philippines"].filter(Boolean);
+    const STATUS_OPTIONS = ["Currently Enrolled","NOT Currently Enrolled","Inactive","Graduated"];
+
+    const SCHOLARSHIP_TYPES = [
+      'CHED Scholarship','OWWA Scholarship','BFAR Scholarship',
+      'LANDBANK Scholarship','DOST Scholarship','PhilSA Scholarship'
+    ];
+    const SCHEDULE_OPTIONS = ['Morning','Afternoon','Evening'];
+    const REGION_LABELS = [
+      'Zamboanga Peninsula (Region IX)',
+      'Northern Mindanao (Region X)',
+      'Davao Region (Region XI)',
+      'SOCCSKSARGEN (Region XII)',
+      'Caraga (Region XIII)',
+      'Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)'
+    ];
+    const DEMO_ITEMS = [
+      { key:'age',         label:'Age' },
+      { key:'year',        label:'Year Level' },
+      { key:'religion',    label:'Religion' },
+      { key:'gender',      label:'Gender' },
+      { key:'course',      label:'Course' },
+      { key:'working',     label:'Working Students' },
+      { key:'finance',     label:'Breadwinner vs Self-Financing' },
+      { key:'orphan',      label:'Orphans' },
+      { key:'npr',         label:'Non-Davao Residence' },
+      { key:'sched',       label:'Class Schedule' },
+      { key:'regularity',  label:'Regular vs Irregular' },
+      { key:'scholarship', label:'Student Scholarship' },
+      { key:'govscholar',  label:"Gov't Scholarship Type" },
+      { key:'region',      label:'Region' }
+    ];
+
+const DEMO_DEFAULT_ON = new Set(['age','year','gender','course']);
+
+function buildDemoFilter(){
+  const wrap = document.getElementById('demoFilter');
+  if (!wrap) return;
+  wrap.innerHTML = DEMO_ITEMS.map(d =>
+    `<label><input type="checkbox" data-demokey="${d.key}"><span>${d.label}</span></label>`
+  ).join('');
+  wrap.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.checked = DEMO_DEFAULT_ON.has(cb.dataset.demokey);
+    cb.addEventListener('change', setDemoVisibility);
+  });
+  setDemoVisibility(); 
+}
+
+function setDemoVisibility(){
+  const selected = new Set(
+    Array.from(document.querySelectorAll('#demoFilter input:checked'))
+         .map(cb => cb.dataset.demokey)
+  );
+  document.querySelectorAll('#demoCard .chart').forEach(card => {
+    const k = card.getAttribute('data-demokey');
+    card.classList.toggle('hidden', !selected.has(k));
+  });
+
+  
+  requestAnimationFrame(() => drawCharts(getDemographicList()));
+}
+
+
+function getDemographicList(){
+  const sel = (document.getElementById('demoStatus')?.value || 'All Student')
+                .trim().toLowerCase();
+  if (sel === 'all student') return allStudents;                
+  return allStudents.filter(s => {
+    const st = String(aiFlagsByAccount.get(s.accountId)?.status || '')
+                 .trim().toLowerCase();
+    return st === sel;
+  });
+}
+
+
+window.addEventListener('resize', () => drawCharts(getDemographicList()));
+
+
+document.getElementById('demoStatus')?.addEventListener('change', () => {
+  drawCharts(getDemographicList());
+});
+
+
+window.addEventListener('resize', () => drawCharts(currentFiltered));
+
+
+document.addEventListener('DOMContentLoaded', buildDemoFilter);
+    
+    async function fetchStudents() {
+      const role = localStorage.getItem('session');
+      if (role !== 'dean' && role !== 'secretary') { showNotice('Not authorized.'); return; }
+      hideNotice();
+      try {
+        const res = await axios.get(`${API_BASE}/studentprofiling/dean/students/summary`, {
+          headers: { 'ngrok-skip-browser-warning': 'true' }
+        });
+        allStudents = Array.isArray(res.data) ? res.data : [];
+
+        await loadAIForStudents(allStudents);
+        await loadPendingMap(allStudents);
+        populateFilters(allStudents);
+
+        currentFiltered = applyFilters(allStudents);
+        renderPaginated();
+        google.charts.setOnLoadCallback(() => drawCharts(getDemographicList()));
+
+        if (allStudents.length === 0) showNotice('No students found.');
+      } catch (e) {
+        console.error(e);
+        showNotice('Failed to load students.');
+      }
+    }
+
+    async function loadAIForStudents(studs) {
+      aiFlagsByAccount.clear();
+      editUsedMap.clear();
+      await Promise.all(studs.map(async s => {
+        try {
+          const r = await axios.get(`${API_BASE}/studentprofiling/getadditioninfo/${s.accountId}`, {
+            headers: { 'ngrok-skip-browser-warning': 'true' }
+          });
+          const ai = r.data || {};
+          aiFlagsByAccount.set(s.accountId, {
+            working: !!ai.workingStudent,
+            orphan:  !!ai.orphan,
+            nonDavao: ai.davaoPermanentResidence === false,
+            breadwinner: !!ai.breadwinner,
+            selfFinancing: !!ai.selfFinancing,
+            editUsed: !!ai.editUsed,
+            status: (ai.status || ''),
+            hasScholarship: !!ai.hasScholarship,
+            governmentScholarship: (ai.governmentScholarship || '').trim(),
+            region: (ai.region || '').trim()
+          });
+          editUsedMap.set(s.accountId, !!ai.editUsed);
+        } catch {
+          aiFlagsByAccount.set(s.accountId, {
+            working:false, orphan:false, nonDavao:false, breadwinner:false, selfFinancing:false, editUsed:false, status:'', hasScholarship:false, governmentScholarship:'', region:''
+          });
+          editUsedMap.set(s.accountId, false);
+        }
+      }));
+    }
+
+    async function loadPendingMap(studs){
+      pendingMap.clear();
+      const ids = studs.map(s => s.accountId);
+      if (ids.length === 0) return;
+      try{
+        const res = await axios.post(`${API_BASE}/studentprofiling/records/pending-map`, ids, {
+          headers: { 'Content-Type':'application/json', 'ngrok-skip-browser-warning':'true' }
+        });
+        const obj = res.data || {};
+        Object.keys(obj).forEach(k => pendingMap.set(Number(k), !!obj[k]));
+      }catch(e){
+        console.warn('pending-map failed', e);
+      }
+    }
+
+    function showNotice(msg){ $notice.textContent = msg; $notice.style.display = 'block'; }
+    function hideNotice(){ $notice.style.display = 'none'; $notice.textContent = ''; }
+
+    function updateMsTrigger(ms){
+      const c = ms.set.size;
+      ms.trigger.textContent = (c ? `${ms.label} (${c})` : ms.label) + ' ▾';
+    }
+    function toggleMs(ms){
+      const open = !ms.panel.classList.contains('open');
+      document.querySelectorAll('.ms-panel').forEach(p => { p.classList.remove('open'); });
+      document.querySelectorAll('.ms-trigger').forEach(t => { t.classList.remove('active'); });
+      if (open){ ms.panel.classList.add('open'); ms.trigger.classList.add('active'); }
+    }
+    function buildMs(ms, options){
+      ms.panel.innerHTML = `
+        <div class="ms-actions">
+          <button type="button" data-act="all">Select all</button>
+          <button type="button" data-act="none">Clear</button>
+        </div>
+        <div class="ms-list"></div>
+      `;
+      const listEl = ms.panel.querySelector('.ms-list');
+      options.forEach(opt => {
+        const safe = String(opt ?? '').trim();
+        if (!safe) return;
+        const row = document.createElement('label');
+        row.className = 'ms-row';
+        row.innerHTML = `<input type="checkbox" value="${safe}"><span>${safe}</span>`;
+        listEl.appendChild(row);
+      });
+      ms.panel.querySelector('[data-act="all"]').onclick = () => {
+        ms.set = new Set(options.filter(Boolean));
+        listEl.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+        updateMsTrigger(ms); onFilterChange();
+      };
+      ms.panel.querySelector('[data-act="none"]').onclick = () => {
+        ms.set.clear();
+        listEl.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        updateMsTrigger(ms); onFilterChange();
+      };
+      listEl.addEventListener('change', e => {
+        const cb = e.target;
+        if (cb && cb.type === 'checkbox'){
+          if (cb.checked) ms.set.add(cb.value); else ms.set.delete(cb.value);
+          updateMsTrigger(ms); onFilterChange();
+        }
+      });
+      ms.trigger.onclick = (e) => { e.stopPropagation(); toggleMs(ms); };
+      document.addEventListener('click', () => { ms.panel.classList.remove('open'); ms.trigger.classList.remove('active'); });
+      updateMsTrigger(ms);
+    }
+    function clearMs(ms){
+      ms.set.clear();
+      ms.panel.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+      updateMsTrigger(ms);
+    }
+
+    function normScheduleVal(v){
+      const t = String(v||'').toLowerCase();
+      if (t.includes('morn')) return 'Morning';
+      if (t.includes('after')) return 'Afternoon';
+      if (t.includes('even'))  return 'Evening';
+      return '';
+    }
+    function normRegularity(v){
+      const t = String(v||'').toLowerCase();
+      if (t.startsWith('reg'))   return 'Regular';
+      if (t.startsWith('irreg')) return 'Irregular';
+      return '';
+    }
+
+    function populateFilters(students){
+      const yearsFromData = [...new Set(students.map(s => s.yearLevel).filter(Boolean))];
+      const years = [...new Set([...YEAR_OPTIONS, ...yearsFromData])];
+
+      const relsFromData = [...new Set(students.map(s => s.studentReligion).filter(Boolean))];
+      const rels = [...new Set([...RELIGION_OPTIONS, ...relsFromData])].filter(r => r && r !== '-');
+
+      const gendersFromData = [...new Set(students.map(s => s.gender).filter(Boolean))];
+      const coursesFromData = [...new Set(students.map(s => s.course).filter(Boolean))];
+
+      
+      buildMs(msYear, years);
+      buildMs(msGen, gendersFromData);     
+      buildMs(msCourse, coursesFromData);  
+      buildMs(msRel, rels);
+      buildMs(msStatus, STATUS_OPTIONS);
+      buildMs(msRegion,  REGION_LABELS);
+      buildMs(msSched,   SCHEDULE_OPTIONS);
+      buildMs(msScholar, SCHOLARSHIP_TYPES);
+
+  
+      $rfYear.innerHTML     = '<option value="">Any</option>' + years.map(y => `<option value="${y}">${y}</option>`).join('');
+      $rfReligion.innerHTML = '<option value="">Any</option>' + rels.map(r => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join('');
+      $rfGender.innerHTML   = '<option value="">Any</option>' + gendersFromData.map(g => `<option value="${escapeHtml(g)}">${escapeHtml(g)}</option>`).join('');
+
+    const $rfScholar = document.querySelector('#rfScholar');
+    if ($rfScholar) {
+      $rfScholar.innerHTML = '<option value="">Any</option>' +
+        SCHOLARSHIP_TYPES.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+    }
+
+    
+    const $rfSchedule = document.querySelector('#rfSchedule');
+    if ($rfSchedule) {
+      $rfSchedule.innerHTML = '<option value="">Any</option>' +
+        SCHEDULE_OPTIONS.map(t => `<option value="${t}">${t}</option>`).join('');
+    }
+
+   
+    const $rfRegion = document.querySelector('#rfRegion');
+    if ($rfRegion) {
+      $rfRegion.innerHTML = '<option value="">Any</option>' +
+        REGION_LABELS.map(r => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join('');
+    }
+    }
+
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function render(list){
+      $tbody.innerHTML = '';
+      list.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.className = 'clickable';
+        tr.onclick = () => location.href = `profiledean.html?accountId=${s.accountId}`;
+        const full = [s.firstName, s.middleName, s.lastName].filter(Boolean).join(' ');
+        tr.innerHTML = `
+          <td>${escapeHtml(full)}</td>
+          <td>${escapeHtml(s.yearLevel || '')}</td>
+          <td>${escapeHtml(s.course || '')}</td>
+          <td>${escapeHtml(s.studentReligion || '')}</td>
+        `;
+        $tbody.appendChild(tr);
+      });
+    }
+
+    function renderPaginated(){
+      const total = currentFiltered.length;
+      const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const pageItems = currentFiltered.slice(start, start + PAGE_SIZE);
+      render(pageItems);
+      buildPager(total, totalPages, start, start + pageItems.length);
+    }
+
+    function buildPager(total, totalPages, fromIdx, toIdx){
+    const el = document.querySelector('#pager');
+    if (!el) return;
+
+    const info = total
+      ? `Showing ${fromIdx + 1}–${toIdx} of ${total}`
+      : 'No students to display';
+
+    el.innerHTML = `
+      <div class="page-info">${info}</div>
+      <div>
+        <button class="page-btn" id="prevPage" ${currentPage===1?'disabled':''}>Prev</button>
+        <span style="margin:0 8px">Page ${Math.min(currentPage,totalPages)} of ${totalPages}</span>
+        <button class="page-btn" id="nextPage" ${currentPage>=totalPages?'disabled':''}>Next</button>
+      </div>
+    `;
+
+    const prev = document.querySelector('#prevPage');
+    const next = document.querySelector('#nextPage');
+    if (prev) prev.onclick = () => { if (currentPage>1){ currentPage--; renderPaginated(); } };
+    if (next) next.onclick = () => { if (currentPage<totalPages){ currentPage++; renderPaginated(); } };
+    }
+
+
+    function selectedStatuses(){
+      const vals = [];
+      $statusGroup.querySelectorAll('input[type="checkbox"]').forEach(cb => { if (cb.checked) vals.push(cb.value); });
+      return vals;
+    }
+
+    function applyFilters(source){
+      const f = ($first.value || '').toLowerCase().trim();
+      const m = ($middle.value || '').toLowerCase().trim();
+      const l = ($last.value || '').toLowerCase().trim();
+
+      const statusSel = selectedStatuses();
+      const selStatus = msStatus.set.size ? new Set(Array.from(msStatus.set).map(v => String(v).toLowerCase())) : null;
+
+      return source.filter(s => {
+        const fn = (s.firstName  || '').toLowerCase();
+        const mn = (s.middleName || '').toLowerCase();
+        const ln = (s.lastName   || '').toLowerCase();
+
+        const flags = aiFlagsByAccount.get(s.accountId) || {working:false, orphan:false, nonDavao:false, hasScholarship:false};
+
+        
+        const basicTags = statusSel.filter(tag => tag !== 'acadPending');
+        const statusOkBasic = basicTags.every(tag => {
+          if (tag === 'scholarship') return !!flags.hasScholarship;
+          return flags[tag] === true;
+        });
+        const pendOk = !statusSel.includes('acadPending') || pendingMap.get(s.accountId) === true;
+
+        
+        const yearOk   = (msYear.set.size   === 0) || msYear.set.has(s.yearLevel);
+        const genderOk = (msGen.set.size    === 0) || msGen.set.has(s.gender);
+        const courseOk = (msCourse.set.size === 0) || msCourse.set.has(s.course);
+        const relOk    = (msRel.set.size    === 0) || msRel.set.has(s.studentReligion);
+
+        
+        const schedNorm = normScheduleVal(s.classSchedule);
+        const schedOk   = (msSched.set.size   === 0) || msSched.set.has(schedNorm);
+
+        const scholVal  = String((aiFlagsByAccount.get(s.accountId)?.governmentScholarship) || '');
+        const scholOk   = (msScholar.set.size === 0) ||
+          Array.from(msScholar.set).some(t => scholVal.toLowerCase().includes(String(t).toLowerCase()));
+
+        const regionVal = String((aiFlagsByAccount.get(s.accountId)?.region) || '');
+        const regionOk  = (msRegion.set.size  === 0) ||
+          Array.from(msRegion.set).some(r => regionVal.toLowerCase().includes(String(r).toLowerCase()));
+
+       
+        const stuStatus = String((aiFlagsByAccount.get(s.accountId)?.status) || '').toLowerCase();
+        const statusMatch = !selStatus || selStatus.has(stuStatus);
+
+        return (!f || fn.includes(f)) && (!m || mn.includes(m)) && (!l || ln.includes(l)) &&
+              yearOk && genderOk && courseOk && relOk &&
+              schedOk && scholOk && regionOk &&
+              statusOkBasic && pendOk && statusMatch;
+      });
+    }
+
+    function onFilterChange(){
+      currentFiltered = applyFilters(allStudents);
+      currentPage = 1;
+      renderPaginated();               
+      drawCharts(getDemographicList());    
+    }
+
+    function resetFilters(){
+      [$first,$middle,$last].forEach(i => i.value = '');
+      clearMs(msYear);
+      clearMs(msGen);
+      clearMs(msCourse); 
+      clearMs(msRel);
+      clearMs(msStatus);
+
+      clearMs(msRegion);
+      clearMs(msSched);
+      clearMs(msScholar);
+      $statusGroup.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+      const ds = document.getElementById('demoStatus');
+      if (ds) ds.value = 'All Student';
+
+      currentFiltered = [...allStudents];
+      currentPage = 1;
+      renderPaginated();               
+      drawCharts(getDemographicList());     
+    }
+
+    function pct(n, d){ return d ? (n/d*100) : 0; }
+
+    function drawCharts(list){
+      const total = list.length;
+      if (!google || !google.visualization) return;
+
+      const flags = list.map(s => ({ s, f: aiFlagsByAccount.get(s.accountId) || {} }));
+
+      const ageCounts = {};
+      list.forEach(s => { if (s.age!=null){ ageCounts[s.age] = (ageCounts[s.age]||0)+1; }});
+      drawPie('#agePie', 'Age', ageCounts, total);
+
+      const yearCounts = {};
+      list.forEach(s => { const k=s.yearLevel||'(Unknown)'; yearCounts[k]=(yearCounts[k]||0)+1; });
+      drawPie('#yearPie', 'Year Level', yearCounts, total);
+
+      const relCounts = {};
+      list.forEach(s => { const k=s.studentReligion||'(Unknown)'; relCounts[k]=(relCounts[k]||0)+1; });
+      drawPie('#religionPie', 'Religion', relCounts, total);
+
+      const courseCounts = {};
+      list.forEach(s => { const k=s.course||'(Unknown)'; courseCounts[k]=(courseCounts[k]||0)+1; });
+      drawPie('#coursePie', 'Course', courseCounts, total);
+
+      const genderCounts = {};
+      list.forEach(s => { const k=s.gender||'(Unknown)'; genderCounts[k]=(genderCounts[k]||0)+1; });
+      drawPie('#genderPie', 'Gender', genderCounts, total);
+
+      const workingYes = flags.filter(x => !!x.f.working).length;
+      drawYesNoPie('#workingPie', 'Working Student', workingYes, total - workingYes);
+
+      const orphanYes = flags.filter(x => !!x.f.orphan).length;
+      drawYesNoPie('#orphanPie', 'Orphan', orphanYes, total - orphanYes);
+
+      const nprYes = flags.filter(x => !!x.f.nonDavao).length;
+      drawYesNoPie('#nprPie', 'Non-Davao City Residence', nprYes, total - nprYes);
+
+      const bwYes = flags.filter(x => !!x.f.breadwinner).length;
+      const sfYes = flags.filter(x => !!x.f.selfFinancing).length;
+      drawBar('#financeBar', [
+        ['Category','Percentage'],
+        ['Breadwinner', Math.round((bwYes/Math.max(1,total))*100)],
+        ['Self Financing', Math.round((sfYes/Math.max(1,total))*100)]
+      ]);
+
+      
+      const schedCounts = {};
+      list.forEach(s => {
+        const raw = (s.classSchedule || '').trim().toLowerCase();
+        let k = '(Unknown)';
+        if (raw.includes('morn'))      k = 'Morning';
+        else if (raw.includes('after')) k = 'Afternoon';
+        else if (raw.includes('even'))  k = 'Evening';
+        else if (raw)                   k = s.classSchedule; // keep custom text
+        schedCounts[k] = (schedCounts[k] || 0) + 1;
+      });
+      drawPie('#schedPie', 'Class Schedule', schedCounts, total);
+
+      
+      const regCounts = {};
+      list.forEach(s => {
+        const raw = (s.regularOrIrregular || '').trim().toLowerCase();
+        let k = '(Unknown)';
+        if (raw.startsWith('reg'))   k = 'Regular';
+        else if (raw.startsWith('irreg')) k = 'Irregular';
+        else if (raw)                k = s.regularOrIrregular;
+        regCounts[k] = (regCounts[k] || 0) + 1;
+      });
+      drawPie('#regularPie', 'Regular vs Irregular', regCounts, total);
+
+      
+      const fl = list.map(s => aiFlagsByAccount.get(s.accountId) || {});
+      const scholarYes = fl.filter(f => !!f.hasScholarship).length;
+      drawGenericYesNoPie('#scholarshipPie', 'Has Scholarship', 'No Scholarship', scholarYes, total - scholarYes);
+
+      
+      const GOV_TYPES = [
+        'CHED Scholarship','OWWA Scholarship','BFAR Scholarship',
+        'LANDBANK Scholarship','DOST Scholarship','PhilSA Scholarship'
+      ];
+      const govCounts = {};
+      fl.forEach(f => {
+        const val = (f.governmentScholarship || '').trim();
+        if (!val) return;
+        const hit = GOV_TYPES.find(t => val.toLowerCase().includes(t.toLowerCase()));
+        const key = hit || 'Others';
+        govCounts[key] = (govCounts[key] || 0) + 1;
+      });
+      drawPie('#govScholarshipPie', "Gov't Scholarship Type", govCounts, total);
+
+      
+      const REGION_LABELS = [
+        'Zamboanga Peninsula (Region IX)',
+        'Northern Mindanao (Region X)',
+        'Davao Region (Region XI)',
+        'SOCCSKSARGEN (Region XII)',
+        'Caraga (Region XIII)',
+        'Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)'
+      ];
+      const regionCounts = {};
+      fl.forEach(f => {
+        const raw = (f.region || '').trim();
+        if (!raw) { regionCounts['(Unknown)'] = (regionCounts['(Unknown)'] || 0) + 1; return; }
+        const hit = REGION_LABELS.find(r => raw.toLowerCase().includes(r.toLowerCase())) || 'Others';
+        regionCounts[hit] = (regionCounts[hit] || 0) + 1;
+      });
+      drawPie('#regionPie', 'Region', regionCounts, total);
+
+      }
+
+    function drawPie(sel, title, counts, total){
+      const el = document.querySelector(sel);
+      if (!el) return;
+      if (!el || el.closest('.hidden')) return;
+      const dataArr = [['Label','Count']];
+      Object.keys(counts).sort().forEach(k => { dataArr.push([String(k), counts[k]]); });
+      if (dataArr.length===1){ el.innerHTML = '<div style="padding:12px;color:#333">No data</div>'; return; }
+      const dt = google.visualization.arrayToDataTable(dataArr);
+      const chart = new google.visualization.PieChart(el);
+      chart.draw(dt, { legend: { position:'right' }, chartArea: { width:'85%', height:'85%' }, pieSliceText: 'percentage', sliceVisibilityThreshold: 0 });
+    }
+
+    function drawYesNoPie(sel, title, yesCount, noCount){
+      const el = document.querySelector(sel);
+      if (!el) return;
+      if (!el || el.closest('.hidden')) return;
+      const dt = google.visualization.arrayToDataTable([['Label','Count'],['Yes', yesCount],['Full Time Student', noCount]]);
+      const chart = new google.visualization.PieChart(el);
+      chart.draw(dt, { legend: { position:'right' }, chartArea: { width:'85%', height:'85%' }, pieSliceText: 'percentage' });
+    }
+
+    function drawGenericYesNoPie(sel, yesLabel, noLabel, yesCount, noCount){
+      const el = document.querySelector(sel);
+      if (!el) return;
+      if (!el || el.closest('.hidden')) return;
+      const dt = google.visualization.arrayToDataTable([
+        ['Label','Count'], [yesLabel, yesCount], [noLabel, noCount]
+      ]);
+      const chart = new google.visualization.PieChart(el);
+      chart.draw(dt, { legend: { position:'right' }, chartArea: { width:'85%', height:'85%' }, pieSliceText: 'percentage' });
+    }
+
+    function drawBar(sel, rows){
+      const el = document.querySelector(sel);
+      if (!el) return;
+      if (!el || el.closest('.hidden')) return;
+      const dt = google.visualization.arrayToDataTable(rows);
+      const chart = new google.charts.Bar(el);
+      chart.draw(dt, google.charts.Bar.convertOptions({ legend: { position:'none' }, chartArea: { width:'85%', height:'80%' }, vAxis: { viewWindow: {min:0, max:100}, format: "#'%'" } }));
+    }
+
+    
+    function switchReportMode(kind){
+      if (kind==='excel'){
+        $modalTitle.textContent = 'Excel Report';
+        $pdfPane.classList.add('hidden');
+        $excelPane.classList.remove('hidden');
+      } else if (kind==='word') {
+        $modalTitle.textContent = 'Word Report';
+        $excelPane.classList.add('hidden');
+        $pdfPane.classList.remove('hidden'); 
+      } else {
+        $modalTitle.textContent = 'PDF Report';
+        $excelPane.classList.add('hidden');
+        $pdfPane.classList.remove('hidden');
+      }
+    }
+
+    function resetReportModal() {
+    const pdf   = document.querySelector('#reportModal input[name="fmt"][value="pdf"]');
+    const excel = document.querySelector('#reportModal input[name="fmt"][value="excel"]');
+    const word  = document.querySelector('#reportModal input[name="fmt"][value="word"]');
+    if (pdf)   pdf.checked = true;
+    if (excel) excel.checked = false;
+    if (word)  word.checked  = false;
+    switchReportMode('pdf');
+
+    const xStudent = document.querySelector('#reportModal input[name="xlsmode"][value="student"]');
+    const xDemo    = document.querySelector('#reportModal input[name="xlsmode"][value="demo"]');
+    if (xStudent) xStudent.checked = true;
+    if (xDemo)    xDemo.checked    = false;
+    document.querySelector('#excelStudentPane')?.classList.remove('hidden');
+    document.querySelector('#excelDemoPane')?.classList.add('hidden');
+
+    const ageChk  = document.querySelector('#d_ageCol');
+    const ageWrap = document.querySelector('#ageRangeInputs');
+    const ageMin  = document.querySelector('#d_ageMin');
+    const ageMax  = document.querySelector('#d_ageMax');
+    if (ageChk)  ageChk.checked = false;
+    if (ageWrap) ageWrap.classList.add('hidden');
+    if (ageMin)  ageMin.value = '';
+    if (ageMax)  ageMax.value = '';
+  }
+
+    q('#reportBtn').onclick = () => {
+      resetReportModal();
+      $modal.style.display = 'flex';
+    };
+    q('#btnCancel').onclick = () => {
+      $modal.style.display = 'none';
+      resetReportModal();
+    };
+    document.querySelectorAll('input[name="fmt"]').forEach(r=>{
+      r.addEventListener('change', e=> switchReportMode(e.target.value));
+    });
+
+    
+    document.querySelectorAll('input[name="xlsmode"]').forEach(r=>{
+      r.addEventListener('change', e=>{
+        const mode = e.target.value;
+        q('#excelStudentPane').classList.toggle('hidden', mode!=='student');
+        q('#excelDemoPane').classList.toggle('hidden', mode!=='demo');
+        
+        if (mode==='demo') setTimeout(syncAgeRangeUI,0);
+      });
+    });
+
+    
+    const $ageChk  = q('#d_ageCol');
+    const $ageWrap = q('#ageRangeInputs');
+    const $ageMin  = q('#d_ageMin');
+    const $ageMax  = q('#d_ageMax');
+
+    function syncAgeRangeUI(){
+      if (!$ageChk || !$ageWrap) return;
+      const on = $ageChk.checked;
+      $ageWrap.classList.toggle('hidden', !on);
+      if ($ageMin) $ageMin.disabled = !on;
+      if ($ageMax) $ageMax.disabled = !on;
+      if (!on){ if ($ageMin) $ageMin.value=''; if ($ageMax) $ageMax.value=''; }
+    }
+    $ageChk?.addEventListener('change', syncAgeRangeUI);
+    
+    q('#reportBtn')?.addEventListener('click', () => setTimeout(syncAgeRangeUI, 0));
+
+    q('#btnGenerate').onclick = async () => {
+      const fmt = document.querySelector('input[name="fmt"]:checked').value;
+      const include = {};
+      document.querySelectorAll('.incDemo').forEach(cb => include[cb.value] = cb.checked);
+
+      const opts = {
+        year: $rfYear.value || '',
+        religion: $rfReligion.value || '',
+        gender: $rfGender.value || '',
+        scholarType: (document.querySelector('#rfScholar')?.value || ''),
+        schedule:    (document.querySelector('#rfSchedule')?.value || ''),
+        region:      (document.querySelector('#rfRegion')?.value || ''),
+        ageMin: Number(q('#rfAgeMin').value || '') || null,
+        ageMax: Number(q('#rfAgeMax').value || '') || null,
+        working: q('#rfWorking').checked,
+        orphan: q('#rfOrphan').checked,
+        nonDavao: q('#rfNonDavao').checked,
+        breadwinner: q('#rfBreadwinner').checked,
+        selfFinancing: q('#rfSelfFin').checked,
+        regularOnly:   q('#rfRegularOnly')?.checked || false,
+        irregularOnly: q('#rfIrregularOnly')?.checked || false
+      };
+
+      const startList = getDemographicList();
+      const list = applyReportExtraFilters(startList, opts);
+      if (list.length === 0){ alert('No rows match your filters.'); return; }
+
+      if (fmt === 'pdf') {
+        await generatePdfReport(list, include);
+      } else if (fmt === 'word') {
+        await generateWordReport(list, include);
+      } else {
+        const mode = document.querySelector('input[name="xlsmode"]:checked').value;
+        if (mode === 'student') generateExcelReport(list);
+        else generateExcelDemographic(list);
+      }
+
+      $modal.style.display = 'none';
+      resetReportModal();
+    };
+
+    function applyReportExtraFilters(list, o){
+    return list.filter(s => {
+    const f = aiFlagsByAccount.get(s.accountId) || {};
+
+    if (o.year && s.yearLevel !== o.year) return false;
+    if (o.religion && s.studentReligion !== o.religion) return false;
+    if (o.gender && s.gender !== o.gender) return false;
+
+    if (o.ageMin!=null && s.age < o.ageMin) return false;
+    if (o.ageMax!=null && s.age > o.ageMax) return false;
+
+    if (o.working && !f.working) return false;
+    if (o.orphan && !f.orphan) return false;
+    if (o.nonDavao && !f.nonDavao) return false;
+    if (o.breadwinner && !f.breadwinner) return false;
+    if (o.selfFinancing && !f.selfFinancing) return false;
+
+    
+    if (o.scholarType){
+      const val = String(f.governmentScholarship || '');
+      if (!val.toLowerCase().includes(o.scholarType.toLowerCase())) return false;
+    }
+
+    
+    if (o.schedule){
+      const sched = normScheduleVal(s.classSchedule);
+      if (sched !== o.schedule) return false;
+    }
+
+    
+    if (o.region){
+      const raw = String(f.region || '');
+      if (!raw.toLowerCase().includes(o.region.toLowerCase())) return false;
+    }
+
+    
+    const reg = normRegularity(s.regularOrIrregular);
+    if (o.regularOnly && reg !== 'Regular') return false;
+    if (o.irregularOnly && reg !== 'Irregular') return false;
+
+    return true;
+  });
+}
+
+    
+    function nowStamp(){
+      const d = new Date();
+      const pad = n => String(n).padStart(2,'0');
+      const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+      const hh = d.getHours()%12 || 12, ampm = d.getHours()>=12 ? 'PM':'AM';
+      return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} ${pad(hh)}:${pad(d.getMinutes())} ${ampm}`;
+    }
+
+    async function generatePdfReport(list, include){
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({unit:'pt', format:'letter'});
+      const margin = 36;
+      const pageW = doc.internal.pageSize.getWidth();
+      let y = margin;
+
+      
+      if (BANNER_URL){
+        try{
+          const img = await fetch(BANNER_URL).then(r=>r.blob()).then(b=>new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(b); }));
+          doc.addImage(img, 'PNG', margin, y, pageW - margin*2, 60);
+          y += 70;
+        }catch{}
+      }
+
+      
+      doc.setFont('helvetica','bold'); doc.setFontSize(12);
+      doc.text('COLLEGE POPULATION REPORT', pageW/2, y, {align:'center'});
+      y += 14;
+      doc.setFont('helvetica','normal'); doc.setFontSize(10);
+      doc.text(nowStamp(), pageW/2, y, {align:'center'});
+      y += 18;
+
+      
+      const flags = list.map(s => ({ s, f: aiFlagsByAccount.get(s.accountId) || {} }));
+      const counts = {
+        age: (()=>{ const m={}; list.forEach(s=>{ if(s.age!=null) m[s.age]=(m[s.age]||0)+1; }); return m; })(),
+        year: (()=>{ const m={}; list.forEach(s=>{ const k=s.yearLevel||'(Unknown)'; m[k]=(m[k]||0)+1; }); return m; })(),
+        course: (()=>{ const m={}; list.forEach(s=>{ const k=s.course||'(Unknown)'; m[k]=(m[k]||0)+1; }); return m; })(),
+        religion: (()=>{ const m={}; list.forEach(s=>{ const k=s.studentReligion||'(Unknown)'; m[k]=(m[k]||0)+1; }); return m; })(),
+        gender: (()=>{ const m={}; list.forEach(s=>{ const k=s.gender || '(Unknown)';  m[k]=(m[k]||0)+1;  }); return m; })(),
+        workingYes: flags.filter(x => !!x.f.working).length,
+        orphanYes:  flags.filter(x => !!x.f.orphan).length,
+        nprYes:     flags.filter(x => !!x.f.nonDavao).length,
+        bwYes:      flags.filter(x => !!x.f.breadwinner).length,
+        sfYes:      flags.filter(x => !!x.f.selfFinancing).length
+      };
+
+      const schedCounts2 = (()=>{ const m={}; list.forEach(s=>{ const t=(s.classSchedule||'').trim().toLowerCase();
+        let k='(Unknown)'; if(t.includes('morn'))k='Morning'; else if(t.includes('after'))k='Afternoon'; else if(t.includes('even'))k='Evening'; else if(t)k=s.classSchedule; m[k]=(m[k]||0)+1; }); return m; })();
+
+      const regCounts2 = (()=>{ const m={}; list.forEach(s=>{ const t=(s.regularOrIrregular||'').trim().toLowerCase();
+        let k='(Unknown)'; if(t.startsWith('reg'))k='Regular'; else if(t.startsWith('irreg'))k='Irregular'; else if(t)k=s.regularOrIrregular; m[k]=(m[k]||0)+1; }); return m; })();
+
+      const fl2 = list.map(s=>aiFlagsByAccount.get(s.accountId)||{});
+      const scholarYes2 = fl2.filter(f=>!!f.hasScholarship).length;
+
+      const govCounts2 = (()=>{ const m={}; const T=['CHED Scholarship','OWWA Scholarship','BFAR Scholarship','LANDBANK Scholarship','DOST Scholarship','PhilSA Scholarship'];
+        fl2.forEach(f=>{ const v=(f.governmentScholarship||'').trim(); if(!v) return; const hit=T.find(t=>v.toLowerCase().includes(t.toLowerCase()))||'Others'; m[hit]=(m[hit]||0)+1; }); return m; })();
+
+      const regionCounts2 = (()=>{ const m={}; const R=[
+        'Zamboanga Peninsula (Region IX)','Northern Mindanao (Region X)','Davao Region (Region XI)',
+        'SOCCSKSARGEN (Region XII)','Caraga (Region XIII)','Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)'
+      ]; fl2.forEach(f=>{ const raw=(f.region||'').trim(); if(!raw){ m['(Unknown)']=(m['(Unknown)']||0)+1; return; }
+        const hit=R.find(r=>raw.toLowerCase().includes(r.toLowerCase()))||'Others'; m[hit]=(m[hit]||0)+1; }); return m; })();
+
+      
+      const sections = [];
+      if (include.age)      sections.push({title:'Age (percentage)', get:()=>getPieImage(counts.age)});
+      if (include.year)     sections.push({title:'Year Level (percentage)', get:()=>getPieImage(counts.year)});
+      if (include.religion) sections.push({title:'Religion (percentage)', get:()=>getPieImage(counts.religion)});
+      if (include.gender)   sections.push({title:'Gender (percentage)', get:()=>getPieImage(counts.gender)});
+      if (include.working)  sections.push({title:'Working Student', get:()=>getYesNoPieImage(counts.workingYes, list.length - counts.workingYes)});
+      if (include.finance)  sections.push({title:'Breadwinner vs Self-Financing', get:()=>getBarImage([
+        ['Category','Percentage'],
+        ['Breadwinner', Math.round((counts.bwYes/list.length)*100)],
+        ['Self Financing', Math.round((counts.sfYes/list.length)*100)]
+      ])});
+      if (include.orphan)   sections.push({title:'Orphan', get:()=>getYesNoPieImage(counts.orphanYes, list.length - counts.orphanYes)});
+      if (include.npr)      sections.push({title:'Non-Davao City Residence', get:()=>getYesNoPieImage(counts.nprYes, list.length - counts.nprYes)});
+      if (include.sched)       sections.push({title:'Class Schedule', get:()=>getPieImage(schedCounts2)});
+      if (include.regularity)  sections.push({title:'Regular vs Irregular', get:()=>getPieImage(regCounts2)});
+      if (include.scholarship) sections.push({title:'Student Scholarship', get:()=>getGenericYesNoPieImage('Has Scholarship','No Scholarship',scholarYes2, list.length - scholarYes2)});
+      if (include.govscholar)  sections.push({title:"Gov't Scholarship Type", get:()=>getPieImage(govCounts2)});
+      if (include.region)      sections.push({title:'Region', get:()=>getPieImage(regionCounts2)});
+      if (include.course) sections.push({title:'Course (percentage)', get:()=>getPieImage(counts.course)});
+      
+      const imgW = pageW - margin*2, imgH = 230, titleH = 14;
+      for (const s of sections){
+        const uri = await s.get();
+        if (y + titleH + 6 + imgH > 760){ doc.addPage(); y = margin; }
+        doc.setFont('helvetica','bold'); doc.setFontSize(11);
+        doc.text(s.title, margin, y);
+        y += titleH + 6;
+        doc.addImage(uri, 'PNG', margin, y, imgW, imgH);
+        y += imgH + 16;
+      }
+
+      
+      if (y>720){ doc.addPage(); y = margin; }
+      const rows = list.map(s => {
+        const f = aiFlagsByAccount.get(s.accountId) || {};
+        const name = [s.firstName,s.middleName,s.lastName].filter(Boolean).join(' ');
+        return [
+          name, s.age ?? '', s.yearLevel || '', s.course || '', s.studentReligion || '',
+          f.working?'Yes':'No', f.breadwinner?'Yes':'No', f.selfFinancing?'Yes':'No',
+          f.orphan?'Yes':'No', f.nonDavao?'Yes':'No'
+        ];
+      });
+
+      doc.setFont('helvetica','bold'); doc.setFontSize(11);
+      doc.text('Students (current filters)', margin, y); y += 6;
+
+      doc.autoTable({
+        startY: y,
+        margin: {left: margin, right: margin},
+        head: [[
+          'Name','Age','Year','Course','Religion',
+          'Working','Breadwinner','Self-Financing','Orphan','Non-Davao'
+        ]],
+        body: rows,
+        styles: { fontSize: 9, cellPadding: 3 },
+        headStyles: { fillColor: [13,71,161], textColor:255 },
+        theme:'grid'
+      });
+
+      const file = `Population_Report_${(course||'COURSE')}_${new Date().toISOString().slice(0,10)}.pdf`;
+      doc.save(file);
+    }
+
+    
+    function getPieImage(countObj){
+      return new Promise(resolve=>{
+        const root = document.getElementById('exportScratch');
+        const el = document.createElement('div'); el.style.width='680px'; el.style.height='410px'; root.appendChild(el);
+        const data = [['Label','Count']]; Object.keys(countObj).forEach(k=>data.push([String(k), countObj[k]]));
+        const dt = google.visualization.arrayToDataTable(data);
+        const chart = new google.visualization.PieChart(el);
+        google.visualization.events.addListener(chart,'ready',()=>{ const uri=chart.getImageURI(); root.removeChild(el); resolve(uri); });
+        chart.draw(dt, {legend:{position:'right'}, chartArea:{width:'85%',height:'85%'}, sliceVisibilityThreshold:0});
+      });
+    }
+    function getYesNoPieImage(yes,no){ return getPieImage({Yes:yes, 'Full Time Student': no}); }
+    function getGenericYesNoPieImage(yesLabel, noLabel, yes, no){
+    const obj = {}; obj[yesLabel] = yes; obj[noLabel] = no;
+    return getPieImage(obj);
+  }
+
+    function getBarImage(rows){
+      return new Promise(resolve=>{
+        const root = document.getElementById('exportScratch');
+        const el = document.createElement('div'); el.style.width='680px'; el.style.height='410px'; root.appendChild(el);
+        const dt = google.visualization.arrayToDataTable(rows);
+        const chart = new google.visualization.ColumnChart(el);
+        google.visualization.events.addListener(chart,'ready',()=>{ const uri=chart.getImageURI(); root.removeChild(el); resolve(uri); });
+        chart.draw(dt, {legend:{position:'none'}, chartArea:{width:'85%',height:'75%'}, vAxis:{minValue:0, maxValue:100, format:"#'%"}});
+      });
+    }
+
+    
+    function generateExcelReport(list){
+      const wb = XLSX.utils.book_new();
+      const rows = list.map(s => {
+        const f = aiFlagsByAccount.get(s.accountId) || {};
+        return {
+          'Account ID': s.accountId,
+          'Name': [s.firstName,s.middleName,s.lastName].filter(Boolean).join(' '),
+          'Age': s.age,
+          'Year Level': s.yearLevel,
+          'Course': s.course,
+          'Gender': s.gender || '',
+          'Religion': s.studentReligion || '',
+          'Working': f.working ? 'Yes':'No',
+          'Breadwinner': f.breadwinner ? 'Yes':'No',
+          'Self-Financing': f.selfFinancing ? 'Yes':'No',
+          'Orphan': f.orphan ? 'Yes':'No',
+          'Non-Davao Residence': f.nonDavao ? 'Yes':'No'
+        };
+      });
+      const ws = XLSX.utils.json_to_sheet(rows);
+      XLSX.utils.book_append_sheet(wb, ws, 'Students');
+
+      const selYears = msYear.set.size ? Array.from(msYear.set).join(', ') : '(any)';
+      const selRels  = msRel.set.size  ? Array.from(msRel.set).join(', ')  : '(any)';
+      const sel = selectedStatuses();
+
+      const filterSummary = [{
+        'Course': course || '',
+        'Name Search': [$first.value,$middle.value,$last.value].filter(Boolean).join(' '),
+        'Year Filter': selYears,
+        'Religion Filter': selRels,
+        'Gender Filter': $rfGender.value || '(any)',
+        'Scholarship Filter': (document.querySelector('#rfScholar')?.value || '(any)'),
+        'Schedule Filter':    (document.querySelector('#rfSchedule')?.value || '(any)'),
+        'Region Filter':      (document.querySelector('#rfRegion')?.value || '(any)'),
+        'Status Filter': sel.length ? sel.join(', ') : '(none)'
+      }];
+      const wf = XLSX.utils.json_to_sheet(filterSummary);
+      XLSX.utils.book_append_sheet(wb, wf, 'Filters');
+
+      const file = `Students_${(course||'COURSE')}_${new Date().toISOString().slice(0,10)}.xlsx`;
+      XLSX.writeFile(wb, file);
+    }
+
+    
+    function uniq(arr){ return Array.from(new Set(arr)); }
+    function safeKey(v, fallback){ return (v==null || v==='') ? (fallback||'(Unknown)') : String(v); }
+
+    function generateExcelDemographic(list){
+    const wb = XLSX.utils.book_new();
+
+    const rowMode = document.querySelector('input[name="demoRows"]:checked').value; // gender | course
+    const use = {
+      orphan: q('#d_orphan').checked,
+      working: q('#d_working').checked,
+      nonDavao: q('#d_nonDavao').checked,
+      breadwinner: q('#d_breadwinner').checked,
+      selfFin: q('#d_selfFin').checked,
+      age: q('#d_ageCol').checked,
+      yearByCol: q('#d_yearByCol').checked,
+      relByCol: q('#d_relByCol').checked,
+      scholarTypes: q('#d_scholarTypes').checked,
+      schedCols: q('#d_schedCols').checked,
+      regularCol: q('#d_regular').checked,
+      irregularCol: q('#d_irregular').checked,
+      regionCols: q('#d_regionCols').checked
+    };
+    const use_schedCols = use.schedCols;
+    const use_schTypes  = use.scholarTypes;
+
+    const ageMin = Number(q('#d_ageMin').value || '') || null;
+    const ageMax = Number(q('#d_ageMax').value || '') || null;
+
+    const rowLabel = rowMode === 'gender' ? 'Gender' : 'Course';
+    const rowKeys = rowMode === 'gender'
+      ? ['Male','Female', ...uniq(list.map(s => safeKey(s.gender,'(Unknown)'))).filter(g=>!['Male','Female'].includes(g))]
+      : uniq(list.map(s => safeKey(s.course,'(Unknown)')));
+
+    const years = uniq(list.map(s => safeKey(s.yearLevel,'(Unknown)')));
+    const rels  = uniq([...RELIGION_OPTIONS, ...list.map(s => safeKey(s.studentReligion,'(Unknown)'))]);
+
+    const flags = new Map(list.map(s => [s.accountId, aiFlagsByAccount.get(s.accountId) || {}]));
+
+    function matchRow(s){
+      return rowMode === 'gender' ? safeKey(s.gender,'(Unknown)') : safeKey(s.course,'(Unknown)');
+    }
+    function countWhere(fn){
+      const map = new Map(rowKeys.map(k => [k,0]));
+      list.forEach(s => { const k = matchRow(s); if (!map.has(k)) return; if (fn(s, flags.get(s.accountId)||{})) map.set(k, map.get(k)+1); });
+      return map;
+    }
+
+    const mainHeader = [rowLabel];
+    if (use.orphan) mainHeader.push('Orphan');
+    if (use.age)    mainHeader.push(`Age (${ageMin??'min'}–${ageMax??'max'})`);
+    if (use.working) mainHeader.push('Working St');
+    if (use.nonDavao) mainHeader.push('Non-Davao');
+    if (use.breadwinner) mainHeader.push('Breadwinner');
+    if (use.selfFin) mainHeader.push('Self-Financing');
+
+    
+    if (use.regularCol)   mainHeader.push('Regular Students');
+    if (use.irregularCol) mainHeader.push('Irregular Students');
+
+    
+    if (use_schedCols) {
+      SCHEDULE_OPTIONS.forEach(s => mainHeader.push(`Class: ${s}`));
+    }
+
+    
+    if (use_schTypes) {
+      SCHOLARSHIP_TYPES.forEach(t => mainHeader.push(t));
+    }
+
+    if (use.yearByCol) years.forEach(y => mainHeader.push(y));
+
+    const mainRows = [mainHeader];
+
+    const orphanMap = use.orphan ? countWhere((s,f)=>!!f.orphan) : null;
+    const ageMap    = use.age    ? countWhere((s)=> (ageMin==null || s.age>=ageMin) && (ageMax==null || s.age<=ageMax)) : null;
+    const workMap   = use.working? countWhere((s,f)=>!!f.working) : null;
+    const ndMap     = use.nonDavao?countWhere((s,f)=>!!f.nonDavao): null;
+    const bwMap     = use.breadwinner?countWhere((s,f)=>!!f.breadwinner): null;
+    const sfMap     = use.selfFin?countWhere((s,f)=>!!f.selfFinancing): null;
+
+    const regMap    = use.regularCol   ? countWhere((s)=> normRegularity(s.regularOrIrregular)==='Regular') : null;
+    const irregMap  = use.irregularCol ? countWhere((s)=> normRegularity(s.regularOrIrregular)==='Irregular') : null;
+
+    
+    const schedMaps = {};
+    if (use_schedCols){
+      SCHEDULE_OPTIONS.forEach(label=>{
+        schedMaps[label] = countWhere((s)=> normScheduleVal(s.classSchedule)===label);
+      });
+    }
+
+    
+    const scholarMaps = {};
+    if (use_schTypes){
+      SCHOLARSHIP_TYPES.forEach(t=>{
+        scholarMaps[t] = countWhere((s,f)=> String(f.governmentScholarship||'').toLowerCase().includes(t.toLowerCase()));
+      });
+    }
+
+    const yearMaps = {};
+    if (use.yearByCol){
+      years.forEach(y=>{ yearMaps[y] = countWhere(s=> safeKey(s.yearLevel,'(Unknown)')===y); });
+    }
+
+    rowKeys.forEach(k=>{
+      const row = [k];
+      if (use.orphan) row.push(orphanMap.get(k) || 0);
+      if (use.age)    row.push(ageMap.get(k) || 0);
+      if (use.working)row.push(workMap.get(k) || 0);
+      if (use.nonDavao)row.push(ndMap.get(k) || 0);
+      if (use.breadwinner)row.push(bwMap.get(k) || 0);
+      if (use.selfFin)row.push(sfMap.get(k) || 0);
+
+      if (use.regularCol)   row.push(regMap.get(k) || 0);
+      if (use.irregularCol) row.push(irregMap.get(k) || 0);
+
+      if (use_schedCols){
+        SCHEDULE_OPTIONS.forEach(label=> row.push(schedMaps[label].get(k) || 0));
+      }
+      if (use_schTypes){
+        SCHOLARSHIP_TYPES.forEach(t=> row.push(scholarMaps[t].get(k) || 0));
+      }
+      if (use.yearByCol) years.forEach(y => row.push(yearMaps[y].get(k) || 0));
+
+      mainRows.push(row);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(mainRows);
+
+    
+    let r = mainRows.length + 2;
+    if (use.relByCol){
+      const relHeader = [rowLabel, ...rels];
+      const relRows = [relHeader];
+      const maps = {};
+      rels.forEach(rel=> maps[rel] = countWhere(s => safeKey(s.studentReligion,'(Unknown)')===rel));
+      rowKeys.forEach(k=>{
+        const row = [k];
+        rels.forEach(rel => row.push(maps[rel].get(k) || 0));
+        relRows.push(row);
+      });
+      XLSX.utils.sheet_add_aoa(ws, [[''],['Religion']], {origin:{r:r-2,c:0}});
+      XLSX.utils.sheet_add_aoa(ws, relRows, {origin:{r:r,c:0}});
+      r = r + relRows.length + 3;
+    }
+
+    
+    if (use.regionCols){
+      const regionHeader = [rowLabel, ...REGION_LABELS];
+      const regionRows = [regionHeader];
+      const rMaps = {};
+      REGION_LABELS.forEach(rr => {
+        rMaps[rr] = countWhere((s,f)=> String((f.region||'')).toLowerCase().includes(rr.toLowerCase()));
+      });
+      rowKeys.forEach(k=>{
+        const row = [k];
+        REGION_LABELS.forEach(rr => row.push(rMaps[rr].get(k) || 0));
+        regionRows.push(row);
+      });
+      XLSX.utils.sheet_add_aoa(ws, [[''],['Region']], {origin:{r:r-2,c:0}});
+      XLSX.utils.sheet_add_aoa(ws, regionRows, {origin:{r:r,c:0}});
+    }
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Demographics');
+    const file = `Demographics_${rowLabel}_${new Date().toISOString().slice(0,10)}.xlsx`;
+    XLSX.writeFile(wb, file);
+  }
+
+
+    
+    async function generateWordReport(list, include){
+      const parts = [];
+      let bannerData = '';
+      if (BANNER_URL){
+        try{
+          bannerData = await fetch(BANNER_URL).then(r=>r.blob()).then(b=>new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(b); }));
+        }catch{}
+      }
+      parts.push(`<html><head><meta charset="utf-8"><style>
+        body{font-family:Arial,Helvetica,sans-serif;font-size:11pt}
+        h1,h2,h3{margin:6px 0}
+        table{border-collapse:collapse;width:100%;margin:8px 0}
+        th,td{border:1px solid #444;padding:4px 6px;text-align:center}
+        th:first-child,td:first-child{text-align:left}
+      </style></head><body>`);
+      if (bannerData) parts.push(`<img src="${bannerData}" style="width:100%;max-height:90px;object-fit:contain"><br>`);
+      parts.push(`<h2 style="text-align:center">COLLEGE POPULATION REPORT</h2><div style="text-align:center">${nowStamp()}</div>`);
+
+      const flags = list.map(s => ({ s, f: aiFlagsByAccount.get(s.accountId) || {} }));
+      const counts = {
+        age: (()=>{ const m={}; list.forEach(s=>{ if(s.age!=null) m[s.age]=(m[s.age]||0)+1; }); return m; })(),
+        year: (()=>{ const m={}; list.forEach(s=>{ const k=s.yearLevel||'(Unknown)'; m[k]=(m[k]||0)+1; }); return m; })(),
+        course: (()=>{ const m={}; list.forEach(s=>{ const k=s.course||'(Unknown)'; m[k]=(m[k]||0)+1; }); return m; })(),
+        religion: (()=>{ const m={}; list.forEach(s=>{ const k=s.studentReligion||'(Unknown)'; m[k]=(m[k]||0)+1; }); return m; })(),
+        gender: (()=>{ const m={}; list.forEach(s=>{ const k=s.gender || '(Unknown)'; m[k]=(m[k]||0)+1; }); return m; })(),
+        workingYes: flags.filter(x => !!x.f.working).length,
+        orphanYes:  flags.filter(x => !!x.f.orphan).length,
+        nprYes:     flags.filter(x => !!x.f.nonDavao).length,
+        bwYes:      flags.filter(x => !!x.f.breadwinner).length,
+        sfYes:      flags.filter(x => !!x.f.selfFinancing).length
+      };
+
+      const sections = [];
+      if (include.age)      sections.push(['Age (percentage)', await getPieImage(counts.age)]);
+      if (include.year)     sections.push(['Year Level (percentage)', await getPieImage(counts.year)]);
+      if (include.gender)   sections.push(['Gender (percentage)', await getPieImage(counts.gender)]);
+      if (include.religion) sections.push(['Religion (percentage)', await getPieImage(counts.religion)]);
+      if (include.working)  sections.push(['Working Student', await getYesNoPieImage(counts.workingYes, list.length - counts.workingYes)]);
+      if (include.finance)  sections.push(['Breadwinner vs Self-Financing', await getBarImage([['Category','Percentage'],['Breadwinner', Math.round((counts.bwYes/list.length)*100)],['Self Financing', Math.round((counts.sfYes/list.length)*100)]])]);
+      if (include.orphan)   sections.push(['Orphan', await getYesNoPieImage(counts.orphanYes, list.length - counts.orphanYes)]);
+      if (include.npr)      sections.push(['Non-Davao City Residence', await getYesNoPieImage(counts.nprYes, list.length - counts.nprYes)]);
+      if (include.course) sections.push(['Course (percentage)', await getPieImage(counts.course)]);
+      sections.forEach(([title,uri])=>{
+        parts.push(`<h3 style="text-align:center">${title}</h3><div style="text-align:center"><img src="${uri}" style="max-width:100%"></div>`);
+      });
+
+      parts.push('<h3>Students (current filters)</h3>');
+      const rows = list.map(s => {
+        const f = aiFlagsByAccount.get(s.accountId) || {};
+        const name = [s.firstName,s.middleName,s.lastName].filter(Boolean).join(' ');
+        return `<tr><td>${escapeHtml(name)}</td><td>${s.age ?? ''}</td><td>${escapeHtml(s.yearLevel||'')}</td><td>${escapeHtml(s.course||'')}</td><td>${escapeHtml(s.studentReligion||'')}</td><td>${f.working?'Yes':'No'}</td><td>${f.breadwinner?'Yes':'No'}</td><td>${f.selfFinancing?'Yes':'No'}</td><td>${f.orphan?'Yes':'No'}</td><td>${f.nonDavao?'Yes':'No'}</td></tr>`;
+      }).join('');
+      parts.push(`<table><thead><tr><th>Name</th><th>Age</th><th>Year</th><th>Course</th><th>Religion</th><th>Working</th><th>Breadwinner</th><th>Self-Financing</th><th>Orphan</th><th>Non-Davao</th></tr></thead><tbody>${rows}</tbody></table>`);
+      const blob = new Blob(['\ufeff', parts.join('')], {type:'application/msword'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Population_Report_${(course||'COURSE')}_${new Date().toISOString().slice(0,10)}.doc`;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+    }
+
+    
+    q('#resetBtn').onclick = resetFilters;
+    [$first,$middle,$last].forEach(el => el.addEventListener('input', onFilterChange));
+    $statusGroup.addEventListener('change', onFilterChange);
+
+    q('#accountBtn').onclick = () => location.href = 'DeanAccount.html';
+    q('#logoutBtn').onclick = () => { localStorage.removeItem('session'); location.href = 'index.html'; };
+
+    
+    fetchStudents();
+  </script>
+
+  <script>
+    
+    (function(){
+      document.querySelectorAll('table').forEach(t=>{
+        if (!t.closest('.table-wrap')) {
+          const w = document.createElement('div');
+          w.className = 'table-wrap';
+          t.parentNode.insertBefore(w, t);
+          w.appendChild(t);
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

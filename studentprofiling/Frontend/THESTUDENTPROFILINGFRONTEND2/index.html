@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login / Sign-Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --clr-sky:#2196f3; --radius:22px; --card-w:360px; --card-h:480px; }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html, body { height:100%; font-family:Poppins,sans-serif; overflow:hidden; background:#1da5db; color:#319ee7; }
+    .ray { position:absolute; width:180vw; height:180vh; top:-40vh; left:-40vw; background:rgba(152,199,238,.623); clip-path:polygon(50% 50%,100% 49%,100% 51%); pointer-events:none; user-select:none; }
+    .r1{transform:rotate(0deg)} .r2{transform:rotate(45deg)} .r3{transform:rotate(90deg)} .r4{transform:rotate(135deg)}
+    .r5{transform:rotate(180deg)} .r6{transform:rotate(225deg)} .r7{transform:rotate(270deg)} .r8{transform:rotate(315deg)}
+    .card { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:var(--card-w); min-height:var(--card-h); padding:38px 32px 46px; border-radius:var(--radius); background:var(--clr-sky); box-shadow:0 15px 35px rgba(0,0,0,.25); display:grid; grid-template-rows:auto 1fr auto; align-items:start; justify-items:center; transition:.25s ease; z-index:2; color:#fff; }
+    #splash-card { display:flex; align-items:center; justify-content:center; padding:0; }
+    .card.hidden { display:none; }
+    .card img { width:84px; margin:0 auto 24px; display:block; cursor:pointer; filter:drop-shadow(0 5px 8px rgba(0,0,0,.25)); }
+    form { width:100%; display:flex; flex-direction:column; gap:18px; }
+    label { font-size:.9rem; font-weight:600; text-align:left; color:#fff; }
+    input { width:100%; padding:13px 16px; font-size:.95rem; border:1px solid #ccc; border-radius:12px; background:#fff; color:#000; transition:.2s; }
+    input:focus { outline:none; border-color:#1565c0; }
+    input::placeholder { color:#555; }
+    button { margin-top:8px; padding:13px; border:none; border-radius:12px; font-size:1rem; font-weight:600; background:#0d47a1; color:#fff; cursor:pointer; box-shadow:0 6px 14px rgba(0,0,0,.25); transition:background .2s, transform .15s; }
+    button:hover { background:#09377a; }
+    button:active { transform:translateY(1px); }
+    .inline-error{ color:#ffeb3b; font-size:.9rem; margin-top:-8px; margin-bottom:-6px; min-height:1.2em; text-align:left; }
+    .field-error{ border-color:#c62828 !important; box-shadow:0 0 0 3px rgba(198,40,40,.15); }
+    @media (max-width:400px) { :root { --card-w:92vw; --card-h:480px; } .card { padding:32px 24px 40px; } #splash-card { padding:0; } }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+  
+  <div class="ray r1"></div><div class="ray r2"></div><div class="ray r3"></div><div class="ray r4"></div>
+  <div class="ray r5"></div><div class="ray r6"></div><div class="ray r7"></div><div class="ray r8"></div>
+
+  
+  <div class="card" id="splash-card">
+    <img src="logo.png" alt="Logo" id="splash-logo" />
+  </div>
+
+  
+  <div class="card hidden" id="login-card">
+    <img src="logo.png" alt="Logo" id="login-logo" />
+    <form id="loginForm">
+      <label>Email</label>
+      <input type="email" placeholder="you@example.com" required id="email" />
+      <label>Password</label>
+      <input type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required id="password" />
+      <button type="submit">LOGIN</button>
+    </form>
+  </div>
+
+  
+  <div class="card hidden" id="signup-card">
+    <img src="logo.png" alt="Logo" id="signup-logo" />
+    <form id="signupForm">
+      <label>Enter Code</label>
+      <p id="codeError" class="inline-error"></p>
+      <input id="signupCode" type="text" placeholder="Your access code" required />
+      <button id="signupBtn" type="submit">SIGN UP</button>
+    </form>
+  </div>
+
+  
+  <div class="card hidden" id="twofa-card">
+    <img src="logo.png" alt="Logo" id="twofa-logo" />
+    <form id="twofaForm">
+      <label>Enter 6-digit code</label>
+      <p id="twofaErr" class="inline-error"></p>
+      <input id="twofaCode" type="text" placeholder="123456" required />
+      <button id="twofaBtn" type="submit">VERIFY</button>
+    </form>
+  </div>
+
+  <script>
+    const API_BASE = 'https://4efa0ea5cdc7.ngrok-free.app';
+
+  
+    const splash = document.getElementById('splash-card');
+    const login  = document.getElementById('login-card');
+    const signup = document.getElementById('signup-card');
+    const twofa  = document.getElementById('twofa-card');
+
+    const splashLogo = document.getElementById('splash-logo');
+    const loginLogo  = document.getElementById('login-logo');
+    const signupLogo = document.getElementById('signup-logo');
+    const twofaLogo  = document.getElementById('twofa-logo');
+
+    const signupForm = document.getElementById('signupForm');
+    const codeInput  = document.getElementById('signupCode');
+    const codeError  = document.getElementById('codeError');
+    const signupBtn  = document.getElementById('signupBtn');
+
+    const twofaForm  = document.getElementById('twofaForm');
+    const twofaCode  = document.getElementById('twofaCode');
+    const twofaErr   = document.getElementById('twofaErr');
+    const twofaBtn   = document.getElementById('twofaBtn');
+
+    splashLogo.style.cursor = 'pointer';
+    splashLogo.onclick = () => { splash.classList.add('hidden'); login.classList.remove('hidden'); };
+
+    
+    let regOpen = false;
+    async function refreshOpenState(){
+      try{
+        const r = await axios.get(`${API_BASE}/studentprofiling/registration/open-state`, { headers:{'ngrok-skip-browser-warning':'true'} });
+        regOpen = !!r.data?.open;
+      }catch{ regOpen = false; }
+      loginLogo.style.cursor = regOpen ? 'pointer' : 'not-allowed';
+      loginLogo.title = regOpen ? 'Click to sign up with a code' : 'Registration is currently closed';
+      loginLogo.onclick = regOpen ? () => { login.classList.add('hidden'); signup.classList.remove('hidden'); } : (e)=>e.preventDefault();
+    }
+
+    
+    refreshOpenState();
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshOpenState(); });
+
+    signupLogo.onclick = () => { signup.classList.add('hidden'); login.classList.remove('hidden'); };
+    twofaLogo.onclick  = () => {};
+
+    const clearCodeError = () => { codeError.textContent = ''; codeInput.classList.remove('field-error'); };
+    codeInput.addEventListener('input', clearCodeError); codeInput.addEventListener('focus', clearCodeError);
+
+    let signing = false;
+    async function trySignup(){
+      if (signing) return; signing = true;
+      clearCodeError();
+      const raw  = (codeInput.value || '').trim();
+      const code = raw.replace(/\D/g,'').slice(0,6);
+      if (code.length !== 6){ codeError.textContent='Please enter the 6-digit access code.'; codeInput.classList.add('field-error'); codeInput.focus(); signing=false; return; }
+      signupBtn.disabled = true; signupBtn.textContent = 'Checking...';
+
+      try {
+        const r = await axios.get(`${API_BASE}/studentprofiling/registration/verify-code`, { params:{ code }, headers:{'ngrok-skip-browser-warning':'true'} });
+        if (r.data && r.data.status === 'ok') {
+          localStorage.setItem('reg_code', code);
+          localStorage.setItem('reg_slot_id', String(r.data.accountId || ''));
+          if (r.data.course) localStorage.setItem('reg_course', r.data.course);
+          location.href = `Register.html?code=${encodeURIComponent(code)}`;
+        } else {
+          codeError.textContent = 'Code entered not found, please try again.'; codeInput.classList.add('field-error'); codeInput.focus();
+        }
+      } catch { codeError.textContent='Code entered not found, please try again.'; codeInput.classList.add('field-error'); codeInput.focus(); }
+      finally { signupBtn.disabled=false; signupBtn.textContent='SIGN UP'; signing=false; }
+    }
+
+    signupForm.addEventListener('submit', (e) => { e.preventDefault(); trySignup(); });
+    signupBtn.addEventListener('click', (e) => { e.preventDefault(); trySignup(); });
+
+    const errorMsg = document.createElement('p');
+    errorMsg.style.color = 'yellow'; errorMsg.style.fontSize = '0.9rem'; errorMsg.style.marginTop = '10px'; errorMsg.style.textAlign = 'center';
+    document.getElementById('loginForm').appendChild(errorMsg);
+    
+    let pending2FA = null; 
+
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      errorMsg.textContent = '';
+      try {
+        const r = await axios.post(`${API_BASE}/studentprofiling/login-step1`, { email, password }, { headers:{'Content-Type':'application/json','ngrok-skip-browser-warning':'true'} });
+        if (r.data && r.data.status === '2fa') {
+          pending2FA = { tempId: r.data.tempId, redirect: r.data.redirect, role: r.data.role, email };
+          login.classList.add('hidden'); twofa.classList.remove('hidden'); twofaCode.value=''; twofaErr.textContent='';
+        } else if (r.data === 'incorrect' || r.data?.status === 'incorrect') {
+          errorMsg.textContent = 'Incorrect email or password.';
+        } else {
+          errorMsg.textContent = 'Access denied. Role not recognized.';
+        }
+      } catch { errorMsg.textContent = 'Login failed. Please try again.'; }
+    });
+
+
+    const clear2Err = () => { twofaErr.textContent=''; twofaCode.classList.remove('field-error'); };
+    twofaCode.addEventListener('input', clear2Err); twofaCode.addEventListener('focus', clear2Err);
+
+    twofaForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!pending2FA) return; 
+      const raw=(twofaCode.value||'').trim(); const code=raw.replace(/\D/g,'').slice(0,6);
+      if (code.length!==6){ twofaErr.textContent='Please enter the 6-digit code.'; twofaCode.classList.add('field-error'); return; }
+      twofaBtn.disabled=true; twofaBtn.textContent='Verifying...';
+      try{
+        const v = await axios.post(`${API_BASE}/studentprofiling/login-verify`, { tempId: pending2FA.tempId, code }, { headers:{'Content-Type':'application/json','ngrok-skip-browser-warning':'true'} });
+        if (v.data && v.data.status === 'ok') {
+          if (pending2FA.role === 'Dean.html') { localStorage.setItem('session','dean'); localStorage.setItem('staff_email', pending2FA.email); location.href='Dean.html'; }
+          else if (pending2FA.role === 'Secretary.html') { localStorage.setItem('session','secretary'); localStorage.setItem('staff_email', pending2FA.email); location.href='Secretary.html'; }
+          else if (pending2FA.role?.startsWith('profilestudent.html')) {
+            localStorage.setItem('session','student'); localStorage.setItem('student_email', pending2FA.email);
+            try{ const url=new URL(pending2FA.role, location.href); const id=url.searchParams.get('accountId'); if (id) localStorage.setItem('accountId', id); location.href=url.toString(); } catch{ location.href=pending2FA.role; }
+          }
+          else if (pending2FA.role?.startsWith('ProgramHeadDean.html')) {
+            localStorage.setItem('session','programhead'); localStorage.setItem('programhead_email', pending2FA.email);
+            try{ const url=new URL(pending2FA.role, location.href); const c=url.searchParams.get('course'); if (c) localStorage.setItem('programhead_course', c); location.href=url.toString(); } catch{ location.href=pending2FA.role; }
+          }
+          else { twofaErr.textContent='Access denied.'; }
+        } else { twofaErr.textContent='Incorrect code.'; twofaCode.classList.add('field-error'); }
+      } catch { twofaErr.textContent='Verification failed.'; }
+      finally { twofaBtn.disabled=false; twofaBtn.textContent='VERIFY'; }
+    });
+
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+

@@ -1,0 +1,23 @@
+FOR RUNNING THE STUDENT PROFILING SYSTEM (BOTH FRONTEND AND BACKEND)
+
+
+1. Make sure the device installed Docker Desktop 
+    -To check if the docker is installed, type the command "docker --version" to see whenever the docker is finally installed in your device or not.
+2. Make sure also to have an Ngrok installed in your device
+    -To check if your Ngrok is installed, type command "ngrok help" in the terminal to see whenever Ngrok is finally installed in your device or not. (install your auth token also in your device, more info at https://ngrok.com/docs/getting-started#windows)
+3. Run the docker.compose.yml file first to setup the docker container, database and pgadmin. use this command to run the file "docker compose -f docker.compose.yml up -d"
+    -Make sure the Docker Desktop is open before running the yml file
+    -Make sure to double check the user/email and password in the file to know how to access these containers
+    -Make sure to check the sql file "001_accounts.sql" if all of the email and password for each programheads/dean and secretaries are set (more info at the file itself).
+4. After Installing the nessesary containers, run the command "./mvnw spring-boot:run" to run the SPS System backend.
+    -You can now open the pgadmin by going to "http://localhost:5050/" and entering your pgadmin container and password, this application help you access the database of the SPS system
+5. After running the system, open your command prompt in your Device and type in the command "ngrok http 8080" to expose your local SPS system to the public by given URL
+    -MAKE SURE YOU INSTALLED NGROK AND ENTERED YOUR API KEY FOR THIS TO WORK (follow step 2)
+6. After running the system backend and exposing the localhost from ngrok URL, copy the given ngrok URL and paste the URL to all of the const API_BASE variable from the frontend
+    -the given ngrok URL will suppose to look like this "https://(code).ngrok-free.app"
+    -the const API_BASE variable will be found every html file in the frontend foler, use shortcut "ctrl + f" and type "API_BASE" to see the variable
+7. After getting and replacing the new given Ngrok URL to every API_BASE variable, run the frontend by using the extension of VSCODE "Live Server".  Right click the index.html and clicked "Open with Live Server" to run the SPS System Frontend locally. And with that, You finally Run the SPS System frontend and backend!
+
+NOTE:
+    -Everytime you open the SPS System again, you have to open the Docker Desktop First and then just follow the step 4 and onward.
+    -You can also run the frontend by ngrok, but keep in mind the FREE Ngrok can only run one instance per device, so meaning you have to have another device to run frontend locally and use ngrok url to expose the frontend of the system in public.

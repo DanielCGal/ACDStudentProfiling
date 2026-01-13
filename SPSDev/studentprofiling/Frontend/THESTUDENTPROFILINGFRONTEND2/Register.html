@@ -1,0 +1,982 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Registration</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --clr-sky:#2196f3; --clr-dark-sky:#0d47a1; --clr-pill:#3aa0f7; --clr-pill-active:#0d74d1; }
+    * { box-sizing:border-box; margin:0; padding:0; font-family:Poppins,sans-serif; }
+    html, body { width:100%; height:100%; overflow:hidden; background:#1DA5DB; }
+    .ray{ position:fixed; width:180vw; height:180vh; top:-40vh; left:-40vw; background:rgba(152,199,238,.623);
+      clip-path:polygon(50% 50%,100% 49%,100% 51%); pointer-events:none; user-select:none; z-index:0; }
+    .r1{transform:rotate(0deg)} .r2{transform:rotate(45deg)}
+    .r3{transform:rotate(90deg)} .r4{transform:rotate(135deg)}
+    .r5{transform:rotate(180deg)} .r6{transform:rotate(225deg)}
+    .r7{transform:rotate(270deg)} .r8{transform:rotate(315deg)}
+    .card{ z-index:2; }
+    .card { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      width:96%; max-width:980px; padding:18px 20px 22px; background:var(--clr-sky);
+      border-radius:28px; box-shadow:0 8px 16px rgba(0,0,0,.2); color:#fff; overflow:auto; max-height:96vh; }
+    .card h1 { text-align:center; font-size:1.6rem; margin-bottom:10px; }
+    .steps { display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-start; margin:4px auto 14px; }
+    .step-pill { background:var(--clr-pill); padding:8px 10px; border-radius:999px; font-size:.82rem; font-weight:700;
+      cursor:pointer; user-select:none; border:2px solid rgba(255,255,255,.35); box-shadow:0 2px 0 rgba(0,0,0,.15); }
+    .step-pill.active { background:var(--clr-pill-active); }
+    .step-pill.done { opacity:.9; }
+    .pane { display:none; }
+    .pane.active { display:block; }
+    .reg-form { display:grid; grid-template-columns:1fr 1fr; gap:18px 24px; }
+    .reg-col { display:flex; flex-direction:column; gap:14px; }
+    .reg-row-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+    .reg-row-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    label { font-weight:600; }
+    input, select, textarea { width:100%; padding:10px; border:none; border-radius:10px; background:#fff; color:#000; font-size:.95rem; text-align:center; }
+    textarea { resize:vertical; min-height:38px; }
+    .photo-wrapper { position:relative; width:120px; height:120px; border-radius:22px; background:#ddd; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+    .photo-wrapper input { position:absolute; inset:0; opacity:0; }
+    .photo-wrapper img { width:100%; height:100%; object-fit:cover; border-radius:22px; }
+    #photoPrompt{ color:#666; font-weight:600; font-size:.85rem; text-align:center; padding:8px; }
+    .ss-title { font-size:1.1rem; font-weight:800; margin:6px 0 4px; }
+    .muted { opacity:.85; font-size:.9rem; }
+    .panewrap { padding-bottom:84px; }
+    .review-footer { position:absolute; right:20px; bottom:20px; display:flex; justify-content:flex-end; gap:10px; }
+    .btn { padding:10px 16px; border:none; border-radius:12px; background:var(--clr-dark-sky); color:#fff; font-size:1rem; cursor:pointer; box-shadow:0 4px 6px rgba(0,0,0,.2); }
+    .btn:disabled{ opacity:.6; cursor:not-allowed; }
+    .hidden{ display:none !important; }
+    @media (max-width:1000px){
+      .reg-form{ grid-template-columns:1fr; }
+      .reg-row-4{ grid-template-columns:repeat(2,1fr); }
+      .reg-row-3, .row, .grid2{ grid-template-columns:1fr; }
+      .photo-wrapper{ width:100px; height:100px; }
+    }
+    .modal-mask{ display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.5); align-items:center; justify-content:center; padding:16px; }
+    .modal{ background:#fff; color:#000; border:3px solid #2196f3; border-radius:12px; width:min(780px,95vw); max-height:85vh; padding:18px 20px; overflow:auto; box-shadow:0 10px 30px rgba(0,0,0,.25); }
+    .modal h2{ color:#2196f3; text-align:center; margin-bottom:8px; }
+    .modal .buttons{ display:flex; justify-content:center; gap:12px; margin-top:12px; }
+    .modal .buttons button{ padding:8px 16px; border:none; border-radius:8px; }
+    .btn-ok{ background:#2196f3; color:#fff; }
+    .btn-cancel{ background:#ccc; color:#000; }
+    .review-grid{ width:100%; border-collapse:collapse; }
+    .review-grid td{ padding:6px 8px; border-bottom:1px solid #eaeaea; font-size:.95rem; }
+    .review-grid td:first-child{ font-weight:600; width:38%; }
+  </style>
+
+  <link rel="stylesheet" href="responsive.css">
+
+</head>
+<body>
+  
+  <div class="ray r1"></div><div class="ray r2"></div>
+  <div class="ray r3"></div><div class="ray r4"></div>
+  <div class="ray r5"></div><div class="ray r6"></div>
+  <div class="ray r7"></div><div class="ray r8"></div>
+
+  <div class="card">
+    <h1 id="title">Student Registration</h1>
+
+    <div class="steps" id="steps">
+      <div class="step-pill active" data-step="1">Personal Information</div>
+      <div class="step-pill" data-step="2">Working Student</div>
+      <div class="step-pill" data-step="3">Orphan Student</div>
+      <div class="step-pill" data-step="4">Permanent Residence</div>
+      <div class="step-pill" data-step="5">Student Scholarship</div>
+    </div>
+
+    <div class="panewrap">
+      <form id="regForm" novalidate>
+        <div class="pane active" data-step="1">
+          <div class="reg-form">
+            <div class="reg-col">
+              <label>Student Photo</label>
+              <div class="photo-wrapper">
+                <span id="photoPrompt">Click to add image</span>
+                <input type="file" id="photoInput" accept="image/*" />
+                <img id="photoPreview" style="display:none" />
+              </div>
+
+              <label>Name</label>
+              <div class="reg-row-3">
+                <input type="text" id="firstName" placeholder="First name" required />
+                <input type="text" id="middleName" placeholder="Middle name (optional)" />
+                <input type="text" id="lastName" placeholder="Last name" required />
+              </div>
+
+              <div class="reg-row-4">
+                <div>
+                  <label>Age</label>
+                  <input type="number" name="age" min="18" placeholder="18" required readonly />
+                </div>
+                <div>
+                  <label>Gender</label>
+                  <select name="gender" required>
+                    <option value="" disabled selected>-</option>
+                    <option>Male</option><option>Female</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Year Level</label>
+                  <select name="year" required>
+                    <option value="" disabled selected>-</option>
+                    <option>1st Year</option><option>2nd Year</option>
+                    <option>3rd Year</option><option>4th Year</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Course</label>
+                  <select name="course" required>
+                    <option value="" disabled selected>-</option>
+                    <option>BSIT - Bachelor of Science in Information Technology</option>
+                    <option>BSBA - Bachelor of Science in Business Administration</option>
+                    <option>BSED - Bachelor of Secondary Education</option>
+                    <option>BEED - Bachelor of Elementary Education</option>
+                    <option>BSHM - Bachelor of Science in Hospitality Management</option>
+                    <option>BSSW - Bachelor of Science in Social Work</option>
+                  </select>
+                </div>
+              </div>
+
+              <label>Birth Date</label>
+              <input type="date" name="birth" required />
+
+              <label>Contact Info</label>
+              <input type="text" name="contact" placeholder="09XXXXXXXXX" required />
+            </div>
+
+            <div class="reg-col">
+              <label>Email</label>
+              <input type="email" name="email" placeholder="acd123@example.com" required />
+
+              <label>Address</label>
+              <input type="text" name="address" placeholder="Street, City" required />
+
+              <label>Religion</label>
+              <select id="religion" required>
+                <option value="" disabled selected>-</option>
+                <option value="Catholic">Catholic</option>
+                <option value="Islam">Islam</option>
+                <option value="Iglesia ni Cristo">Iglesia ni Cristo</option>
+                <option value="Philippine Independent Church">Philippine Independent Church</option>
+                <option value="Seventh-day Adventist">Seventh-day Adventist</option>
+                <option value="Bible Baptist Church">Bible Baptist Church</option>
+                <option value="United Church of Christ in the Philippines">United Church of Christ in the Philippines</option>
+                <option value="Jehovah's Witnesses">Jehovah's Witnesses</option>
+                <option value="Church of Christ">Church of Christ</option>
+                <option value="Others">Others</option>
+                <option value="None">None</option>
+              </select>
+
+              <label>Student Nationality</label>
+              <input type="text" name="nationality" placeholder="Filipino" required />
+            
+            <label>Regular or Irregular Student?</label>
+            <select id="regularity" required>
+              <option value="" disabled selected>-</option>
+              <option>Regular Student</option>
+              <option>Irregular Student</option>
+            </select>
+
+            <label>Class Schedule?</label>
+            <select id="classSchedule" required>
+              <option value="" disabled selected>-</option>
+              <option>Morning</option>
+              <option>Afternoon</option>
+              <option>Evening</option>
+            </select>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="pane" data-step="2">
+          <div class="ss-title" style="margin-bottom:8px;">Working Student</div>
+
+          <label>Working Student? <span class="muted">(required)</span></label>
+          <select id="workingSel" required>
+            <option value="" disabled selected>-</option>
+            <option>Yes</option><option>No</option>
+          </select>
+
+          <div id="wsBlock">
+            <div class="grid2" style="margin-bottom:8px;">
+              <label>Student SA or Outside?
+                <select id="wsTypeSel">
+                  <option value="" disabled selected>-</option>
+                  <option value="Outside">Outside</option>
+                  <option value="Student SA">Student SA</option>
+                </select>
+              </label>
+              <span></span>
+            </div>
+
+            <div id="wsOutside" class="grid2">
+              <label>Place of Work
+                <input type="text" id="workPlace">
+              </label>
+              <span></span>
+            </div>
+
+            <div id="wsSA" class="grid2 hidden">
+              <label>Department
+                <select id="wsDepartment">
+                  <option value="" disabled selected>-</option>
+                  <option>PCO</option>
+                  <option>HRM</option>
+                  <option>SSPP</option>
+                  <option>COLLEGE/SHS/JHS LIBRARY</option>
+                  <option>COLLEGE FACULTY</option>
+                  <option>PRESIDENT OFFICE</option>
+                  <option>CLINIC</option>
+                  <option>GUIDANCE OFFICE</option>
+                  <option>CULTURAL AND SPORTS OFFICE</option>
+                  <option>BED</option>
+                  <option>HRDO</option>
+                  <option>FINANCE</option>
+                  <option>MWSP</option>
+                  <option>SCIENCE LAB</option>
+                  <option>ROBOTICS LAB</option>
+                  <option>ICTC</option>
+                  <option>SHS FACULTY</option>
+                </select>
+              </label>
+              <span></span>
+            </div>
+
+            <div class="grid2">
+              <label>Supervisor name
+                <input type="text" id="wsSupervisorName">
+              </label>
+              <label>Supervisor Contact info
+                <input type="text" id="wsSupervisorContact" placeholder="09XXXXXXXXX">
+              </label>
+            </div>
+
+            <div class="row">
+              <label>Shift Start
+                <input type="time" id="shiftStart">
+              </label>
+              <label>Shift End
+                <input type="time" id="shiftEnd">
+              </label>
+            </div>
+
+            <div class="grid2">
+              <label>Are you the Breadwinner?
+                <select id="special_breadwinner">
+                  <option value="" disabled selected>-</option>
+                  <option>Yes</option><option>No</option>
+                </select>
+              </label>
+              <label>Are you financing your school?
+                <select id="special_selfFinance">
+                  <option value="" disabled selected>-</option>
+                  <option>Yes</option><option>No</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="pane" data-step="3">
+          <div class="ss-title" style="margin-bottom:8px;">Orphan Student</div>
+
+          <label>Orphan Student? <span class="muted">(required)</span></label>
+          <select id="orphanSel" required>
+            <option value="" disabled selected>-</option>
+            <option>Yes</option><option>No</option>
+          </select>
+
+          <div id="orphanBlock">
+            <div class="grid2">
+              <label>Date of Parental Loss (Mother)
+                <input type="date" id="orphanMotherDate">
+              </label>
+              <label>Date of Parental Loss (Father)
+                <input type="date" id="orphanFatherDate">
+              </label>
+              <label>Name of Parent (Mother)
+                <input type="text" id="orphanMotherName">
+              </label>
+              <label>Name of Parent (Father)
+                <input type="text" id="orphanFatherName">
+              </label>
+            </div>
+            <label>Current Guardian (Full Name)
+              <input type="text" id="orphanGuardian">
+            </label>
+            <label>Guardian Relationship
+              <input type="text" id="orphanRelation">
+            </label>
+            <label>Guardian Occupation
+              <input type="text" id="orphanOccupation">
+            </label>
+            <label>Guardian Income
+              <input type="text" id="orphanIncome">
+            </label>
+          </div>
+        </div>
+
+        
+        <div class="pane" data-step="4">
+          <div class="ss-title" style="margin-bottom:8px;">Permanent Residence</div>
+
+          <label>Permanent Residence of Davao City? <span class="muted">(required)</span></label>
+          <select id="residentSel" required>
+            <option value="" disabled selected>-</option>
+            <option>Yes</option><option>No</option>
+          </select>
+
+          <div id="resNote" class="muted" style="margin:10px 0;">You selected â€œYesâ€ â€” nothing required here.</div>
+
+          <div id="npSection">
+            <label>Current Address
+              <input type="text" id="npAddress">
+            </label>
+
+            
+            <label>Region
+              <select id="npRegion">
+                <option value="" disabled selected>-</option>
+                <option>Zamboanga Peninsula (Region IX)</option>
+                <option>Northern Mindanao (Region X)</option>
+                <option>Davao Region (Region XI)</option>
+                <option>SOCCSKSARGEN (Region XII)</option>
+                <option>Caraga (Region XIII)</option>
+                <option>Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)</option>
+              </select>
+            </label>
+
+            <label>Living Condition
+              <input type="text" id="npCondition">
+            </label>
+          </div>
+        </div>
+
+        
+        <div class="pane" data-step="5">
+          <div class="ss-title" style="margin-bottom:8px;">Student Scholarship</div>
+
+          <label>Have Any Student Scholarship? <span class="muted">(required)</span></label>
+          <select id="scholarHas" required>
+            <option value="" disabled selected>-</option>
+            <option>Yes</option><option>No</option>
+          </select>
+
+          <div id="scholarBlock" class="hidden">
+            <label>Type of Scholarship?
+              <select id="scholarType">
+                <option value="" disabled selected>-</option>
+                <option>Working Scholarship</option>
+                <option>Academic Scholarship</option>
+                <option>Government Scholarship</option>
+              </select>
+            </label>
+
+            <label id="govWrap" class="hidden">Which Government Scholarship did you apply?
+              <select id="govScholar">
+                <option value="" disabled selected>-</option>
+                <option>CHED Scholarship</option>
+                <option>OWWA Scholarship</option>
+                <option>BFAR Scholarship</option>
+                <option>LANDBANK Scholarship</option>
+                <option>DOST Scholarship</option>
+                <option>PhilSA Scholarship</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="review-footer">
+      <button type="button" class="btn" id="btnReview">REVIEW</button>
+    </div>
+  </div>
+
+  
+  <div class="modal-mask" id="reviewMask">
+    <div class="modal">
+      <h2>Review Information</h2>
+      <table class="review-grid" id="reviewTable"></table>
+      <div class="buttons">
+        <button class="btn-cancel" id="btnRevBack">Back</button>
+        <button class="btn-ok" id="btnRevConfirm">Confirm &amp; Save</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="modal-mask" id="noticeModal">
+    <div class="modal">
+      <h2>IMPORTANT NOTICE</h2>
+      <p>The information you have provided in this profiling system is now being stored in our centralized student database.</p>
+      <p>Assumption College of Davao institution is collecting and processing your personal and academic information in compliance with the Data Privacy Act of 2012 (Republic Act No. 10173). Your data will be kept secure and confidential, and will only be accessed by authorized program heads and school administrators.</p>
+      <p>We use this information for administration and student development management purposes, which include, but are not limited to, the following: facilitating efficient collection and organization of student data, supporting data-driven decision-making by program heads and administrators, identifying and monitoring at-risk and probationary students, generating demographic and academic reports, and improving access to accurate student information for institutional planning and student support services.</p>
+      <p>This data will not be shared with any third-party entity without your explicit consent, except when required by law. The system ensures that your personal information is protected through appropriate technical and organizational measures.</p>
+      <p>By continuing to use this system, you acknowledge and consent to the processing of your information for the purposes stated above.</p>
+      <div class="buttons">
+        <button class="btn-ok" id="btnOk">OKAY</button>
+        <button class="btn-cancel" id="btnCancel">CANCEL</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="modal-mask" id="successMask">
+    <div class="modal">
+      <h2>Registration Complete!</h2>
+      <p style="text-align:center; font-size:1rem; margin-top:8px;">
+        Your Temporary Password:
+        <strong id="tempPassword" style="font-size:1.05rem;"></strong>
+      </p>
+      <div class="buttons" style="margin-top:14px;">
+        <button class="btn-ok" id="btnBack">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <script>
+    
+    const API_BASE = 'https://ff2dc04b5a8b.ngrok-free.app';
+
+    
+    const params = new URLSearchParams(location.search);
+    let REG_CODE =
+      params.get('code') ||
+      localStorage.getItem('reg_code') ||
+      sessionStorage.getItem('reg_code') || '';
+
+    REG_CODE = (REG_CODE || '').trim();
+    if (REG_CODE) {
+      sessionStorage.setItem('reg_code', REG_CODE);
+      localStorage.setItem('reg_code', REG_CODE);
+    }
+    if (!/^\d{6}$/.test(REG_CODE)) {
+      alert('Missing or invalid registration code. Please start from the Sign Up page.');
+      location.href = 'index.html';
+    }
+    document.getElementById('title').innerHTML =
+      'Student Registration <small style="font-size:60%;opacity:.9">â€¢ Code ' + REG_CODE + '</small>';
+
+    
+    const photoInput = document.getElementById('photoInput');
+    const photoPreview = document.getElementById('photoPreview');
+    const photoPrompt = document.getElementById('photoPrompt');
+    photoInput.addEventListener('change', () => {
+      if (!photoInput.files.length) return;
+      photoPreview.src = URL.createObjectURL(photoInput.files[0]);
+      photoPreview.style.display = 'block';
+      photoPrompt.style.display = 'none';
+    });
+
+    const form = document.getElementById('regForm');
+    const stepsEl = document.getElementById('steps');
+
+    const cardEl = document.querySelector('.card');
+    let baselineMin = null;
+    function lockCardMinHeightOnce() {
+      if (baselineMin != null) return;
+      requestAnimationFrame(() => {
+        baselineMin = Math.round(cardEl.getBoundingClientRect().height);
+        cardEl.style.minHeight = baselineMin + 'px';
+      });
+    }
+    lockCardMinHeightOnce();
+    window.addEventListener('resize', () => {
+      if (baselineMin == null) return;
+      cardEl.style.minHeight = baselineMin + 'px';
+    });
+
+    const birthInput = form.birth;
+    const ageInput = form.age;
+
+    function calcAge(dateStr){
+      const b = new Date(dateStr + 'T00:00:00');
+      if (Number.isNaN(b.getTime())) return NaN;
+      const t = new Date();
+      let age = t.getFullYear() - b.getFullYear();
+      const m = t.getMonth() - b.getMonth();
+      if (m < 0 || (m === 0 && t.getDate() < b.getDate())) age--;
+      return age;
+    }
+    (function setBirthMax(){
+      const t = new Date();
+      const max = new Date(t.getFullYear() - 18, t.getMonth(), t.getDate());
+      birthInput.max = max.toISOString().split('T')[0];
+    })();
+    function updateAgeFromBirth(){
+      const a = calcAge(birthInput.value);
+      if (Number.isNaN(a)) { ageInput.value=''; birthInput.setCustomValidity(''); return; }
+      ageInput.value = a;
+      if (a < 18){ birthInput.setCustomValidity('You must be at least 18 years old.'); }
+      else { birthInput.setCustomValidity(''); }
+    }
+    birthInput.addEventListener('input', updateAgeFromBirth);
+    birthInput.addEventListener('change', updateAgeFromBirth);
+
+    
+    const workingSel = document.getElementById('workingSel');
+    const wsBlock = document.getElementById('wsBlock');
+    const wsTypeSel = document.getElementById('wsTypeSel');
+    const wsOutside = document.getElementById('wsOutside');
+    const wsSA = document.getElementById('wsSA');
+    const wsDepartment = document.getElementById('wsDepartment');
+    const workPlace = document.getElementById('workPlace');
+    const shiftStart = document.getElementById('shiftStart');
+    const shiftEnd = document.getElementById('shiftEnd');
+    const breadSel = document.getElementById('special_breadwinner');
+    const selfSel = document.getElementById('special_selfFinance');
+    const wsSupName = document.getElementById('wsSupervisorName');
+    const wsSupContact = document.getElementById('wsSupervisorContact');
+    const orphanSel = document.getElementById('orphanSel');
+    const residentSel = document.getElementById('residentSel');
+    const npAddress = document.getElementById('npAddress');
+    const npRegion  = document.getElementById('npRegion');    
+    const npCondition = document.getElementById('npCondition');
+    const scholarHas = document.getElementById('scholarHas');
+    const scholarBlock = document.getElementById('scholarBlock');
+    const scholarType = document.getElementById('scholarType');
+    const govWrap = document.getElementById('govWrap');
+    const govScholar = document.getElementById('govScholar');
+    let autoScholarFromWS = false;
+
+    let step = 1;
+    function setStep(n){
+      step = n;
+      document.querySelectorAll('.pane').forEach(p => p.classList.toggle('active', +p.dataset.step === n));
+      document.querySelectorAll('.step-pill').forEach(p => {
+        const s = +p.dataset.step;
+        p.classList.toggle('active', s === n);
+        p.classList.toggle('done', s < n);
+      });
+    }
+    stepsEl.addEventListener('click', (e)=>{
+      const pill = e.target.closest('.step-pill');
+      if (!pill) return;
+      setStep(+pill.dataset.step);
+    });
+
+    function enableWithin(container, on) {
+      container.querySelectorAll('input, select, textarea').forEach(el => {
+        if (['workingSel','wsTypeSel','orphanSel','residentSel','scholarHas','scholarType'].includes(el.id)) return;
+        el.disabled = !on;
+        if (!on) el.removeAttribute('required');
+      });
+    }
+    function setRequired(list, on){
+      list.forEach(el => on ? el.setAttribute('required','required') : el.removeAttribute('required'));
+    }
+
+    
+    function bindNameOnly(elOrId){
+      const el = typeof elOrId === 'string' ? document.getElementById(elOrId) : elOrId;
+      if (!el) return;
+      el.addEventListener('input', () => {
+        el.value = el.value.replace(/[^A-Za-zÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃÃ‰ÃÃ“Ãš .,'-]/g, '');
+      });
+    }
+    function bindPhoneLimit(elOrId, max=11){
+      const el = typeof elOrId === 'string' ? document.getElementById(elOrId) : elOrId;
+      if (!el) return;
+      el.setAttribute('inputmode', 'numeric');
+      el.setAttribute('maxlength', String(max));
+      el.addEventListener('input', () => {
+        el.value = el.value.replace(/\D/g, '').slice(0, max);
+      });
+    }
+    function setOrphanDateMax(){
+      const today = new Date().toISOString().split('T')[0];
+      const m = document.getElementById('orphanMotherDate');
+      const f = document.getElementById('orphanFatherDate');
+      if (m) m.max = today;
+      if (f) f.max = today;
+    }
+
+    async function lockCourseFromCode(){
+      try{
+        const res = await axios.get(`${API_BASE}/studentprofiling/registration/verify-code`, {
+          params: { code: REG_CODE },
+          headers: { 'ngrok-skip-browser-warning':'true' }
+        });
+        const data = res.data || {};
+        if (data.status !== 'ok' || !data.course){
+          alert('Invalid or expired code. Please start from the Sign Up page.');
+          location.href = 'index.html';
+          return;
+        }
+        const short = String(data.course).toUpperCase();
+        const sel = form.course;
+        let found = false;
+        [...sel.options].forEach(opt => {
+          const txt = (opt.textContent || opt.innerText || '').trim().toUpperCase();
+          if (!found && txt.startsWith(short)) { sel.value = opt.value; found = true; }
+        });
+        sel.disabled = true;
+        sel.style.pointerEvents = 'none';
+        sel.title = `Locked by slot code (${short})`;
+      }catch(e){
+        console.error(e);
+        alert('Could not verify your code. Please try again from Sign Up.');
+        location.href = 'index.html';
+      }
+    }
+
+    function applyInputGuards(){
+      ['firstName','middleName','lastName'].forEach(bindNameOnly);
+      bindPhoneLimit(form.contact, 11);
+      bindNameOnly('wsSupervisorName');
+      bindPhoneLimit('wsSupervisorContact', 11);
+      setOrphanDateMax();
+      ['orphanMotherName','orphanFatherName','orphanGuardian'].forEach(bindNameOnly);
+    }
+    applyInputGuards();
+    lockCourseFromCode();
+
+    
+    function toggleWorking(){
+      const isYes = workingSel.value === 'Yes';
+      wsBlock.style.display = isYes ? 'block' : 'none';
+      enableWithin(wsBlock, isYes);
+      setRequired([wsTypeSel, shiftStart, shiftEnd, breadSel, selfSel, wsSupName, wsSupContact], isYes);
+      if (!isYes){ wsTypeSel.value = ''; workPlace.value = ''; wsDepartment.value = ''; }
+      handleWsType();
+
+      if (isYes) {
+        scholarHas.value = 'Yes';
+        toggleScholar(); 
+        scholarType.value = 'Working Scholarship';
+        toggleScholarType(); 
+        autoScholarFromWS = true;
+      } else if (autoScholarFromWS) {
+        scholarHas.value = '';
+        toggleScholar();
+        scholarType.value = '';
+        toggleScholarType();
+        autoScholarFromWS = false;
+      }
+
+      scholarHas.addEventListener('change', () => { autoScholarFromWS = false; });
+      scholarType.addEventListener('change', () => { autoScholarFromWS = false; });
+
+    }
+    function handleWsType(){
+      const t = wsTypeSel.value;
+      const isOutside = (t === 'Outside') && (workingSel.value === 'Yes');
+      const isSA = (t === 'Student SA') && (workingSel.value === 'Yes');
+      wsOutside.classList.toggle('hidden', !isOutside);
+      wsSA.classList.toggle('hidden', !isSA);
+      setRequired([workPlace], isOutside);
+      setRequired([wsDepartment], isSA);
+    }
+
+    function toggleOrphan(){
+      const isYes = orphanSel.value === 'Yes';
+      const orphanBlock = document.getElementById('orphanBlock');
+      orphanBlock.style.display = isYes ? 'block' : 'none';
+      enableWithin(orphanBlock, isYes);
+      const ids = ['orphanMotherDate','orphanFatherDate','orphanMotherName','orphanFatherName','orphanGuardian','orphanRelation','orphanOccupation'];
+      setRequired(ids.map(id=>document.getElementById(id)), isYes);
+    }
+
+    function toggleResidence(){
+      const isNo = residentSel.value === 'No';
+      document.getElementById('resNote').classList.toggle('hidden', isNo);
+      document.getElementById('npSection').style.display = isNo ? 'block' : 'none';
+      enableWithin(document.getElementById('npSection'), isNo);
+      setRequired([npAddress, npCondition, npRegion], isNo);
+    }
+    
+    function toggleScholar(){
+      const has = scholarHas.value === 'Yes';
+      scholarBlock.classList.toggle('hidden', !has);
+      enableWithin(scholarBlock, has);
+      setRequired([scholarType], has);
+      if (!has){ scholarType.value=''; govScholar.value=''; }
+      toggleScholarType();
+    }
+    function toggleScholarType(){
+      const t = scholarType.value;
+      const showGov = (t === 'Government Scholarship') && (scholarHas.value === 'Yes');
+      govWrap.classList.toggle('hidden', !showGov);
+      setRequired([govScholar], showGov);
+      if (!showGov) govScholar.value='';
+    }
+
+    [workingSel, wsTypeSel].forEach(s => s.addEventListener('change', toggleWorking));
+    [orphanSel].forEach(s => s.addEventListener('change', toggleOrphan));
+    [residentSel].forEach(s => s.addEventListener('change', toggleResidence));
+    [scholarHas].forEach(s => s.addEventListener('change', toggleScholar));
+    [scholarType].forEach(s => s.addEventListener('change', toggleScholarType));
+
+    document.getElementById('btnReview').addEventListener('click', () => {
+      if (!validateAllBeforeReview()) return;
+      openReview();
+    });
+
+    function validateAllBeforeReview(){
+      const req1 = document.querySelectorAll('[data-step="1"] input[required], [data-step="1"] select[required]');
+      for (const el of req1){ if (!el.value || !el.checkValidity()){ setStep(1); el.reportValidity(); return false; } }
+      if (parseInt(ageInput.value || '0', 10) < 18){
+        setStep(1); birthInput.setCustomValidity('You must be at least 18 years old.'); birthInput.reportValidity(); return false;
+      }
+      if (!workingSel.value){ setStep(2); workingSel.reportValidity(); return false; }
+      if (workingSel.value === 'Yes'){
+        const need = [wsTypeSel, shiftStart, shiftEnd, breadSel, selfSel, wsSupName, wsSupContact];
+        if (wsTypeSel.value === 'Outside') need.push(workPlace);
+        if (wsTypeSel.value === 'Student SA') need.push(wsDepartment);
+        for (const el of need){ if (!el.value){ setStep(2); el.reportValidity(); return false; } }
+      }
+      if (!orphanSel.value){ setStep(3); orphanSel.reportValidity(); return false; }
+      if (orphanSel.value === 'Yes'){
+        const ids = ['orphanMotherDate','orphanFatherDate','orphanMotherName','orphanFatherName','orphanGuardian','orphanRelation','orphanOccupation'];
+        for (const id of ids){ const el = document.getElementById(id); if (!el.value){ setStep(3); el.reportValidity(); return false; } }
+      }
+      
+      if (!residentSel.value){ setStep(4); residentSel.reportValidity(); return false; }
+      if (residentSel.value === 'No'){
+        for (const el of [npAddress, npRegion, npCondition]){ if (!el.value){ setStep(4); el.reportValidity(); return false; } }
+      }
+      
+      if (!scholarHas.value){ setStep(5); scholarHas.reportValidity(); return false; }
+      if (scholarHas.value === 'Yes'){
+        if (!scholarType.value){ setStep(5); scholarType.reportValidity(); return false; }
+        if (scholarType.value === 'Government Scholarship' && !govScholar.value){
+          setStep(5); govScholar.reportValidity(); return false;
+        }
+      }
+      return true;
+    }
+
+    
+    function fileToBase64NoPrefix(file) {
+      return new Promise((resolve, reject) => {
+        if (!file) return resolve(null);
+        const r = new FileReader();
+        r.onload = () => {
+          const s = r.result; const i = s.indexOf(',');
+          resolve(i > -1 ? s.slice(i + 1) : s);
+        };
+        r.onerror = reject; r.readAsDataURL(file);
+      });
+    }
+    function truncate(s, max) { return (s ?? '').toString().slice(0, max); }
+    function onlyDigits(s, max) { return (s ?? '').replace(/\D/g,'').slice(0, max); }
+    function toBoolYesNo(str) { if (!str) return null; return String(str).toLowerCase() === 'yes'; }
+    function normalizeReligion(val) {
+      const map = {
+        "United Church of Christ in the Philippines": "UCCP",
+        "Philippine Independent Church": "Phil. Indep. Church",
+        "Bible Baptist Church": "Bible Baptist",
+        "Jehovah's Witnesses": "Jehovah's Witnesses"
+      };
+      return truncate(map[val] || val, 20);
+    }
+    function shortCourse(text) { return truncate((text || '').split(' - ')[0].trim().toUpperCase(), 10); }
+
+    
+    const reviewMask = document.getElementById('reviewMask');
+    const reviewTable = document.getElementById('reviewTable');
+    document.getElementById('btnRevBack').addEventListener('click', ()=> reviewMask.style.display='none');
+    document.getElementById('btnRevConfirm').addEventListener('click', ()=> {
+      reviewMask.style.display='none';
+      document.getElementById('noticeModal').style.display='flex';
+    });
+
+    function openReview(){
+      const getVal = el => (el && el.value) ? el.value : '-';
+      const rows = [
+        ['First Name', document.getElementById('firstName').value],
+        ['Middle Name', document.getElementById('middleName').value],
+        ['Last Name', document.getElementById('lastName').value],
+        ['Age (view-only here)', form.age.value],
+        ['Gender', form.gender.value],
+        ['Year Level', form.year.value],
+        ['Course', form.course.value],
+        ['Birthdate', form.birth.value],
+        ['Contact info', form.contact.value],
+        ['Email', form.email.value],
+        ['Address', form.address.value],
+        ['Religion', document.getElementById('religion').value],
+        ['Nationality', form.nationality.value],
+        ['Working Student', getVal(workingSel)],
+        ['WS Type', getVal(wsTypeSel)],
+        ['Place of Work / Department', (wsTypeSel.value === 'Student SA') ? getVal(wsDepartment) : getVal(workPlace)],
+        ['Supervisor', getVal(wsSupName)],
+        ['Supervisor Contact', getVal(wsSupContact)],
+        ['Shift Hours', (shiftStart.value && shiftEnd.value) ? `${shiftStart.value} - ${shiftEnd.value}` : '-'],
+        ['Breadwinner', getVal(breadSel)],
+        ['Self Financing', getVal(selfSel)],
+        ['Orphan Student', getVal(orphanSel)],
+        ['Permanent Resident (Davao)', getVal(residentSel)],
+        ['NP Address', getVal(npAddress)],
+        ['Region', getVal(npRegion)],                  
+        ['Living Condition', getVal(npCondition)],
+        ['Has Scholarship', getVal(scholarHas)],       
+        ['Scholarship Type', getVal(scholarType)],     
+        ['Government Scholarship', getVal(govScholar)], 
+        ['Regular/Irregular', document.getElementById('regularity').value],
+        ['Class Schedule', document.getElementById('classSchedule').value]
+      ];
+      reviewTable.innerHTML = rows.map(([k,v])=>`<tr><td>${k}</td><td>${v || ''}</td></tr>`).join('');
+      reviewMask.style.display='flex';
+    }
+
+    
+    const noticeModal = document.getElementById('noticeModal');
+    document.getElementById('btnCancel').addEventListener('click', ()=> noticeModal.style.display='none');
+    document.getElementById('btnOk').addEventListener('click', async ()=>{
+      noticeModal.style.display='none';
+      await submitRegistration();
+    });
+
+    
+    toggleWorking(); toggleOrphan(); toggleResidence(); toggleScholar(); toggleScholarType();
+
+    
+    const successMask = document.getElementById('successMask');
+    const tempPasswordEl = document.getElementById('tempPassword');
+    document.getElementById('btnBack').addEventListener('click', ()=>{
+      sessionStorage.removeItem('reg_code');
+      localStorage.removeItem('reg_code');
+      location.href = 'index.html';
+    });
+
+    
+    async function submitRegistration() {
+      updateAgeFromBirth();
+      if (parseInt(ageInput.value || '0', 10) < 18){
+        setStep(1); birthInput.reportValidity(); return;
+      }
+
+      const btns = document.querySelectorAll('.btn');
+      btns.forEach(b=> b.disabled = true);
+
+      try {
+        const base64 = await fileToBase64NoPrefix(photoInput.files?.[0]);
+
+        const firstName = truncate(document.getElementById('firstName').value, 15);
+        const middleName = truncate(document.getElementById('middleName').value, 15);
+        const lastName  = truncate(document.getElementById('lastName').value, 15);
+
+        const age = parseInt(form.age.value || '0', 10);
+        const gender = form.gender.value;
+        const yearLevel = truncate(form.year.value || '', 10);
+        const course = shortCourse(form.course.value);
+        const birthdate = form.birth.value;
+        const contactInfo = onlyDigits(form.contact.value, 11);
+        const email = truncate(form.email.value || '', 80);
+        const address = truncate(form.address.value || '', 50);
+        const studentReligion = normalizeReligion(document.getElementById('religion').value || '');
+        const studentNationality = truncate(form.nationality.value || '', 20);
+
+        const workingStudent = (workingSel.value === 'Yes');
+        const orphan = (orphanSel.value === 'Yes');
+        const davaoPermanentResidence = (residentSel.value === 'Yes');
+
+        const regularity = document.getElementById('regularity').value;      // "Regular Student" | "Irregular Student"
+        const classSchedule = document.getElementById('classSchedule').value; // "Morning" | "Afternoon" | "Evening"
+
+        const wsType = wsTypeSel.value || null;
+        let shiftHours = '';
+        if (workingStudent) {
+          const ss = shiftStart.value, se = shiftEnd.value;
+          shiftHours = (ss && se) ? `${ss}-${se}` : '';
+        }
+        const breadwinner = toBoolYesNo(breadSel.value);
+        const selfFinance = toBoolYesNo(selfSel.value);
+
+        const placeOfWork = workingStudent
+          ? (wsType === 'Student SA' ? '' : truncate(workPlace.value || '', 100))
+          : '';
+        const department = workingStudent && wsType === 'Student SA'
+          ? truncate(wsDepartment.value || '', 40)
+          : '';
+
+        const supervisorName = truncate(wsSupName.value || '', 50);
+        const supervisorContact = onlyDigits(wsSupContact.value || '', 20);
+
+        // >>> NEW: scholarship fields + region
+        const hasScholarship = (scholarHas.value === 'Yes');
+        const scholarshipType = hasScholarship ? (scholarType.value || '') : '';
+        const governmentScholarship = (hasScholarship && scholarshipType === 'Government Scholarship') ? (govScholar.value || '') : '';
+        const region = davaoPermanentResidence ? '' : truncate(npRegion.value || '', 80);
+
+        const payload = {
+          code: REG_CODE,
+          accountEmail: email,
+          student: {
+            accountId: 0,
+            firstName, middleName, lastName,
+            course, gender, age, birthdate,
+            yearLevel, contactInfo, email, address,
+            parentGuardianName: "", studentNationality, studentReligion,
+            seniorHighSchool: "",
+            profilePictureBase64: base64,
+            regularOrIrregular: regularity,
+            classSchedule: classSchedule
+            },
+            additionalInfo: {
+            accountId: 0,
+            workingStudent,
+            workingStudentType: wsType,
+            department,
+            supervisorName,
+            supervisorContact,
+            placeOfWork,
+            shiftHours: truncate(shiftHours, 50),
+            breadwinner: breadwinner,
+            selfFinancing: selfFinance,
+            orphan,
+            dateLossMother: document.getElementById('orphanMotherDate').value || null,
+            dateLossFather: document.getElementById('orphanFatherDate').value || null,
+            nameOfParentMother: truncate(document.getElementById('orphanMotherName').value || '', 100),
+            nameOfParentFather: truncate(document.getElementById('orphanFatherName').value || '', 100),
+            currentGuardian: truncate(document.getElementById('orphanGuardian').value || '', 100),
+            guardianRelationship: truncate(document.getElementById('orphanRelation').value || '', 15),
+            guardianOccupation: truncate(document.getElementById('orphanOccupation').value || '', 100),
+            guardianIncome: truncate(document.getElementById('orphanIncome').value || '', 100),
+            davaoPermanentResidence,
+            currentAddress: truncate(npAddress.value || '', 100),
+            livingCondition: truncate(npCondition.value || '', 50),
+            region,                         
+            hasScholarship,                  
+            scholarshipType,                 
+            governmentScholarship,           
+            status: "Currently Enrolled"
+          }
+        };
+
+        const res = await axios.post(
+          `${API_BASE}/studentprofiling/registration/register-with-code`,
+          payload,
+          { headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' } }
+        );
+
+        const data = res.data || {};
+        if (data.status === 'ok') {
+          if (data.accountId != null) localStorage.setItem('accountId', String(data.accountId));
+          tempPasswordEl.textContent = data.passwordIssued ? String(data.passwordIssued) : '(generated)';
+          successMask.style.display = 'flex';
+        } else {
+          alert(data.message || 'Registration failed. Please check your inputs and try again.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Registration failed. Please check your inputs and try again.');
+      } finally {
+        btns.forEach(b=> b.disabled = false);
+      }
+    }
+  </script>
+</body>
+</html>
+
+
+
+

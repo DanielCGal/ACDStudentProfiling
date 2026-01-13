@@ -1,0 +1,66 @@
+1. account_ID = 1, account_password = password123, student_email = programheadbsit@gmail.com, user_role = program head/bsit
+2. account_ID = 2, account_password = password123, student_email = programheadbsba@gmail.com, user_role = program head/bsba
+3. account_ID = 3, account_password = password123, student_email = programheadbsed@gmail.com, user_role = program head/bsed
+4. account_ID = 4, account_password = password123, student_email = programheadbeed@gmail.com, user_role = program head/beed
+5. account_ID = 5, account_password = password123, student_email = programheadbshm@gmail.com, user_role = program head/bshm
+6. account_ID = 6, account_password = password123, student_email = programheadbssw@gmail.com, user_role = program head/bssw
+7. account_ID = 7, account_password = password123, student_email = dean@gmail.com, user_role = dean
+8. account_ID = 8, account_password = password123, student_email = secretary@gmail.com, user_role = secretary
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: studentprofiling
+      POSTGRES_PASSWORD: student123456789
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d:ro   # <-- run SQL at first boot
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    restart: always
+
+volumes:
+  postgres_data:
+
+
+initdb/001_accounts.sql
+
+-- initdb/001_accounts.sql
+-- Runs automatically on first database initialization.
+
+CREATE TABLE IF NOT EXISTS public.accounts (
+  account_id BIGINT PRIMARY KEY,
+  account_password VARCHAR(255),
+  student_email VARCHAR(255),
+  user_role VARCHAR(255)
+);
+
+INSERT INTO public.accounts (account_id, account_password, student_email, user_role) VALUES
+  (1, 'password123', 'programheadbsit@gmail.com', 'program head/bsit'),
+  (2, 'password123', 'programheadbsba@gmail.com', 'program head/bsba'),
+  (3, 'password123', 'programheadbsed@gmail.com', 'program head/bsed'),
+  (4, 'password123', 'programheadbeed@gmail.com', 'program head/beed'),
+  (5, 'password123', 'programheadbshm@gmail.com', 'program head/bshm'),
+  (6, 'password123', 'programheadbssw@gmail.com', 'program head/bssw'),
+  (7, 'password123', 'dean@gmail.com', 'dean'),
+  (8, 'password123', 'secretary@gmail.com', 'secretary')
+ON CONFLICT (account_id) DO NOTHING;
+
+
+docker compose -f docker.compose.yml down -v
+docker compose -f docker.compose.yml up -d

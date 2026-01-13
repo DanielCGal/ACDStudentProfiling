@@ -1,0 +1,171 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Poppins, sans-serif;
+}
+body {
+  background: #78F2FF;
+  color: #000;
+  overflow: hidden;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+.sidebar {
+  background: #1DA5DB;
+  color: #fff;
+  padding: 20px;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+html, body { height:100%; }
+.bg-rays { 
+  position: fixed; inset: -40vh -40vw; 
+  width: 180vw; height: 180vh; 
+  pointer-events: none; user-select: none; 
+  z-index: 0;
+}
+.bg-rays .ray {
+  position: absolute; inset: 0;
+  background: rgba(152,199,238,.623); 
+  clip-path: polygon(50% 50%, 100% 49%, 100% 51%);
+}
+.bg-rays .r1{transform:rotate(0deg)}
+.bg-rays .r2{transform:rotate(45deg)}
+.bg-rays .r3{transform:rotate(90deg)}
+.bg-rays .r4{transform:rotate(135deg)}
+.bg-rays .r5{transform:rotate(180deg)}
+.bg-rays .r6{transform:rotate(225deg)}
+.bg-rays .r7{transform:rotate(270deg)}
+.bg-rays .r8{transform:rotate(315deg)}
+.sidebar,.main,.card,.card * { position: relative; z-index: 1; }
+.avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #fff;
+  margin-bottom: 16px;
+}
+.side-btn {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #1565c0;
+  color: #fff;
+  cursor: pointer;
+  width: 100%;
+}
+.main {
+  padding: 24px;
+  overflow: auto;
+}
+.search-wrap {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1px;
+}
+#studTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+#studTable th,
+#studTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+.card {
+  background: #44888F;
+  color: #fff;
+  padding: 24px;
+  border-radius: 12px;
+}
+.card input {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.back-btn {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #0d47a1;
+  color: #fff;
+  cursor: pointer;
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 16px;
+}
+.photo-box {
+  width: 150px;
+  height: 150px;
+  background: #fff;
+  border-radius: 8px;
+}
+.quad {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.row,
+.row-full {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+.spec-grid {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 16px;
+}
+.spec-title {
+  margin-bottom: 16px;
+}
+.ray {
+  position: absolute;
+  width: 180vw;
+  height: 180vh;
+  top: -40vh;
+  left: -40vw;
+  background: rgba(33, 150, 243, 0.06);
+  clip-path: polygon(50% 50%, 100% 49%, 100% 51%);
+  pointer-events: none;
+}
+.r1 { transform: rotate(0deg); }
+.r2 { transform: rotate(45deg); }
+.r3 { transform: rotate(90deg); }
+.r4 { transform: rotate(135deg); }
+.r5 { transform: rotate(180deg); }
+.r6 { transform: rotate(225deg); }
+.r7 { transform: rotate(270deg); }
+.r8 { transform: rotate(315deg); }
+#listView {
+  background: #c5f7ed;
+  padding: 20px;
+  border-radius: 20px;
+}
+#listView table {
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+#studTable th,
+#studTable td {
+  background: transparent;
+}
+.chart { overflow: hidden; }
+.chart .holder { width: 100%; height: 220px; }
+.chart .holder > div,
+.chart svg {
+  width: 100% !important;
+  height: 100% !important;
+}

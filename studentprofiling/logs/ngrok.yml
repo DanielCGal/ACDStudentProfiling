@@ -1,0 +1,9 @@
+version: 3
+region: ap
+tunnels:
+  backend:
+    proto: http
+    addr: 8080
+  frontend:
+    proto: http
+    addr: 5500

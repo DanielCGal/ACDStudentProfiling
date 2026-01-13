@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dean Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif}
+    body{background:#78F2FF;color:#000;min-height:100vh}
+    .sidebar{
+      position:fixed; inset:0 auto 0 0; width:260px; height:100vh;
+      background:#C7E7EB; color:#fff; padding:20px;
+      display:flex; flex-direction:column; align-items:center; gap:12px;
+      box-shadow:2px 0 0 rgba(0,0,0,.06)
+    }
+    .avatar{width:90px;height:90px;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 4px #d3dde6}
+    .side-btn{width:100%;padding:10px 14px;border:0;border-radius:8px;background:#1565c0;color:#fff;cursor:pointer}
+    .side-btn:active{transform:translateY(1px)}
+    
+    .main{
+      margin-left:260px;       
+      padding:24px;            
+      min-height:100vh;
+      display:flex;            
+      align-items:flex-start;
+      justify-content:flex-start;
+    }
+
+    .card{
+      width:100%;
+      max-width:980px;
+      background:#44888F; color:#fff;
+      padding:24px; border-radius:12px;
+      box-shadow:0 8px 18px rgba(0,0,0,.12)
+    }
+    .card h1{margin-bottom:16px}
+    .reg-form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    label{display:flex;flex-direction:column;gap:6px;font-weight:600}
+    input{padding:10px;border:0;border-radius:8px;background:#e6f1f7;color:#000}
+    .actions{grid-column:1/-1;display:flex;gap:10px}
+    
+    .ray{position:fixed;width:180vw;height:180vh;top:-40vh;left:-40vw;background:rgba(33,150,243,.06);clip-path:polygon(50% 50%,100% 49%,100% 51%);pointer-events:none}
+    .r1{transform:rotate(0deg)} .r2{transform:rotate(45deg)} .r3{transform:rotate(90deg)} .r4{transform:rotate(135deg)}
+    .r5{transform:rotate(180deg)} .r6{transform:rotate(225deg)} .r7{transform:rotate(270deg)} .r8{transform:rotate(315deg)}
+   
+    @media (max-width:880px){
+      .sidebar{position:static;width:100%;height:auto;flex-direction:row;justify-content:center;gap:8px}
+      .main{margin-left:0;padding:16px}
+      .reg-form{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="ray r1"></div><div class="ray r2"></div><div class="ray r3"></div><div class="ray r4"></div>
+  <div class="ray r5"></div><div class="ray r6"></div><div class="ray r7"></div><div class="ray r8"></div>
+
+  <aside class="sidebar">
+    <div class="avatar"></div>
+    <h2 style="text-align:center">Welcome<br>Back!</h2>
+    <button class="side-btn" id="accountBtn">Account</button>
+    <button class="side-btn" id="logoutBtn">Logout</button>
+    <button class="side-btn" id="backBtn">Back</button>
+  </aside>
+
+  <main class="main">
+    <section class="card">
+      <h1>Account Settings</h1>
+      <form id="accountForm" class="reg-form" autocomplete="off">
+        <label>Name<input id="name" type="text" required disabled /></label>
+        <label>Email<input id="email" type="email" required disabled /></label>
+        <div class="actions">
+          <button type="button" class="side-btn" id="editBtn">Edit</button>
+          <button type="button" class="side-btn" style="background:#999;display:none" id="doneBtn">Done</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const byId=id=>document.getElementById(id);
+    const profileKey='dean_profile';
+    function loadProfile(){
+      const saved=JSON.parse(localStorage.getItem(profileKey)||'{}');
+      byId('name').value=saved.name||'Dean Name';
+      byId('email').value=saved.email||'dean@example.edu';
+    }
+    function saveProfile(){
+      localStorage.setItem(profileKey,JSON.stringify({
+        name:byId('name').value.trim(),
+        email:byId('email').value.trim()
+      }));
+    }
+    function setEditing(on){
+      byId('name').disabled=!on;
+      byId('email').disabled=!on;
+      byId('editBtn').style.display=on?'none':'inline-block';
+      byId('doneBtn').style.display=on?'inline-block':'none';
+      if(on) byId('name').focus();
+    }
+    loadProfile(); setEditing(false);
+    byId('editBtn').onclick=()=>setEditing(true);
+    byId('doneBtn').onclick=()=>{saveProfile();setEditing(false)};
+    byId('logoutBtn').onclick=()=>{localStorage.removeItem('session');location.href='index.html'};
+    byId('backBtn').onclick=()=>history.back();
+  </script>
+</body>
+</html>

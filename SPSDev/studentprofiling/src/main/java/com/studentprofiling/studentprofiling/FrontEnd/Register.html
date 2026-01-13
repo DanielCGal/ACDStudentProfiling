@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Registration</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --clr-sky: #2196f3;
+      --clr-dark-sky: #0d47a1;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Poppins, sans-serif;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #1DA5DB;
+    }
+    .ray {
+      position: absolute;
+      width: 180vw;
+      height: 180vh;
+      top: -40vh;
+      left: -40vw;
+      background: #6ABAE6;
+      clip-path: polygon(50% 50%, 100% 49%, 100% 51%);
+      pointer-events: none;
+    }
+    .r1 { transform: rotate(0deg); }
+    .r2 { transform: rotate(45deg); }
+    .r3 { transform: rotate(90deg); }
+    .r4 { transform: rotate(135deg); }
+    .r5 { transform: rotate(180deg); }
+    .r6 { transform: rotate(225deg); }
+    .r7 { transform: rotate(270deg); }
+    .r8 { transform: rotate(315deg); }
+    .card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 900px;
+      padding: 20px 30px;
+      background: var(--clr-sky);
+      border-radius: 30px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      color: #fff;
+    }
+    .card h1 {
+      text-align: center;
+      font-size: 1.8rem;
+    }
+    .reg-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px 30px;
+    }
+    .reg-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .reg-row-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .photo-wrapper {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      border-radius: 24px;
+      background: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .photo-wrapper input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+    }
+    .photo-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 24px;
+    }
+    label {
+      font-weight: 600;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #fff;
+      color: #000;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+    button {
+      width: 140px;
+      padding: 10px;
+      border: none;
+      border-radius: 12px;
+      background: var(--clr-dark-sky);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      justify-self: end;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #09377a;
+    }
+    @media (max-width: 1080px) {
+      .card {
+        width: 95%;
+        padding: 15px;
+      }
+      .reg-form {
+        grid-template-columns: 1fr;
+      }
+      .reg-row-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .photo-wrapper {
+        width: 100px;
+        height: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ray r1"></div>
+  <div class="ray r2"></div>
+  <div class="ray r3"></div>
+  <div class="ray r4"></div>
+  <div class="ray r5"></div>
+  <div class="ray r6"></div>
+  <div class="ray r7"></div>
+  <div class="ray r8"></div>
+
+  <div class="card">
+    <h1>Student Registration</h1>
+    <form id="regForm" class="reg-form">
+      <div class="reg-col">
+        <label>Student Photo</label>
+        <div class="photo-wrapper">
+          <span id="photoPrompt">Click to add image</span>
+          <input type="file" id="photoInput" accept="image/*" />
+          <img id="photoPreview" style="display: none" />
+        </div>
+        <label>Name</label>
+        <input type="text" name="name" placeholder="Name" required />
+        <div class="reg-row-4">
+          <div>
+            <label>Age</label>
+            <input type="number" name="age" min="1" placeholder="18" required />
+          </div>
+          <div>
+            <label>Gender</label>
+            <select name="gender" required>
+              <option value="" disabled selected>-</option>
+              <option>Male</option>
+              <option>Female</option>
+            </select>
+          </div>
+          <div>
+            <label>Year Level</label>
+            <input type="text" name="year" placeholder="1st" required />
+          </div>
+          <div>
+            <label>Course</label>
+            <input type="text" name="course" placeholder="BSSW" required />
+          </div>
+        </div>
+        <label>Birth Date</label>
+        <input type="date" name="birth" required />
+        <label>Contact Info</label>
+        <input type="text" name="contact" placeholder="xxxx-xxx-xxxx" required />
+      </div>
+      <div class="reg-col">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="acd123@example.com" required />
+        <label>Address</label>
+        <input type="text" name="address" placeholder="Street, City" required />
+        <label>Religion</label>
+        <input type="text" name="religion" placeholder="Optional" />
+        <label>Student Nationality</label>
+        <input type="text" name="nationality" placeholder="Filipino" required />
+        <label>Working Student?</label>
+        <select name="working" required>
+          <option value="" disabled selected>-</option>
+          <option>Yes</option>
+          <option>No</option>
+        </select>
+        <label>Orphan?</label>
+        <select name="orphan" required>
+          <option value="" disabled selected>-</option>
+          <option>Yes</option>
+          <option>No</option>
+        </select>
+        <label>Permanent Resident?</label>
+        <select name="davaoResident" required>
+          <option value="" disabled selected>-</option>
+          <option>Yes</option>
+          <option>No</option>
+        </select>
+      </div>
+      <button type="submit">NEXT</button>
+    </form>
+  </div>
+
+  <script>
+    const photoInput = document.getElementById('photoInput');
+    const photoPreview = document.getElementById('photoPreview');
+    const photoPrompt = document.getElementById('photoPrompt');
+
+    photoInput.addEventListener('change', () => {
+      if (!photoInput.files.length) return;
+      photoPreview.src = URL.createObjectURL(photoInput.files[0]);
+      photoPreview.style.display = 'block';
+      photoPrompt.style.display = 'none';
+    });
+
+    document.getElementById('regForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const students = JSON.parse(localStorage.getItem('students') || '[]');
+      const fd = new FormData(e.target);
+      const student = { id: students.length + 1 };
+      fd.forEach((value, key) => {
+        student[key] = value;
+      });
+      students.push(student);
+      localStorage.setItem('students', JSON.stringify(students));
+      location.href = `profile.html?id=${student.id}`;
+    });
+  </script>
+</body>
+</html>

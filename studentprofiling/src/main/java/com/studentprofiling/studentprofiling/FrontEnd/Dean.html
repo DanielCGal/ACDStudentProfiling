@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dean Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="Dean.css">
+</head>
+<body>
+  <div class="ray r1"></div>
+  <div class="ray r2"></div>
+  <div class="ray r3"></div>
+  <div class="ray r4"></div>
+  <div class="ray r5"></div>
+  <div class="ray r6"></div>
+  <div class="ray r7"></div>
+  <div class="ray r8"></div>
+
+  
+    <aside class="sidebar">
+      <div class="avatar"></div>
+      <h2>Welcome<br>Back!</h2>
+      <button class="side-btn" id="accountBtn">Account</button>
+      <button class="side-btn" id="logoutBtn">Logout</button>
+    </aside>
+
+
+  </aside>
+
+  <main class="main">
+    <section id="listView">
+      <div class="search-wrap">
+        <input id="searchInput" type="text" placeholder="Search Student">
+      </div>
+      <table id="studTable">
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Year Level</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+ <script>
+  const q = s => document.querySelector(s);
+
+  const students = [
+    { id:1,name:"Daniel C. Galam",year:"3rd-Year",age:20,gender:"Male",course:"BSIT",birth:"2004-02-01",nat:"Filipino",contact:"09xx-xxx-xxxx",email:"daniel@acd.edu.ph",addr:"Davao City",rel:"Catholic" }
+  ];
+
+  function render(list){
+    const tbody = q("#studTable tbody");
+    tbody.innerHTML = "";
+    list.forEach(s=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td><a href="profile.html?id=${s.id}">${s.name}</a></td><td>${s.year}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  render(students);
+
+  q("#searchInput").addEventListener("keyup", e => {
+    const v = e.target.value.toLowerCase();
+    render(students.filter(s=>s.name.toLowerCase().includes(v)));
+  });
+
+  q("#accountBtn").onclick = () => location.href = "DeanAccount.html";
+  q("#logoutBtn").onclick  = () => location.href = "index.html";
+</script>
+

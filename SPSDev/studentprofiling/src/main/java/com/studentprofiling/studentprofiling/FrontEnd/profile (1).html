@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Student Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif}
+  body{background:#78F2FF;color:#000;min-height:100vh}
+  .sidebar{position:fixed;inset:0 auto 0 0;width:260px;height:100vh;background:#C7E7EB;color:#0b0f19;padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .avatar{width:84px;height:84px;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 4px #d3dde6}
+  .side-btn{width:100%;padding:10px 14px;border:0;border-radius:22px;background:#0d47a1;color:#fff;cursor:pointer;font-weight:600}
+  .main{margin-left:260px;padding:24px;min-height:100vh}
+  .card{background:#3e8086;color:#fff;border-radius:28px;padding:22px;max-width:1100px;box-shadow:0 8px 18px rgba(0,0,0,.12)}
+  .hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .hdr h1{font-size:28px}
+  .detail-grid{display:grid;grid-template-columns:280px 1fr;gap:22px;margin-top:8px}
+  .photo{width:280px;height:280px;border-radius:32px;background:#f3f6f8}
+  .lbl{font-weight:700;margin:6px 0 4px}
+  .row{display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:center}
+  .row-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .input{width:100%;padding:12px 14px;border:0;border-radius:26px;background:#ddd;color:#000}
+  .long{width:100%}
+  .section{margin-top:18px}
+  .subhead{font-weight:800;margin:18px 0 6px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .btn{padding:10px 16px;border:0;border-radius:22px;font-weight:700;cursor:pointer}
+  .primary{background:#0b5fc4;color:#fff}
+  .muted{background:#999;color:#fff}
+  .right{display:flex;gap:10px;margin-left:auto}
+  .footer-actions{display:flex;justify-content:flex-end;margin-top:14px}
+  @media (max-width:1100px){.detail-grid{grid-template-columns:1fr}.row{grid-template-columns:1fr}.row-4{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+  @media (max-width:980px){.main{margin-left:0}.sidebar{position:static;width:100%;height:auto;flex-direction:row;justify-content:center}}
+</style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="avatar"></div>
+    <div style="font-weight:700;line-height:1.2;text-align:left;width:100%">Welcome<br/>Back!</div>
+    <button class="side-btn" id="logoutBtn">Logout</button>
+    <button class="side-btn" id="editProfileBtn">Edit Profile</button>
+    <button class="side-btn" id="backDeanBtn" style="display:none">Back to Dean Page</button>
+  </aside>
+
+  <main class="main">
+    <section class="card">
+      <div class="hdr">
+        <h1>Student Profile</h1>
+        <div class="right">
+          <button class="btn primary" id="saveBtn" style="display:none">Save</button>
+          <button class="btn muted" id="cancelBtn" style="display:none">Cancel</button>
+          <button class="btn muted" id="backBtn" style="display:none">Back</button>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="lbl">Student Photo</div>
+          <div class="photo" id="photoBox"></div>
+        </div>
+        <div>
+          <div class="lbl">Name</div>
+          <input class="input long" id="name" disabled>
+          <div class="row-4 section">
+            <div><div class="lbl">Age</div><input class="input" id="age" disabled></div>
+            <div><div class="lbl">Gender</div><input class="input" id="gender" disabled></div>
+            <div><div class="lbl">Year Level</div><input class="input" id="year" disabled></div>
+            <div><div class="lbl">Course</div><input class="input" id="course" disabled></div>
+          </div>
+          <div class="row section"><div class="lbl">BirthDate</div><input class="input" id="birth" disabled></div>
+          <div class="row section"><div class="lbl">Student Nationality</div><input class="input" id="nat" disabled></div>
+          <div class="section"><div class="lbl">Contact Info</div><input class="input long" id="contact" disabled></div>
+          <div class="section"><div class="lbl">Email</div><input class="input long" id="email" disabled></div>
+          <div class="section"><div class="lbl">Address</div><input class="input long" id="addr" disabled></div>
+          <div class="section"><div class="lbl">Religion</div><input class="input long" id="rel" disabled></div>
+          <div class="footer-actions">
+            <button class="btn primary" id="specialBtn">Special Status (View)</button>
+          </div>
+          <div id="specialSection" style="display:none">
+            <div class="subhead">Special Status</div>
+            <div class="section"><div class="lbl">Place of Work</div><input class="input long" id="workPlace" disabled></div>
+            <div class="section"><div class="lbl">Shift Hours</div><input class="input long" id="shiftHours" disabled></div>
+            <div class="grid2 section">
+              <div><div class="lbl">Are you the Breadwinner?</div><input class="input" id="breadwinner" disabled></div>
+              <div><div class="lbl">Are you financing your school?</div><input class="input" id="selfFinance" disabled></div>
+            </div>
+            <div class="grid2 section">
+              <div><div class="lbl">Date of Parental Loss (Mother)</div><input class="input" id="motherLossDate" type="date" disabled></div>
+              <div><div class="lbl">Date of Parental Loss (Father)</div><input class="input" id="fatherLossDate" type="date" disabled></div>
+              <div><div class="lbl">Name of Parent (Mother)</div><input class="input" id="motherName" disabled></div>
+              <div><div class="lbl">Name of Parent (Father)</div><input class="input" id="fatherName" disabled></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const students = JSON.parse(localStorage.getItem('students') || '[]');
+  const role = localStorage.getItem('role') || 'student';
+  const params = new URLSearchParams(location.search);
+  const id = parseInt(params.get('id'));
+  let s = students.find(x => String(x.id) === String(id)) || {};
+
+  function setV(id,val){ const el=$(id); if(el) el.value = val ?? ''; }
+  setV('name',s.name); setV('age',s.age); setV('gender',s.gender); setV('year',s.year);
+  setV('course',s.course); setV('birth',s.birth); setV('nat',s.nationality||s.nat);
+  setV('contact',s.contact); setV('email',s.email); setV('addr',s.address||s.addr);
+  setV('rel',s.religion||s.rel);
+  const sp=s.specialStatus||{};
+  setV('workPlace',sp.workPlace); setV('shiftHours',sp.shiftHours);
+  setV('breadwinner',sp.breadwinner); setV('selfFinance',sp.selfFinance);
+  setV('motherLossDate',sp.motherLossDate); setV('fatherLossDate',sp.fatherLossDate);
+  setV('motherName',sp.motherName); setV('fatherName',sp.fatherName);
+
+  function setEditing(on){
+    document.querySelectorAll('.input').forEach(i => i.disabled = !on);
+    $('saveBtn').style.display = on ? 'inline-block' : 'none';
+    $('cancelBtn').style.display = on ? 'inline-block' : 'none';
+    $('specialSection').style.display = on ? 'block' : 'none';
+  }
+
+  if(role === 'dean' || role === 'secretary' || role === 'programDean'){
+    $('editProfileBtn').style.display = 'none';
+    $('backDeanBtn').style.display = 'block';
+    $('backBtn').style.display = 'inline-block';
+  } else {
+    $('editProfileBtn').onclick = () => setEditing(true);
+  }
+
+  $('backDeanBtn').onclick = () => location.href = 'Dean.html';
+  $('backBtn').onclick = () => history.back();
+  $('cancelBtn').onclick = () => location.reload();
+
+  $('saveBtn').onclick = () => {
+    s = {
+      ...s,
+      name:$('name').value, age:$('age').value, gender:$('gender').value,
+      year:$('year').value, course:$('course').value, birth:$('birth').value,
+      nationality:$('nat').value, contact:$('contact').value, email:$('email').value,
+      address:$('addr').value, religion:$('rel').value,
+      specialStatus:{
+        workPlace:$('workPlace').value, shiftHours:$('shiftHours').value,
+        breadwinner:$('breadwinner').value, selfFinance:$('selfFinance').value,
+        motherLossDate:$('motherLossDate').value, fatherLossDate:$('fatherLossDate').value,
+        motherName:$('motherName').value, fatherName:$('fatherName').value
+      }
+    };
+    const arr = JSON.parse(localStorage.getItem('students') || '[]');
+    const idx = arr.findIndex(x => String(x.id) === String(id));
+    if(idx>-1) arr[idx]=s; else arr.push({...s,id});
+    localStorage.setItem('students', JSON.stringify(arr));
+    setEditing(false);
+  };
+
+  $('specialBtn').onclick = () => location.href = `special-status.html?id=${id}`;
+  $('logoutBtn').onclick = () => { localStorage.removeItem('session'); location.href = 'index.html'; };
+</script>
+</body>
+</html>

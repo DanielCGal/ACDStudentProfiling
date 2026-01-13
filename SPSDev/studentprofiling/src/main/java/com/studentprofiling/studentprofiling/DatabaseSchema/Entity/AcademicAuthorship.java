@@ -1,0 +1,52 @@
+package com.studentprofiling.studentprofiling.DatabaseSchema.Entity;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "academic_authorships")
+public class AcademicAuthorship {
+
+    public enum Type { Research, Capstone, OJT_Portfolio, Project }
+    public enum Status { PENDING, ACCEPTED, REJECTED }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable=false)
+    private Integer accountId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length=20, nullable=false)
+    private Type type;
+
+    @Column(length=100, nullable=false)
+    private String description;   
+
+    @Column(length=120)
+    private String date;          
+
+    @Column(length=255)
+    private String proofPath;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length=10, nullable=false)
+    private Status status = Status.PENDING;
+
+    public Long getId() { return id; }
+    public Integer getAccountId() { return accountId; }
+    public void setAccountId(Integer accountId) { this.accountId = accountId; }
+    public Type getType() { return type; }
+    public void setType(Type type) { this.type = type; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public String getDate() { return date; }
+    public void setDate(String date) { this.date = date; }
+    public String getProofPath() { return proofPath; }
+    public void setProofPath(String proofPath) { this.proofPath = proofPath; }
+    public Status getStatus(){ return status; }
+    public void setStatus(Status status){ this.status = status; }
+
+
+    
+}

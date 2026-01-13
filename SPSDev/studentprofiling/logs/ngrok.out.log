@@ -1,0 +1,15 @@
+t=2025-10-26T17:56:05+0800 lvl=info msg="command usage" msg="Flag --region has been deprecated, ngrok automatically chooses the region with lowest latency"
+t=2025-10-26T17:56:05+0800 lvl=info msg="no configuration paths supplied"
+t=2025-10-26T17:56:05+0800 lvl=info msg="using configuration at default config path" path=C:\\Users\\Admin\\AppData\\Local/ngrok/ngrok.yml
+t=2025-10-26T17:56:05+0800 lvl=info msg="open config file" path=C:\\Users\\Admin\\AppData\\Local\\ngrok\\ngrok.yml err=nil
+t=2025-10-26T17:56:05+0800 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2025-10-26T17:56:05+0800 lvl=info msg="client session established" obj=tunnels.session
+t=2025-10-26T17:56:05+0800 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2025-10-26T17:56:05+0800 lvl=info msg=start pg=/api/tunnels id=190df574e34f325f
+t=2025-10-26T17:56:05+0800 lvl=info msg=end pg=/api/tunnels id=190df574e34f325f status=200 dur=536.3µs
+t=2025-10-26T17:56:05+0800 lvl=info msg="started tunnel" obj=tunnels name=command_line addr=http://localhost:8080 url=https://ff2dc04b5a8b.ngrok-free.app
+t=2025-10-26T17:56:07+0800 lvl=info msg=start pg=/api/tunnels id=9c7ce263c232e12a
+t=2025-10-26T17:56:07+0800 lvl=info msg=end pg=/api/tunnels id=9c7ce263c232e12a status=200 dur=507.6µs
+t=2025-10-26T17:56:10+0800 lvl=warn msg="failed to check for update" obj=updater err="Post \"https://update.equinox.io/check\": context deadline exceeded"
+t=2025-10-26T17:56:19+0800 lvl=info msg="join connections" obj=join id=5f1d0981d7bb l=[::1]:8080 r=143.44.184.152:45064
+t=2025-10-26T18:01:56+0800 lvl=info msg="join connections" obj=join id=f51406ce9b42 l=[::1]:8080 r=143.44.184.152:7350

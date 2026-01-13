@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="Dean.css">
+</head>
+<body>
+  <div class="ray r1"></div>
+  <div class="ray r2"></div>
+  <div class="ray r3"></div>
+  <div class="ray r4"></div>
+  <div class="ray r5"></div>
+  <div class="ray r6"></div>
+  <div class="ray r7"></div>
+  <div class="ray r8"></div>
+
+  <aside class="sidebar">
+    <div class="avatar"></div>
+    <h2>Student<br>Profile</h2>
+    <button class="side-btn" id="backBtn">Back</button>
+  </aside>
+
+  <main class="main">
+    <section class="card">
+      <div class="detail-grid">
+        <div class="photo-box"></div>
+        <div class="detail-meta">
+          <div class="row">
+            <label>Name</label>
+            <input id="name" disabled>
+          </div>
+          <div class="quad">
+            <div>
+              <label>Age</label>
+              <input id="age" disabled>
+            </div>
+            <div>
+              <label>Gender</label>
+              <input id="gender" disabled>
+            </div>
+            <div>
+              <label>Year Lvl</label>
+              <input id="year" disabled>
+            </div>
+            <div>
+              <label>Course</label>
+              <input id="course" disabled>
+            </div>
+          </div>
+          <div class="row">
+            <label>Birth Date</label>
+            <input id="birth" disabled>
+          </div>
+          <div class="row">
+            <label>Nationality</label>
+            <input id="nat" disabled>
+          </div>
+          <div class="row">
+            <label>Contact</label>
+            <input id="contact" disabled>
+          </div>
+          <div class="row">
+            <label>Email</label>
+            <input id="email" disabled>
+          </div>
+          <div class="row">
+            <label>Address</label>
+            <input id="addr" disabled>
+          </div>
+          <div class="row">
+            <label>Religion</label>
+            <input id="rel" disabled>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const students = JSON.parse(localStorage.getItem('students') || '[]');
+    const params = new URLSearchParams(location.search);
+    const id = parseInt(params.get('id'));
+    const s = students.find(x => x.id === id) || {};
+
+    document.getElementById('name').value = s.name || '';
+    document.getElementById('age').value = s.age || '';
+    document.getElementById('gender').value = s.gender || '';
+    document.getElementById('year').value = s.year || '';
+    document.getElementById('course').value = s.course || '';
+    document.getElementById('birth').value = s.birth || '';
+    document.getElementById('nat').value = s.nat || '';
+    document.getElementById('contact').value = s.contact || '';
+    document.getElementById('email').value = s.email || '';
+    document.getElementById('addr').value = s.addr || '';
+    document.getElementById('rel').value = s.rel || '';
+
+    document.getElementById('backBtn').onclick = () => history.back();
+  </script>
+</body>
+</html>

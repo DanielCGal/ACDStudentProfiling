@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Student Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif}
+  body{background:#1DA5DB;color:#000;min-height:100vh}
+  .sidebar{position:fixed;inset:0 auto 0 0;width:260px;height:100vh;background:#C7E7EB;color:#0b0f19;padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .avatar{width:84px;height:84px;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 4px #d3dde6}
+  .side-btn{width:100%;padding:10px 14px;border:0;border-radius:22px;background:#0d47a1;color:#fff;cursor:pointer;font-weight:600}
+  .main{margin-left:260px;padding:24px;min-height:100vh}
+  .grid-outer{display:grid;grid-template-columns:1fr 340px;gap:18px;align-items:start}
+  .sidecol{display:grid;grid-template-rows:auto auto;gap:18px}
+  .card{background:#3e8086;color:#fff;border-radius:28px;padding:22px;box-shadow:0 8px 18px rgba(0,0,0,.12)}
+  .hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .hdr h1{font-size:28px}
+  .tabs{display:flex;gap:8px;margin:8px 0}
+  .tab{padding:8px 12px;border-radius:999px;background:#2c6a70;color:#cfe8ff;font-weight:700;cursor:pointer;border:2px solid transparent}
+  .tab.active{background:#0b5fc4;color:#fff;border-color:#89b8ff}
+  .hidden{display:none !important}
+  .detail-grid{display:grid;grid-template-columns:280px 1fr;gap:22px;margin-top:8px}
+  .photo{width:280px;height:280px;border-radius:32px;background:#f3f6f8;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .photo img{width:100%;height:100%;object-fit:cover}
+  .lbl{font-weight:700;margin:6px 0 4px}
+  .row{display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:center}
+  .row-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .input{width:100%;padding:12px 14px;border:0;border-radius:26px;background:#ddd;color:#000}
+  .long{width:100%}
+  .section{margin-top:18px}
+  .subhead{font-weight:800;margin:18px 0 6px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .btn{padding:10px 16px;border:0;border-radius:22px;font-weight:700;cursor:pointer}
+  .primary{background:#0b5fc4;color:#fff}
+  .footer-actions{display:flex;justify-content:flex-end;margin-top:14px}
+  .sidecard{background:#e9f6ff;color:#0b0f19;border-radius:16px;padding:14px;box-shadow:0 8px 18px rgba(0,0,0,.08)}
+  .box-title{font-weight:800;margin-bottom:8px}
+  .req-card{background:#fff;border-radius:12px;padding:10px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+  .req-img{width:100%;height:160px;object-fit:cover;border-radius:10px;margin:6px 0;cursor:zoom-in}
+  .badge{display:inline-block;background:#0b5fc4;color:#fff;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:700}
+  .actions{display:flex;gap:8px;margin-top:8px}
+  .btn-accept{background:#22a14a;color:#fff;border:0;border-radius:16px;padding:8px 12px;cursor:pointer;font-weight:700}
+  .btn-reject{background:#c62828;color:#fff;border:0;border-radius:16px;padding:8px 12px;cursor:pointer;font-weight:700}
+  @media (max-width:1200px){.grid-outer{grid-template-columns:1fr}.sidecol{grid-template-columns:1fr;grid-template-rows:auto auto}}
+  @media (max-width:1100px){.detail-grid{grid-template-columns:1fr}.row{grid-template-columns:1fr}.row-4{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+  @media (max-width:980px){.main{margin-left:0}.sidebar{position:static;width:100%;height:auto;flex-direction:row;justify-content:center}}
+  html, body { height: 100%; }
+  .bg-rays{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:180vw;height:180vh;pointer-events:none;user-select:none;z-index:-1}
+  .bg-rays .ray{position:absolute;inset:0;background:rgba(152,199,238,.623);clip-path:polygon(50% 50%, 100% 49%, 100% 51%)}
+  .bg-rays .r1{transform:rotate(0)} .bg-rays .r2{transform:rotate(45deg)} .bg-rays .r3{transform:rotate(90deg)} .bg-rays .r4{transform:rotate(135deg)}
+  .bg-rays .r5{transform:rotate(180deg)} .bg-rays .r6{transform:rotate(225deg)} .bg-rays .r7{transform:rotate(270deg)} .bg-rays .r8{transform:rotate(315deg)}
+  .img-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.75);z-index:2000}
+  .img-modal.open{display:flex}
+  .img-modal-card{position:relative;max-width:95vw;max-height:90vh}
+  .img-modal-card img{display:block;max-width:95vw;max-height:90vh;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  .img-modal-close{position:absolute;top:-14px;right:-14px;width:36px;height:36px;border:0;border-radius:50%;background:#fff;color:#111;font-size:20px;line-height:36px;font-weight:700;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.25)}
+
+  .box-scroll {
+    max-height: none;         
+    overflow-y: auto;         
+    overflow-x: hidden;       
+    padding-right: 6px;       
+  }
+
+
+  .box-scroll::-webkit-scrollbar { width: 8px; }
+  .box-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,.2);
+    border-radius: 6px;
+  }
+  .box-scroll { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,.25) transparent; }
+
+  #acceptedBox.box-scroll,
+  #pendingBox.box-scroll {
+    max-height: 440px;   
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .btn-delete{
+    background:#e53935;color:#fff;border:0;border-radius:16px;
+    padding:6px 12px;cursor:pointer;font-weight:700;font-size:12px;
+  }
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);z-index:3000}
+  .modal.open{display:flex}
+  .modal-card{
+    width:min(560px,92vw); background:#2da1ff; color:#fff; border-radius:22px;
+    box-shadow:0 10px 30px rgba(0,0,0,.35); padding:18px;
+  }
+  .modal-title{font-weight:800;margin-bottom:10px;text-align:center}
+  .modal-inner{background:#fff;border-radius:16px;padding:12px;color:#111}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
+  .btn-cancel{background:#9e9e9e;color:#fff;border:0;border-radius:16px;padding:8px 14px;font-weight:700;cursor:pointer}
+  .btn-danger{background:#e53935;color:#fff;border:0;border-radius:16px;padding:8px 14px;font-weight:700;cursor:pointer}
+  .reason-area{width:100%;height:140px;border-radius:12px;border:0;background:#f3f6f8;padding:10px;color:#111;resize:vertical}
+
+  .status-row .status-pill{
+    width:100%;display:flex;align-items:center;justify-content:center;
+    padding:12px 14px;border-radius:26px;
+  }
+  .status-pill{
+    padding:6px 12px;border-radius:999px;font-weight:800;font-size:12px;
+    letter-spacing:.2px;background:#78909c;color:#fff;min-width:160px;text-align:center;
+  }
+  .status-enrolled  { background:#2e7d32; }
+  .status-not       { background:#ef6c00; }
+  .status-inactive  { background:#546e7a; }
+  .status-graduated { background:#1565c0; }
+
+</style>
+
+<link rel="stylesheet" href="responsive.css">
+
+</head>
+<body>
+
+<div class="bg-rays" aria-hidden="true">
+  <div class="ray r1"></div><div class="ray r2"></div><div class="ray r3"></div><div class="ray r4"></div>
+  <div class="ray r5"></div><div class="ray r6"></div><div class="ray r7"></div><div class="ray r8"></div>
+</div>
+
+<aside class="sidebar">
+  <div class="avatar"></div>
+  <div style="font-weight:700;line-height:1.2;text-align:left;width:100%">Welcome<br/>Back!</div>
+  <button class="side-btn" id="logoutBtn">Logout</button>
+  <button class="side-btn" id="backDeanBtn">Back to Student List</button>
+</aside>
+
+<main class="main">
+  <div class="grid-outer">
+    <section class="card">
+      <div class="hdr"><h1>Student Profile</h1></div>
+
+      
+      <div class="tabs" id="tabsBar">
+        <button id="tabPersonal" class="tab active">Personal Information</button>
+        <button id="tabAdditional" class="tab">Additional Information</button>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="lbl">Student Photo</div>
+          <div class="photo"><img id="photoImg" alt=""></div>
+        </div>
+
+        <div id="tabsContainer">
+          
+          <div id="personalSection">
+
+            <div class="row-4 section status-row">
+            <div>
+              <div class="lbl">Status</div>
+              <div id="statusPill" class="status-pill">Currently Enrolled</div>
+            </div>
+
+            <div>
+              <div class="lbl">Class Schedule</div>
+              <input class="input" id="classSchedule" disabled>
+            </div>
+
+            <div>
+              <div class="lbl">Regular or Irregular?</div>
+              <input class="input" id="regularIrregular" disabled>
+            </div>
+
+            <div></div>
+          </div>
+
+            <div class="lbl">Name</div>
+            <input class="input long" id="name" disabled>
+
+            <div class="row-4 section">
+              <div><div class="lbl">Age</div><input class="input" id="age" disabled></div>
+              <div><div class="lbl">Gender</div><input class="input" id="gender" disabled></div>
+              <div><div class="lbl">Year Level</div><input class="input" id="year" disabled></div>
+              <div><div class="lbl">Course</div><input class="input" id="course" disabled></div>
+            </div>
+
+            <div class="row section"><div class="lbl">BirthDate</div><input class="input" id="birth" disabled></div>
+            <div class="row section"><div class="lbl">Student Nationality</div><input class="input" id="nat" disabled></div>
+            <div class="section"><div class="lbl">Contact Info</div><input class="input long" id="contact" disabled></div>
+            <div class="section"><div class="lbl">Email</div><input class="input long" id="email" disabled></div>
+            <div class="section"><div class="lbl">Address</div><input class="input long" id="addr" disabled></div>
+            <div class="section"><div class="lbl">Religion</div><input class="input long" id="rel" disabled></div>
+          </div>
+
+          <div id="additionalSection" class="hidden">
+            <div class="subhead">Special Status</div>
+
+            <div class="section"><div class="lbl">Working Student Type</div>
+              <input class="input long" id="workingStudentType" disabled>
+            </div>
+            <div class="section"><div class="lbl">Department</div>
+              <input class="input long" id="department" disabled>
+            </div>
+            <div class="section"><div class="lbl">Place of Work</div>
+              <input class="input long" id="workPlace" disabled>
+            </div>
+            <div class="section"><div class="lbl">Shift Hours</div>
+              <input class="input long" id="shiftHours" disabled>
+            </div>
+
+            <div class="section"><div class="lbl">Supervisor Name</div>
+              <input class="input long" id="supervisorName" disabled>
+            </div>
+            <div class="section"><div class="lbl">Supervisor Contact Info</div>
+              <input class="input long" id="supervisorContact" disabled>
+            </div>
+
+            <div class="grid2 section">
+              <div><div class="lbl">Breadwinner</div><input class="input" id="breadwinner" disabled></div>
+              <div><div class="lbl">Self Financing</div><input class="input" id="selfFinance" disabled></div>
+            </div>
+
+            <div class="subhead">Scholarship</div>
+            <div class="section">
+              <div class="lbl">Scholarship Type</div>
+              <input class="input long" id="scholarshipType" disabled>
+            </div>
+            <div class="section">
+              <div class="lbl">Government Scholar</div>
+              <input class="input long" id="governmentScholarship" disabled>
+            </div>
+
+            <div class="subhead">Orphan</div>
+            <div class="grid2 section">
+              <div><div class="lbl">Date of Parental Loss (Mother)</div><input class="input" id="motherLossDate" disabled></div>
+              <div><div class="lbl">Date of Parental Loss (Father)</div><input class="input" id="fatherLossDate" disabled></div>
+              <div><div class="lbl">Name of Parent (Mother)</div><input class="input" id="motherName" disabled></div>
+              <div><div class="lbl">Name of Parent (Father)</div><input class="input" id="fatherName" disabled></div>
+            </div>
+
+
+            <div class="section">
+              <div class="lbl">Current Guardian (Full Name)</div>
+              <input class="input long" id="guardianName" disabled>
+            </div>
+            <div class="section">
+              <div class="lbl">Guardian Relationship</div>
+              <input class="input long" id="guardianRel" disabled>
+            </div>
+            <div class="grid2 section">
+              <div><div class="lbl">Guardian Occupation</div><input class="input" id="guardianOcc" disabled></div>
+              <div><div class="lbl">Guardian Income</div><input class="input" id="guardianInc" disabled></div>
+            </div>
+
+            <div class="subhead">Non-Permanent Residence</div>
+            <div class="section"><div class="lbl">Current Address</div><input class="input long" id="currentAddress" disabled></div>
+            <div class="section">
+            <div class="lbl">Region</div>
+            <input class="input long" id="region" disabled>
+          </div>
+            <div class="section"><div class="lbl">Living Condition</div><input class="input long" id="livingCondition" disabled></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="sidecol">
+      <section class="sidecard">
+        <div class="box-title">Student Academic Information</div>
+        <div id="acceptedBox" class="box-scroll"></div>
+      </section>
+      <section class="sidecard">
+        <div class="box-title">Pending Academic Information Requests</div>
+        <div id="pendingBox" class="box-scroll"></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+
+<div id="delStep1" class="modal" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-title">Delete Student Academic Record?</div>
+    <div class="modal-inner">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span class="badge" id="delBadge">Achievement</span>
+        <button class="btn-delete" id="delGoStep2">Delete</button>
+      </div>
+      <div id="delTitle" style="font-weight:800"></div>
+      <div id="delDate"  style="font-size:12px;opacity:.7;margin:2px 0 6px"></div>
+      <img id="delImg" alt="Proof" style="width:240px;height:140px;object-fit:cover;border-radius:10px;display:none">
+      <div id="delDesc" style="margin-top:8px"></div>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="delCancel1">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="delStep2" class="modal" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-title">Reason of Deletion?</div>
+    <div class="modal-inner">
+      <textarea id="delReason" class="reason-area" placeholder="Briefly state the reason..."></textarea>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="delCancel2">Cancel</button>
+        <button class="btn-danger" id="delConfirm">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="img-modal" id="imgModal" role="dialog" aria-modal="true">
+  <div class="img-modal-card">
+    <button class="img-modal-close" id="imgClose" aria-label="Close">×</button>
+    <img id="imgFull" alt="Full view">
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+
+const API_BASE = 'https://73b684773422.ngrok-free.app';
+const $ = id => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+const accountId = params.get('accountId');
+
+
+let activeTab = 'personal';
+let studentEmail = null;
+let deleteTarget = null;
+function updateTabContent(){
+  $('personalSection').classList.toggle('hidden', activeTab!=='personal');
+  $('additionalSection').classList.toggle('hidden', activeTab!=='additional');
+  $('tabPersonal').classList.toggle('active', activeTab==='personal');
+  $('tabAdditional').classList.toggle('active', activeTab==='additional');
+}
+
+
+function setV(id,val){ const el=$(id); if(el) el.value = val ?? ''; }
+function yn(v){ if(v===true) return 'Yes'; if(v===false) return 'No'; return 'NONE'; }
+function fmtDate(d){ return d || 'NONE'; }
+
+function resolvePhotoPath(p) {
+  if (!p) return null;
+  if (p.startsWith('http')) return p;
+  if (p.startsWith('/')) return `${API_BASE}${p}`;
+  return `${API_BASE}/studentprofiling/files/profile-pictures/${p}`;
+}
+
+async function loadPhoto(urlLike, altText) {
+  const img = $('photoImg');
+  if (!urlLike) { img.removeAttribute('src'); img.alt = altText || 'Profile Picture'; return; }
+  try {
+    const url = resolvePhotoPath(urlLike);
+    const res = await axios.get(url, { responseType: 'blob', headers: { 'ngrok-skip-browser-warning': 'true' } });
+    img.src = URL.createObjectURL(res.data);
+    img.alt = altText || 'Profile Picture';
+  } catch { img.removeAttribute('src'); img.alt = 'No photo'; }
+}
+
+function setStatusPill(statusRaw){
+  const pill = document.getElementById('statusPill');
+  const status = (statusRaw || '').trim();
+
+  
+  pill.className = 'status-pill';
+
+  let label = status || 'NOT Currently Enrolled';
+  let cls   = 'status-not';
+
+  switch (status) {
+    case 'Currently Enrolled': cls = 'status-enrolled'; break;
+    case 'NOT Currently Enrolled': cls = 'status-not'; break;
+    case 'Inactive': cls = 'status-inactive'; break;
+    case 'Graduated': cls = 'status-graduated'; break;
+    default:
+      
+      label = status || 'NOT Currently Enrolled';
+      cls = (status === 'Currently Enrolled') ? 'status-enrolled' : 'status-not';
+  }
+
+  pill.textContent = label;
+  pill.classList.add(cls);
+}
+
+
+async function load() {
+  if (!accountId) return;
+  const res = await axios.get(`${API_BASE}/studentprofiling/student-full/${accountId}`, { headers: { 'ngrok-skip-browser-warning': 'true' } });
+  const data = res.data || {};
+  const s = data.student || {};
+  const ai = data.additionalInfo || {};
+
+  const full = [s.firstName,s.middleName,s.lastName].filter(Boolean).join(' ');
+  setV('name', full);
+  setV('age', s.age);
+  setV('gender', s.gender);
+  setV('year', s.yearLevel);
+  setV('course', s.course);
+  setV('birth', fmtDate(s.birthdate));
+  setV('nat', s.studentNationality);
+  setV('contact', s.contactInfo);
+  setV('email', s.email || data.accountEmail);
+  studentEmail = (s.email || data.accountEmail || '').trim();
+  setV('addr', s.address);
+  setV('rel', s.studentReligion);
+  setV('classSchedule', s.classSchedule || 'NONE');
+  setV('regularIrregular', s.regularOrIrregular || 'NONE'); // hello maam, nagbasa ka ani maam? ahhahhaah (from: Daniel)
+  setV('workingStudentType', ai.workingStudentType || 'NONE');
+  setV('department',        ai.workingStudentType === 'Student SA' ? (ai.department || 'NONE') : 'NONE');
+  setV('workPlace',         ai.placeOfWork || 'NONE');
+  setV('shiftHours',        data.shiftHours || ai.shiftHours || 'NONE');
+  setV('supervisorName',    ai.supervisorName || 'NONE');
+  setV('supervisorContact', ai.supervisorContact || 'NONE');
+  setV('breadwinner',       yn(ai.breadwinner));
+  setV('selfFinance',       yn(ai.selfFinancing));
+  setV('scholarshipType', ai.scholarshipType || 'NONE');
+  setV('governmentScholarship', ai.governmentScholarship || 'NONE');
+  setV('region', ai.region || 'NONE');
+  setV('motherLossDate',    fmtDate(ai.dateLossMother));
+  setV('fatherLossDate',    fmtDate(ai.dateLossFather));
+  const momName = ai.nameOfParentMother ?? ai.motherName ?? null; 
+  const dadName = ai.nameOfParentFather ?? ai.fatherName ?? null;
+
+  setV('motherName', momName || 'NONE');
+  setV('fatherName', dadName || 'NONE');
+  setV('guardianName', ai.currentGuardian || 'NONE');
+  setV('guardianRel', ai.guardianRelationship || 'NONE');
+  setV('guardianOcc', ai.guardianOccupation || 'NONE');
+  setV('guardianInc', ai.guardianIncome || 'NONE');
+  setV('currentAddress',    ai.currentAddress || 'NONE');
+  setV('livingCondition',   ai.livingCondition || 'NONE');
+
+  setStatusPill(ai.status || s.status || s.studentStatus || s.enrollmentStatus || data.enrollmentStatus || s.studentEnrollmentStatus || '');
+
+  await loadPhoto(s.profilePicture, full);
+
+  updateTabContent();
+}
+
+
+function openProofModal(src){ const m=$('imgModal'), i=$('imgFull'); i.src=src; m.classList.add('open'); }
+function closeProofModal(){ const m=$('imgModal'), i=$('imgFull'); i.removeAttribute('src'); m.classList.remove('open'); }
+$('imgClose').addEventListener('click', closeProofModal);
+$('imgModal').addEventListener('click', (e)=>{ if (e.target.id === 'imgModal') closeProofModal(); });
+document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeProofModal(); });
+
+
+function getProofPath(rec){ return rec.proofPath || rec.photoPath || rec.proof || rec.photo || rec.imagePath || ''; }
+function toServedUrl(p){ if(!p) return null; if(/^https?:\/\//i.test(p)) return p; let c=String(p).replace(/^\/+/,''); if(c.startsWith('uploads/')) c=c.slice(8); return `${API_BASE}/studentprofiling/files/any/${c}`; }
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]))}
+function hydrateImages(root){
+  const headers = { 'ngrok-skip-browser-warning': 'true' };
+  root.querySelectorAll('img[data-src]').forEach(async (img) => {
+    const raw = img.getAttribute('data-src') || '';
+    const url = toServedUrl(raw);
+    if (!url) { img.style.display='none'; return; }
+    try{
+      const res = await axios.get(url, { responseType: 'blob', headers });
+      if (res.status >= 200 && res.status < 300) {
+        img.src = URL.createObjectURL(res.data);
+        img.alt = 'proof';
+        img.style.display = '';
+        if (!img.dataset.viewerBound) { img.addEventListener('click', () => openProofModal(img.src)); img.dataset.viewerBound='1'; }
+      } else img.style.display='none';
+    }catch{ img.style.display='none'; }
+  });
+}
+
+async function openDeleteStep1(rec){
+  deleteTarget = rec;
+  $('delBadge').textContent = rec.kind === 'ACH' ? 'Achievement' : 'Authorship';
+  $('delTitle').textContent = rec.name || '';
+  $('delDate').textContent  = rec.date ? String(rec.date) : '';
+  $('delDesc').textContent  = rec.desc || '';
+
+  const img = $('delImg');
+  img.removeAttribute('src');
+  img.style.display = 'none';
+
+  if (rec.proofResolved) {
+    
+    img.src = rec.proofResolved;
+    img.style.display = 'block';
+  } else if (rec.proof) {
+    
+    const url = toServedUrl(rec.proof);
+    if (url) {
+      try {
+        const res = await axios.get(url, {
+          responseType: 'blob',
+          headers: { 'ngrok-skip-browser-warning': 'true' }
+        });
+        img.src = URL.createObjectURL(res.data);
+        img.style.display = 'block';
+      } catch {
+        
+      }
+    }
+  }
+  $('delStep1').classList.add('open');
+}
+function closeDelStep1(){ $('delStep1').classList.remove('open'); }
+function openDeleteStep2(){ $('delStep2').classList.add('open'); $('delReason').value=''; $('delReason').focus(); }
+function closeDelStep2(){ $('delStep2').classList.remove('open'); }
+
+async function performDelete(){
+  if (!deleteTarget) return;
+  const reason = ($('delReason').value || '').trim();
+
+  try {
+    const id = deleteTarget.id;
+    const headers = { 'ngrok-skip-browser-warning':'true' };
+    const params = new URLSearchParams({
+      reason: reason || '',
+      email:  studentEmail || ''
+    }).toString();
+
+    const url = (deleteTarget.kind === 'ACH')
+      ? `${API_BASE}/studentprofiling/achievements/${id}?${params}`
+      : `${API_BASE}/studentprofiling/authorships/${id}?${params}`;
+
+    await axios.delete(url, { headers });
+  } catch(e){
+    console.error(e);
+    alert('Delete failed.');
+  } finally {
+    deleteTarget = null;
+    closeDelStep2(); closeDelStep1();
+    await loadAcademicBoxes();
+  }
+}
+
+function cardHtml(rec, isPending){
+  const kind = rec.kind === 'ACH' ? 'Achievement' : 'Authorship';
+  const name = rec.kind === 'ACH' ? rec.achievement : rec.type;
+  const desc = rec.description || '';
+  const date = rec.date || '';
+  const raw  = getProofPath(rec);
+
+  const data = `
+    data-id="${rec.id}" data-kind="${rec.kind}"
+    data-name="${escapeHtml(name || '')}"
+    data-desc="${escapeHtml(desc || '')}"
+    data-date="${escapeHtml(date || '')}"
+    data-proof="${escapeHtml(raw || '')}"
+  `;
+
+  return `
+    <div class="req-card" ${data}>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="badge">${kind}</span>
+        ${!isPending ? `<button class="btn-delete">Delete</button>` : ``}
+      </div>
+      <div style="font-weight:700;margin-top:6px">${name ? escapeHtml(name) : ''}</div>
+      ${date ? `<div style="font-size:12px;opacity:.8">${escapeHtml(date)}</div>` : ''}
+      <div style="margin-top:4px">${escapeHtml(desc)}</div>
+      ${raw ? `<img class="req-img" data-src="${escapeHtml(raw)}" alt="proof">` : ''}
+
+      ${isPending ? `
+        <div class="actions">
+          <button class="btn-accept">Accept</button>
+          <button class="btn-reject">Reject</button>
+        </div>` : ``}
+    </div>`;
+}
+
+
+function clampListToTwoCards(listEl) {
+  const cards = listEl.querySelectorAll('.req-card');
+  listEl.style.maxHeight = 'none';
+  listEl.style.overflowY = 'visible';
+  listEl.style.overflowX = 'hidden';
+  if (cards.length <= 2) return;
+
+  const gap = parseFloat(getComputedStyle(cards[0]).marginBottom || '0');
+  const maxH = cards[0].offsetHeight + cards[1].offsetHeight + gap;
+  listEl.style.maxHeight = `${maxH}px`;
+  listEl.style.overflowY = 'auto';
+
+}
+
+function reclampLists() {
+  clampListToTwoCards(document.getElementById('acceptedBox'));
+  clampListToTwoCards(document.getElementById('pendingBox'));
+}
+
+async function loadAcademicBoxes() {
+  const headers = { 'ngrok-skip-browser-warning':'true' };
+  const fetchList = async (url) => { try { const r = await axios.get(url, { headers }); return Array.isArray(r.data) ? r.data : []; } catch { return []; } };
+
+  const achAccepted = await fetchList(`${API_BASE}/studentprofiling/achievements/by-account/${accountId}?status=ACCEPTED`);
+  const achPending  = await fetchList(`${API_BASE}/studentprofiling/achievements/by-account/${accountId}?status=PENDING`);
+  const autAccepted = await fetchList(`${API_BASE}/studentprofiling/authorships/by-account/${accountId}?status=ACCEPTED`);
+  const autPending  = await fetchList(`${API_BASE}/studentprofiling/authorships/by-account/${accountId}?status=PENDING`);
+
+  const accepted = [
+    ...achAccepted.map(x => ({...x, kind:'ACH', status:'ACCEPTED'})),
+    ...autAccepted.map(x => ({...x, kind:'AUT', status:'ACCEPTED'})),
+  ];
+  const pending = [
+    ...achPending.map(x => ({...x, kind:'ACH', status:'PENDING'})),
+    ...autPending.map(x => ({...x, kind:'AUT', status:'PENDING'})),
+  ];
+
+  const accBox = document.getElementById('acceptedBox');
+  const penBox = document.getElementById('pendingBox');
+
+  accBox.innerHTML = accepted.length
+    ? accepted.map(r => cardHtml(r, false)).join('')
+    : '<div class="req-card">No Academic Information</div>';
+
+  penBox.innerHTML = pending.length
+    ? pending.map(r => cardHtml(r, true)).join('')
+    : '<div class="req-card">No Pending Request</div>';
+
+  hydrateImages(accBox);
+  hydrateImages(penBox);
+
+  requestAnimationFrame(reclampLists);
+
+  
+  [accBox, penBox].forEach(box => {
+    box.querySelectorAll('img[data-src], img').forEach(img => {
+      if (!img.complete) img.addEventListener('load', reclampLists, { once: true });
+    });
+  });
+
+  setTimeout(reclampLists, 200);
+  setTimeout(reclampLists, 800);
+
+
+window.addEventListener('resize', reclampLists);
+
+
+accBox.querySelectorAll('.req-card[data-id] .btn-delete').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const card = e.target.closest('.req-card');
+    const proofResolved = card.querySelector('.req-img')?.src || null; 
+
+    openDeleteStep1({
+      id:   card.getAttribute('data-id'),
+      kind: card.getAttribute('data-kind'),  
+      name: card.getAttribute('data-name') || '',
+      desc: card.getAttribute('data-desc') || '',
+      date: card.getAttribute('data-date') || '',
+      proof:card.getAttribute('data-proof') || '',
+      proofResolved
+    });
+  });
+});
+
+
+penBox.querySelectorAll('.req-card[data-id]').forEach(card => {
+  const id   = card.getAttribute('data-id');
+  const kind = card.getAttribute('data-kind');
+  const acceptBtn = card.querySelector('.btn-accept');
+  const rejectBtn = card.querySelector('.btn-reject');
+
+  const update = async (status) => {
+    const headers = { 'ngrok-skip-browser-warning': 'true' };
+    const params = new URLSearchParams({
+      status,
+      notify: 'true',
+      email: studentEmail || ''
+    }).toString();
+
+    const url = (kind === 'ACH')
+      ? `${API_BASE}/studentprofiling/achievements/${id}/status?${params}`
+      : `${API_BASE}/studentprofiling/authorships/${id}/status?${params}`;
+
+    acceptBtn.disabled = true;
+    rejectBtn.disabled = true;
+
+    try { await axios.put(url, null, { headers }); }
+    catch (e) { console.error(e); alert('Update failed.'); }
+    finally { await loadAcademicBoxes(); }
+  };
+
+  acceptBtn?.addEventListener('click', () => update('ACCEPTED'));
+  rejectBtn?.addEventListener('click', () => update('REJECTED'));
+});
+
+  penBox.querySelectorAll('.req-card[data-id]').forEach(card => {
+  const id   = card.getAttribute('data-id');
+  const kind = card.getAttribute('data-kind');
+  const acceptBtn = card.querySelector('.btn-accept');
+  const rejectBtn = card.querySelector('.btn-reject');
+
+  const headers = { 'ngrok-skip-browser-warning':'true' };
+
+  const update = async (status) => {
+  const headers = { 'ngrok-skip-browser-warning': 'true' };
+
+  const params = new URLSearchParams({
+    status,
+    notify: 'true',
+    email: studentEmail || ''
+  }).toString();
+
+  const url = (kind === 'ACH')
+    ? `${API_BASE}/studentprofiling/achievements/${id}/status?${params}`
+    : `${API_BASE}/studentprofiling/authorships/${id}/status?${params}`;
+
+  
+  acceptBtn.disabled = true; 
+  rejectBtn.disabled = true;
+
+  try { await axios.put(url, null, { headers }); }
+  catch (e) { console.error(e); alert('Update failed.'); }
+  finally { await loadAcademicBoxes(); }
+};
+
+  acceptBtn?.addEventListener('click', () => update('ACCEPTED'));
+  rejectBtn?.addEventListener('click', () => update('REJECTED'));
+});
+}
+
+
+$('backDeanBtn').onclick = () => history.back();
+$('logoutBtn').onclick   = () => { localStorage.removeItem('session'); location.href = 'index.html'; };
+
+$('tabPersonal').onclick   = () => { activeTab='personal'; updateTabContent(); };
+$('tabAdditional').onclick = () => { activeTab='additional'; updateTabContent(); };
+
+$('delCancel1').onclick = () => closeDelStep1();
+$('delGoStep2').onclick = () => { closeDelStep1(); openDeleteStep2(); };
+$('delCancel2').onclick = () => { closeDelStep2(); deleteTarget = null; };
+$('delConfirm').onclick  = performDelete;
+
+document.addEventListener('keydown', (e)=>{
+  if (e.key === 'Escape'){ closeDelStep1(); closeDelStep2(); }
+});
+
+(async ()=>{ await load(); await loadAcademicBoxes(); })();
+</script>
+</body>
+</html>

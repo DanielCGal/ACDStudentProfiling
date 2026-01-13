@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Student Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif}
+  body{background:#1DA5DB;color:#000;min-height:100vh}
+  .sidebar{position:fixed;inset:0 auto 0 0;width:260px;height:100vh;background:#C7E7EB;color:#0b0f19;padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .avatar{width:84px;height:84px;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 4px #d3dde6}
+  .side-btn{width:100%;padding:10px 14px;border:0;border-radius:22px;background:#0d47a1;color:#fff;cursor:pointer;font-weight:600}
+  .main{margin-left:260px;padding:24px;min-height:100vh}
+  .card{background:#3e8086;color:#fff;border-radius:28px;padding:22px;width:100%;max-width:none;box-shadow:0 8px 18px rgba(0,0,0,.12)}
+  .hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:12px}
+  .hdr h1{font-size:28px}
+  .detail-grid{display:grid;grid-template-columns:280px 1fr;gap:22px;margin-top:8px}
+  .tabs{display:flex;gap:8px;margin:8px 0 2px}
+  .tab{padding:8px 12px;border-radius:999px;background:#2c6a70;color:#cfe8ff;font-weight:700;cursor:pointer;border:2px solid transparent}
+  .tab.active{background:#0b5fc4;color:#fff;border-color:#89b8ff}
+  .tab:disabled{opacity:.5;cursor:not-allowed}
+  .photo{position:relative;width:280px;height:280px;border-radius:32px;background:#f3f6f8;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .photo img{width:100%;height:100%;object-fit:cover}
+  .edit-pic{display:none}
+  .edit-pic input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .edit-pic .hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.55);color:#fff;padding:6px 10px;border-radius:12px;font-size:12px}
+  .lbl{font-weight:700;margin:6px 0 4px}
+  .row{display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:center}
+  .row-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .input, .select{width:100%;padding:12px 14px;border:0;border-radius:26px;background:#ddd;color:#000}
+  .select{appearance:none}
+  .long{width:100%}
+  .section{margin-top:18px}
+  .subhead{font-weight:800;margin:18px 0 6px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .btn{padding:10px 16px;border:0;border-radius:22px;font-weight:700;cursor:pointer}
+  .primary{background:#0b5fc4;color:#fff}
+  .muted{background:#999;color:#fff}
+  .danger{background:#c62828;color:#fff}
+  .footer-actions{display:flex;justify-content:flex-end;margin-top:14px;gap:10px}
+  .hidden{display:none !important;}
+  .long-btn{width:100%;border-radius:22px}
+  .note{font-size:12px;opacity:.9;margin-top:6px}
+  .main.two-col{margin-left:260px;padding:24px;min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}
+  .info-panels{position:sticky;top:12px;display:flex;flex-direction:column;gap:14px;z-index:2}
+  .panel{background:#e9f6ff;color:#0b0f19;border-radius:16px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.12);max-height:calc(100vh - 24px);overflow:auto}
+  .panel h3{margin:0 0 8px 4px;font-size:16px}
+  .req-card{background:#fff;border-radius:12px;padding:10px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+  .req-img{width:100%;height:160px;object-fit:cover;border-radius:10px;margin:6px 0}
+  .badge{display:inline-block;background:#0b5fc4;color:#fff;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:700}
+  @media (max-width:1100px){.detail-grid{grid-template-columns:1fr}.row{grid-template-columns:1fr}.row-4{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}}
+  @media (max-width:980px){
+    .main{margin-left:0}
+    .main.two-col{display:block}
+    .sidebar{position:static;width:100%;height:auto;flex-direction:row;justify-content:center}
+    .info-panels{position:static;width:auto;margin:16px 24px}
+  }
+  html, body { height: 100%; }
+  .bg-rays{position: fixed; top:50%; left:50%; transform:translate(-50%,-50%); width: 180vw; height: 180vh; pointer-events:none; user-select:none; z-index:-1;}
+  .bg-rays .ray{ position:absolute; inset:0; background:rgba(152,199,238,.623); clip-path:polygon(50% 50%, 100% 49%, 100% 51%); }
+  .bg-rays .r1{transform:rotate(0deg)} .bg-rays .r2{transform:rotate(45deg)} .bg-rays .r3{transform:rotate(90deg)} .bg-rays .r4{transform:rotate(135deg)}
+  .bg-rays .r5{transform:rotate(180deg)} .bg-rays .r6{transform:rotate(225deg)} .bg-rays .r7{transform:rotate(270deg)} .bg-rays .r8{transform:rotate(315deg)}
+  .proof-wrap{margin-top:12px}
+  .proof-box{width:100%; max-width:420px; height:220px; border-radius:16px; background:#e9f2f9; color:#0b0f19; border:2px dashed rgba(13,71,161,.35); display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;}
+  .proof-box input[type="file"]{position:absolute; inset:0; opacity:0; cursor:pointer}
+  .proof-placeholder{opacity:.75; font-weight:600; padding:0 10px; text-align:center}
+  .proof-preview{width:100%; height:100%; object-fit:cover; display:none}
+  .counter{font-size:12px; opacity:.9; margin-top:4px}
+  .popbox { background: #0b5fc4; color: #fff; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,.2); animation: fadeIn .3s ease; white-space: nowrap; }
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:30}
+  .modal.open{display:flex}
+  .modal_card{background:#fff;color:#111;max-width:780px;width:calc(100% - 40px);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);overflow:hidden}
+  .modal_head{padding:14px 16px;background:#0b5fc4;color:#fff;font-weight:700}
+  .modal_body{padding:16px;max-height:70vh;overflow:auto}
+  .modal_body dl{display:grid;grid-template-columns:200px 1fr;gap:8px;margin:0}
+  .modal_body dt{font-weight:700}
+  .modal_actions{display:flex;justify-content:flex-end;gap:10px;padding:12px 16px;background:#f6f7f9}
+  .req-img{ cursor: zoom-in; }
+  .img-modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.75); z-index:2000;}
+  .img-modal.open{ display:flex; }
+  .img-modal-card{ position:relative; max-width:95vw; max-height:90vh; }
+  .img-modal-card img{display:block; max-width:95vw; max-height:90vh; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,.5);}
+  .img-modal-close{position:absolute; top:-14px; right:-14px; width:36px; height:36px; border:0; border-radius:50%; background:#fff; color:#111; font-size:20px; line-height:36px; font-weight:700; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,.25);}
+  .status-row .status-pill{
+    width:100%;display:flex;align-items:center;justify-content:center;
+    padding:12px 14px;border-radius:26px;
+  }
+  .status-pill{
+    padding:6px 12px;border-radius:999px;font-weight:800;font-size:12px;
+    letter-spacing:.2px;background:#78909c;color:#fff;min-width:160px;text-align:center;
+  }
+  .status-enrolled  { background:#2e7d32; }
+  .status-not       { background:#ef6c00; }
+  .status-inactive  { background:#546e7a; }
+  .status-graduated { background:#1565c0; }
+
+</style>
+
+<link rel="stylesheet" href="responsive.css">
+
+</head>
+<body>
+
+  <div class="bg-rays" aria-hidden="true">
+    <div class="ray r1"></div><div class="ray r2"></div>
+    <div class="ray r3"></div><div class="ray r4"></div>
+    <div class="ray r5"></div><div class="ray r6"></div>
+    <div class="ray r7"></div><div class="ray r8"></div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="avatar"></div>
+    <div style="font-weight:700;line-height:1.2;text-align:left;width:100%">Welcome<br/>Back!</div>
+    <button class="side-btn" id="accountBtn">Account</button>
+    <button class="side-btn" id="logoutBtn">Logout</button>
+  </aside>
+
+  <main class="main two-col">
+    <section class="card">
+      <div class="hdr">
+        <h1>Student Profile</h1>
+        <div id="requestNotice" class="hidden popbox">Saved!</div>
+      </div>
+
+      <div class="tabs" id="tabsBar">
+        <button id="tabPersonal" class="tab active">Personal Information</button>
+        <button id="tabAdditional" class="tab">Additional Information</button>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="lbl">Student Photo</div>
+          <div class="photo">
+            <img id="photoImg" alt="">
+            <div class="edit-pic" id="editPicWrap">
+              <input type="file" id="profilePicInput" accept="image/*" />
+              <span class="hint">Click to change photo</span>
+            </div>
+          </div>
+
+          <div class="section" id="requestButtons">
+            <button class="btn primary long-btn" id="btnAddAch">Add Academic Achievement</button>
+            <button class="btn primary long-btn" id="btnAddAuth" style="margin-top:10px">Add Academic Authorship</button>
+          </div>
+
+          <div class="section">
+            <button class="btn primary long-btn" id="btnEditProfile">Edit Profile</button>
+            <div class="section hidden" id="editActions">
+              <button class="btn muted long-btn" id="btnCancelEdit">Cancel</button>
+              <button class="btn primary long-btn" id="btnSaveEdit">Save Changes</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          
+          <div id="tabbedContent">
+            <div id="personalSection">
+
+              <div class="row-4 section status-row">
+                <div>
+                  <div class="lbl">Status</div>
+                  <div id="statusPill" class="status-pill">Currently Enrolled</div>
+                </div>
+
+                <div>
+                  <div class="lbl">Class Schedule</div>
+                  <input class="input" id="classSchedule" disabled>
+                  <select class="select hidden" id="classScheduleEdit">
+                    <option value="">-</option>
+                    <option>Morning</option>
+                    <option>Afternoon</option>
+                    <option>Evening</option>
+                  </select>
+                </div>
+
+                <div>
+                  <div class="lbl">Regular or Irregular?</div>
+                  <input class="input" id="regularIrregular" disabled>
+                  <select class="select hidden" id="regularIrregularEdit">
+                    <option value="">-</option>
+                    <option>Regular</option>
+                    <option>Irregular</option>
+                  </select>
+                </div>
+
+                <div></div>
+              </div>
+              <div class="lbl">Name</div>
+              <div id="nameRowView">
+                <input class="input long" id="name" disabled>
+              </div>
+              <div id="nameRowEdit" class="grid3 hidden">
+                <div><div class="lbl">First Name</div><input class="input" id="firstName"></div>
+                <div><div class="lbl">Middle Name</div><input class="input" id="middleName"></div>
+                <div><div class="lbl">Last Name</div><input class="input" id="lastName"></div>
+              </div>
+
+              <div class="row-4 section">
+                <div><div class="lbl">Age</div><input class="input" id="age" disabled></div>
+                <div>
+                  <div class="lbl">Gender</div>
+                  <input class="input" id="gender" disabled>
+                  <select id="genderEdit" class="select hidden">
+                    <option value="">-</option><option>Male</option><option>Female</option>
+                  </select>
+                </div>
+                <div>
+                  <div class="lbl">Year Level</div>
+                  <input class="input" id="year" disabled>
+                  <select id="yearEdit" class="select hidden">
+                    <option value="">-</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option>
+                  </select>
+                </div>
+                <div>
+                  <div class="lbl">Course</div>
+                  <input class="input" id="course" disabled>
+                  <select id="courseEdit" class="select hidden">
+                    <option value="">-</option>
+                    <option value="BSIT">BSIT - Bachelor of Science in Information Technology</option>
+                    <option value="BSBA">BSBA - Bachelor of Science in Business Administration</option>
+                    <option value="BSED">BSED - Bachelor of Secondary Education</option>
+                    <option value="BEED">BEED - Bachelor of Elementary Education</option>
+                    <option value="BSHM">BSHM - Bachelor of Science in Hospitality Management</option>
+                    <option value="BSSW">BSSW - Bachelor of Science in Social Work</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row section">
+                <div class="lbl">BirthDate</div>
+                <input class="input" id="birth" disabled>
+                <input class="input hidden" id="birthEdit" type="date">
+              </div>
+
+              <div class="row section">
+                <div class="lbl">Student Nationality</div>
+                <input class="input" id="nat" disabled>
+                <input class="input hidden" id="natEdit">
+              </div>
+
+              <div class="section">
+                <div class="lbl">Contact Info</div>
+                <input class="input long" id="contact" disabled>
+                <input class="input long hidden" id="contactEdit" maxlength="11">
+              </div>
+
+              <div class="section">
+                <div class="lbl">Email</div>
+                <input class="input long" id="email" disabled>
+                <input class="input long hidden" id="emailEdit">
+              </div>
+
+              <div class="section">
+                <div class="lbl">Address</div>
+                <input class="input long" id="addr" disabled>
+                <input class="input long hidden" id="addrEdit">
+              </div>
+
+              <div class="section">
+                <div class="lbl">Religion</div>
+                <input class="input long" id="rel" disabled>
+                <select id="relEdit" class="select long hidden">
+                  <option value="">-</option>
+                  <option>Catholic</option><option>Islam</option><option>Iglesia ni Cristo</option><option>Philippine Independent Church</option>
+                  <option>Seventh-day Adventist</option><option>Bible Baptist Church</option><option>United Church of Christ in the Philippines</option>
+                  <option>Jehovah's Witnesses</option><option>Church of Christ</option><option>Others</option><option>None</option>
+                </select>
+              </div>
+            </div>
+
+            
+            <div id="additionalView" class="hidden">
+              <div class="subhead">Special Status</div>
+              <div class="section"><div class="lbl">Working Student Type</div><input class="input long" id="workingStudentType" disabled></div>
+              <div class="section"><div class="lbl">Department</div><input class="input long" id="department" disabled></div>
+              <div class="section"><div class="lbl">Place of Work</div><input class="input long" id="workPlace" disabled></div>
+              <div class="section"><div class="lbl">Shift Hours</div><input class="input long" id="shiftHours" disabled></div>
+              <div class="section"><div class="lbl">Supervisor Name</div><input class="input long" id="supervisorName" disabled></div>
+              <div class="section"><div class="lbl">Supervisor Contact Info</div><input class="input long" id="supervisorContact" disabled></div>
+
+              <div class="grid2 section">
+                <div><div class="lbl">Breadwinner</div><input class="input" id="breadwinner" disabled></div>
+                <div><div class="lbl">Self Financing</div><input class="input" id="selfFinance" disabled></div>
+              </div>
+
+              <div class="subhead">Scholarship</div>
+              <div class="section">
+                <div class="lbl">Scholarship Type</div>
+                <input class="input long" id="scholarshipType" disabled>
+              </div>
+              <div class="section">
+                <div class="lbl">Government Scholar</div>
+                <input class="input long" id="governmentScholarship" disabled>
+              </div>
+
+              <div class="subhead">Orphan</div>
+              <div class="grid2 section">
+                <div><div class="lbl">Date of Parental Loss (Mother)</div><input class="input" id="motherLossDate" disabled></div>
+                <div><div class="lbl">Date of Parental Loss (Father)</div><input class="input" id="fatherLossDate" disabled></div>
+                <div><div class="lbl">Name of Parent (Mother)</div><input class="input" id="motherName" disabled></div>
+                <div><div class="lbl">Name of Parent (Father)</div><input class="input" id="fatherName" disabled></div>
+              </div>
+
+              <div class="section">
+                <div class="lbl">Current Guardian (Full Name)</div>
+                <input class="input long" id="guardianName" disabled>
+              </div>
+              <div class="section">
+                <div class="lbl">Guardian Relationship</div>
+                <input class="input long" id="guardianRel" disabled>
+              </div>
+              <div class="grid2 section">
+                <div><div class="lbl">Guardian Occupation</div><input class="input" id="guardianOcc" disabled></div>
+                <div><div class="lbl">Guardian Income</div><input class="input" id="guardianInc" disabled></div>
+              </div>
+
+
+              <div class="subhead">Non-Permanent Residence</div>
+              <div class="section"><div class="lbl">Current Address</div><input class="input long" id="currentAddress" disabled></div>
+              <div class="section">
+              <div class="lbl">Region</div>
+              <input class="input long" id="region" disabled>
+            </div>
+              <div class="section"><div class="lbl">Living Condition</div><input class="input long" id="livingCondition" disabled></div>
+            </div>
+
+            
+            <div id="additionalEdit" class="hidden">
+              <div class="subhead">Working Student</div>
+              <div class="grid2 section">
+                <div>
+                  <div class="lbl">Working Student?</div>
+                  <select class="select" id="workingStudentEdit">
+                    <option value="">-</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                </div>
+                <div></div>
+              </div>
+
+              <div class="section">
+                <div class="lbl">Working Student Type</div>
+                <select class="select" id="workingTypeEdit">
+                  <option value="">-</option>
+                  <option>Outside</option>
+                  <option>Student SA</option>
+                </select>
+              </div>
+
+              <div class="section" id="workPlaceEditRow">
+                <div class="lbl">Place Of Work</div>
+                <input class="input long" id="workPlaceEdit">
+              </div>
+
+              <div class="section hidden" id="departmentEditRow">
+                <div class="lbl">Department</div>
+                <select class="select long" id="departmentEdit">
+                  <option value="">-</option>
+                  <option>PCO</option><option>HRM</option><option>SSPP</option><option>COLLEGE/SHS/JHS LIBRARY</option>
+                  <option>COLLEGE FACULTY</option><option>PRESIDENT OFFICE</option><option>CLINIC</option><option>GUIDANCE OFFICE</option>
+                  <option>CULTURAL AND SPORTS OFFICE</option><option>BED</option><option>HRDO</option><option>FINANCE</option>
+                  <option>MWSP</option><option>SCIENCE LAB</option><option>ROBOTICS LAB</option><option>ICTC</option><option>SHS FACULTY</option>
+                </select>
+              </div>
+
+              <div class="section">
+                <div class="lbl">Supervisor Name</div>
+                <input class="input long" id="supervisorNameEdit" placeholder="e.g., Juan Dela Cruz">
+              </div>
+              <div class="section">
+                <div class="lbl">Supervisor Contact Info</div>
+                <input class="input long" id="supervisorContactEdit" placeholder="e.g., 09xxxxxxxxx or email">
+              </div>
+
+              <div class="grid2 section">
+                <div>
+                  <div class="lbl">Shift Start</div>
+                  <input class="input" type="time" id="shiftStartEdit" placeholder="--:-- --">
+                </div>
+                <div>
+                  <div class="lbl">Shift End</div>
+                  <input class="input" type="time" id="shiftEndEdit" placeholder="--:-- --">
+                </div>
+              </div>
+
+              <div class="grid2 section">
+                <div>
+                  <div class="lbl">Are you the Breadwinner?</div>
+                  <select class="select" id="breadwinnerEdit">
+                    <option value="">-</option><option value="true">Yes</option><option value="false">No</option>
+                  </select>
+                </div>
+                <div>
+                  <div class="lbl">Are you financing your school?</div>
+                  <select class="select" id="selfFinanceEdit">
+                    <option value="">-</option><option value="true">Yes</option><option value="false">No</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="subhead">Scholarship</div>
+              <div class="grid2 section">
+                <div>
+                  <div class="lbl">Scholarship?</div>
+                  <select class="select" id="scholarshipHasEdit">
+                    <option value="">-</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                </div>
+                <div></div>
+              </div>
+
+              <div class="section">
+                <div class="lbl">Scholarship Type</div>
+                <select class="select long" id="scholarshipTypeEdit">
+                  <option value="">-</option>
+                  <option>Government Scholarship</option>
+                  <option>Academic Scholarship</option>
+                  <option>Working Scholarship</option>
+                </select>
+              </div>
+
+              <div class="section">
+                <div class="lbl">Government Scholarship</div>
+                <select class="select long" id="governmentScholarshipEdit">
+                  <option value="">-</option>
+                  <option>CHED Scholarship</option>
+                  <option>OWWA Scholarship</option>
+                  <option>BFAR Scholarship</option>
+                  <option>LANDBANK Scholarship</option>
+                  <option>DOST Scholarship</option>
+                  <option>PhilSA Scholarship</option>
+                </select>
+              </div>
+
+              <div class="subhead">Orphan Student</div>
+              <div class="grid2 section">
+                <div>
+                  <div class="lbl">Orphan Student?</div>
+                  <select class="select" id="orphanEdit">
+                    <option value="">-</option><option value="true">Yes</option><option value="false">No</option>
+                  </select>
+                </div>
+                <div></div>
+              </div>
+              <div class="grid2 section">
+                <div><div class="lbl">Date of Parental Loss (Mother)</div><input class="input" type="date" id="motherLossEdit"></div>
+                <div><div class="lbl">Date of Parental Loss (Father)</div><input class="input" type="date" id="fatherLossEdit"></div>
+              </div>
+              <div class="grid2 section">
+                <div><div class="lbl">Name of Parent (Mother)</div><input class="input" id="motherNameEdit"></div>
+                <div><div class="lbl">Name of Parent (Father)</div><input class="input" id="fatherNameEdit"></div>
+              </div>
+              <div class="section"><div class="lbl">Current Guardian (Full Name)</div><input class="input long" id="guardianNameEdit"></div>
+              <div class="section"><div class="lbl">Guardian Relationship</div><input class="input long" id="guardianRelEdit" placeholder="Mother / Father / ..."></div>
+              <div class="grid2 section">
+                <div><div class="lbl">Guardian Occupation</div><input class="input" id="guardianOccEdit"></div>
+                <div><div class="lbl">Guardian Income</div><input class="input" id="guardianIncEdit"></div>
+              </div>
+
+              <div class="subhead">Non-Permanent Residence</div>
+              <div class="grid2 section">
+                <div>
+                  <div class="lbl">Non-Permanent Residence?</div>
+                  <select class="select" id="nprEdit">
+                    <option value="">-</option><option value="true">Yes</option><option value="false">No</option>
+                  </select>
+                </div>
+                <div></div>
+              </div>
+              <div class="section"><div class="lbl">Current Address</div><input class="input long" id="currentAddressEdit"></div>
+              <div class="section">
+              <div class="lbl">Region</div>
+              <select class="select long" id="regionEdit">
+                <option value="">-</option>
+                <option>Zamboanga Peninsula (Region IX)</option>
+                <option>Northern Mindanao (Region X)</option>
+                <option>Davao Region (Region XI)</option>
+                <option>SOCCSKSARGEN (Region XII)</option>
+                <option>Caraga (Region XIII)</option>
+                <option>Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)</option>
+              </select>
+            </div>
+              <div class="section"><div class="lbl">Living Condition</div><input class="input long" id="livingConditionEdit"></div>
+            </div>
+          </div>
+
+          <div id="achievementView" class="hidden">
+            <div class="subhead" style="margin-top:6px">Add Academic Achievement</div>
+            <div class="section">
+              <div class="lbl">Achievement (max 20)</div>
+              <input class="input long" id="achTitle" maxlength="20" placeholder="e.g., Dean’s Lister">
+              <div class="counter" id="achTitleCnt">0 / 20</div>
+              <div class="lbl" style="margin-top:10px">Description (max 100)</div>
+              <input class="input long" id="achDesc" maxlength="100" placeholder="Short description">
+              <div class="counter" id="achDescCnt">0 / 100</div>
+              <div class="lbl" style="margin-top:10px">Date</div>
+              <input class="input" id="achDate" type="date">
+              <div class="proof-wrap">
+                <div class="lbl" style="margin-bottom:6px">Photographic Proof (required)</div>
+                <div class="proof-box" id="achProofBox">
+                  <span class="proof-placeholder">Click or tap to upload image</span>
+                  <img id="achProofPreview" class="proof-preview" alt="Achievement Proof Preview">
+                  <input type="file" id="achProofInput" accept="image/*">
+                </div>
+                <div class="note">Your request won’t send without a photo.</div>
+              </div>
+            </div>
+            <div class="footer-actions">
+              <button class="btn muted" id="backFromAch">Back</button>
+              <button class="btn primary" id="sendAch">Send request</button>
+            </div>
+          </div>
+
+          <div id="authorshipView" class="hidden">
+            <div class="subhead" style="margin-top:6px">Add Academic Authorship</div>
+            <div class="section">
+              <div class="lbl">Type</div>
+              <select class="select" id="authType">
+                <option value="">Select...</option>
+                <option>Research</option><option>Capstone</option><option>OJT Portfolio</option><option>Project</option>
+              </select>
+              <div class="lbl" style="margin-top:10px">Description (max 100)</div>
+              <input class="input long" id="authDesc" maxlength="100" placeholder="Short description of the work">
+              <div class="counter" id="authDescCnt">0 / 100</div>
+              <div class="lbl" style="margin-top:10px">Date</div>
+              <input class="input" id="authDate" type="date">
+              <div class="proof-wrap">
+                <div class="lbl" style="margin-bottom:6px">Photographic Proof (required)</div>
+                <div class="proof-box" id="authProofBox">
+                  <span class="proof-placeholder">Click or tap to upload image</span>
+                  <img id="authProofPreview" class="proof-preview" alt="Authorship Proof Preview">
+                  <input type="file" id="authProofInput" accept="image/*">
+                </div>
+                <div class="note">Your request won’t send without a photo.</div>
+              </div>
+            </div>
+            <div class="footer-actions">
+              <button class="btn muted" id="backFromAuth">Back</button>
+              <button class="btn primary" id="sendAuth">Send request</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="info-panels">
+      <aside class="panel">
+        <h3>Student Academic Information</h3>
+        <div id="acceptedBox"></div>
+      </aside>
+    </div>
+  </main>
+
+  <div class="modal" id="reviewModal" aria-modal="true" role="dialog">
+    <div class="modal_card">
+      <div class="modal_head">Review your changes</div>
+      <div class="modal_body">
+        <dl id="reviewList"></dl>
+      </div>
+      <div class="modal_actions">
+        <button class="btn muted" id="reviewCancel">Back</button>
+        <button class="btn primary" id="reviewConfirm">Confirm & Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="img-modal" id="imgModal" role="dialog" aria-modal="true">
+    <div class="img-modal-card">
+      <button class="img-modal-close" id="imgClose" aria-label="Close">×</button>
+      <img id="imgFull" alt="Full view">
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+
+(function(){
+  const API_BASE = 'https://73b684773422.ngrok-free.app';
+  const $ = id => document.getElementById(id);
+  let accountId = null;
+  let addlId = null;
+  let editMode = false;
+  let pickedPicFile = null;
+  let prevShiftHours = null;
+  let previewPicUrl = null; 
+
+  let courseEditOpen = false;
+  let hasUsedEdit = false;
+  let currentTab = 'personal';
+  const LOCAL_USED_KEY = id => `sp:editUsed:${id}`;
+
+  function fileToBase64NoPrefix(file) {
+    return new Promise((resolve, reject) => {
+      if (!file) return resolve(null);
+      const r = new FileReader();
+      r.onload = () => {
+        const s = r.result; const i = s.indexOf(',');
+        resolve(i > -1 ? s.slice(i + 1) : s);
+      };
+      r.onerror = reject;
+      r.readAsDataURL(file);
+    });
+  }
+
+  function bindCounter(inputId, counterId, max){
+    const input = $(inputId), counter = $(counterId);
+    if(!input || !counter) return;
+    const upd = () => counter.textContent = `${input.value.length} / ${max}`;
+    input.addEventListener('input', upd); upd();
+  }
+
+  function setupProof(inputId, previewId, boxId){
+    const input = $(inputId), preview = $(previewId), box = $(boxId);
+    if(!input || !preview || !box) return;
+    const placeholder = box.querySelector('.proof-placeholder');
+    input.addEventListener('change', () => {
+      if (!input.files || !input.files[0]) {
+        preview.style.display = 'none';
+        placeholder && (placeholder.style.display = 'block');
+        preview.removeAttribute('src'); return;
+      }
+      const url = URL.createObjectURL(input.files[0]);
+      preview.src = url; preview.style.display = 'block';
+      placeholder && (placeholder.style.display = 'none');
+    });
+  }
+
+  function setSel(id, v){ const el=$(id); if(el){ el.value = (v==null?'':String(v)); } }
+  function showView(targetId){
+  ['personalSection','additionalView','additionalEdit','achievementView','authorshipView']
+    .forEach(id => $(id)?.classList.add('hidden'));
+
+  if (targetId === 'tabbed') {
+    if (currentTab === 'personal') {
+      $('personalSection').classList.remove('hidden');
+    } else {
+      if (editMode) $('additionalEdit').classList.remove('hidden');
+      else $('additionalView').classList.remove('hidden');
+    }
+  } else {
+    $(targetId)?.classList.remove('hidden');
+  }
+
+  
+  const infoPanels = document.querySelector('.info-panels');
+  if (targetId === 'achievementView' || targetId === 'authorshipView' || editMode) {
+    if (infoPanels) infoPanels.style.display = 'none';
+  } else {
+    if (infoPanels) infoPanels.style.display = 'flex';
+  }
+
+  
+  const tabsBar = $('tabsBar') || document.querySelector('.tabs');
+  const hideTabs = (targetId === 'achievementView' || targetId === 'authorshipView');
+  if (tabsBar) tabsBar.classList.toggle('hidden', hideTabs);
+  }
+
+  const backToProfile = () => { showView('tabbed'); };
+
+  function setV(id,val){ const el=$(id); if(el) el.value = val ?? ''; }
+  function yn(v){ if(v===true) return 'Yes'; if(v===false) return 'No'; return 'NONE'; }
+  function fmtDate(d){ return d || 'NONE'; }
+  function resolvePhotoPath(p) {
+    if (!p) return null;
+    if (p.startsWith('http')) return p;
+    if (p.startsWith('/')) return `${API_BASE}${p}`;
+    return `${API_BASE}/studentprofiling/files/profile-pictures/${p}`;
+  }
+  async function loadPhoto(urlLike, altText) {
+    const img = $('photoImg'); if (!img) return;
+    if (!urlLike) { img.removeAttribute('src'); img.alt = altText || 'Profile Picture'; return; }
+    try {
+      const url = resolvePhotoPath(urlLike);
+      const res = await axios.get(url, { responseType: 'blob', headers: { 'ngrok-skip-browser-warning': 'true' }});
+      img.src = URL.createObjectURL(res.data); img.alt = altText || 'Profile Picture';
+    } catch (e) { img.removeAttribute('src'); img.alt = 'No photo'; }
+  }
+  function showNotice() {
+    const n = $('requestNotice'); if (!n) return;
+    n.classList.remove('hidden'); setTimeout(() => { n.classList.add('hidden'); }, 2500);
+  }
+
+  function openProofModal(src){ const m=$('imgModal'), i=$('imgFull'); if(!m||!i) return; i.src=src; m.classList.add('open'); }
+  function closeProofModal(){ const m=$('imgModal'), i=$('imgFull'); if(!m||!i) return; i.removeAttribute('src'); m.classList.remove('open'); }
+
+  function getProofPath(rec){ return rec.proofPath || rec.photoPath || rec.proof || rec.photo || rec.imagePath || ''; }
+  function toServedUrl(p){
+    if(!p) return null; if(/^https?:\/\//i.test(p)) return p;
+    let clean = String(p).replace(/^\/+/, '');
+    if (clean.startsWith('uploads/')) clean = clean.slice(8);
+    return `${API_BASE}/studentprofiling/files/any/${clean}`;
+  }
+  function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]))}
+
+  function prefillShiftInputsFromHours(str){
+  if (!str) return;
+  const parts = String(str).replace(/[–—]/g, '-').split('-');
+  if (parts.length < 2) return;
+
+  const parse = (p) => {
+    p = String(p).trim().toUpperCase();            // e.g. "6:08 PM" or "06:08"
+    const m = p.match(/^(\d{1,2})(?::?(\d{2}))?\s*(AM|PM)?$/i);
+    if (!m) return null;
+    let h = parseInt(m[1], 10);
+    const min = parseInt(m[2] ?? '0', 10);
+    const ap = (m[3] || '').toUpperCase();
+    if (ap === 'PM' && h < 12) h += 12;
+    if (ap === 'AM' && h === 12) h = 0;
+    const hh = String(h).padStart(2, '0');
+    const mm = String(min).padStart(2, '0');
+    return `${hh}:${mm}`;                           // value format for <input type="time">
+  };
+
+  const s = parse(parts[0]);
+  const e = parse(parts[1]);
+  if (s) document.getElementById('shiftStartEdit').value = s;
+  if (e) document.getElementById('shiftEndEdit').value = e;
+}
+
+  function toRegIrregOption(v){
+    if(!v) return '';
+    v = String(v).toLowerCase().trim();
+    if (v.startsWith('regular'))   return 'Regular';
+    if (v.startsWith('irregular')) return 'Irregular';
+    return '';
+  }
+  function fromRegIrregOption(v){
+    if(!v) return null;
+    v = String(v).trim();
+    if (v === 'Regular'  || v === 'Regular Student')   return 'Regular Student';
+    if (v === 'Irregular'|| v === 'Irregular Student') return 'Irregular Student';
+    return v;
+  }
+
+  function hydrateImages(root){
+    const headers = { 'ngrok-skip-browser-warning': 'true' };
+    root.querySelectorAll('img[data-src]').forEach(async (img) => {
+      const raw = img.getAttribute('data-src') || '';
+      const url = toServedUrl(raw);
+      if (!url) { img.style.display='none'; return; }
+      try{
+        const res = await axios.get(url, { responseType: 'blob', headers });
+        if (res.status >= 200 && res.status < 300) {
+          const blobUrl = URL.createObjectURL(res.data);
+          img.src = blobUrl; img.alt = 'proof'; img.style.display = '';
+          if (!img.dataset.viewerBound) {
+            img.addEventListener('click', () => openProofModal(img.src));
+            img.dataset.viewerBound = '1';
+          }
+        } else img.style.display = 'none';
+      }catch(e){
+        console.warn('image load failed:', url, e);
+        img.removeAttribute('src'); img.alt = 'proof not available'; img.style.display = 'none';
+      }
+    });
+  }
+
+  function cardHtml(rec){
+    const kind = rec.kind === 'ACH' ? 'Achievement' : 'Authorship';
+    const name = rec.kind === 'ACH' ? rec.achievement : rec.type;
+    const desc = rec.description || '';
+    const date = rec.date || '';
+    const raw  = getProofPath(rec);
+    return `
+      <div class="req-card">
+        <span class="badge">${kind}</span>
+        <div style="font-weight:700;margin-top:6px">${name ? escapeHtml(name) : ''}</div>
+        ${date ? `<div style="font-size:12px;opacity:.8">${escapeHtml(date)}</div>` : ''}
+        <div style="margin-top:4px">${escapeHtml(desc)}</div>
+        ${raw ? `<img class="req-img" data-src="${escapeHtml(raw)}" alt="proof">` : ''}
+      </div>`;
+  }
+
+  async function loadAcademicPanels(id){
+    const headers = { 'ngrok-skip-browser-warning':'true' };
+    const safeGet = async url => { try { const r = await axios.get(url, { headers }); return Array.isArray(r.data) ? r.data : []; } catch { return []; } };
+    const achAccepted = await safeGet(`${API_BASE}/studentprofiling/achievements/by-account/${id}?status=ACCEPTED`);
+    const autAccepted = await safeGet(`${API_BASE}/studentprofiling/authorships/by-account/${id}?status=ACCEPTED`);
+    const accepted = [ ...achAccepted.map(x => ({...x, kind:'ACH'})), ...autAccepted.map(x => ({...x, kind:'AUT'})) ];
+    const box = $('acceptedBox');
+    box.innerHTML = accepted.length ? accepted.map(cardHtml).join('') : '<div class="req-card">No Academic Information</div>';
+    hydrateImages(box);
+  }
+
+  function showTab(tab){
+    currentTab = tab;
+    $('tabPersonal').classList.toggle('active', tab==='personal');
+    $('tabAdditional').classList.toggle('active', tab==='additional');
+    showView('tabbed');
+  }
+
+  function applyScholarshipRules(){
+  const has = $('scholarshipHasEdit')?.value || '';
+  const type = $('scholarshipTypeEdit')?.value || '';
+
+  setDisabledAndClear(['scholarshipTypeEdit'], !(has === 'true'), true);
+
+  const needsGov = (has === 'true' && type === 'Government Scholarship');
+  setDisabledAndClear(['governmentScholarshipEdit'], !needsGov, true);
+
+  if (has !== 'true'){
+    $('scholarshipTypeEdit').value = '';
+    $('governmentScholarshipEdit').value = '';
+  } else if (!needsGov){
+    $('governmentScholarshipEdit').value = '';
+  }
+}
+
+  function toggleEditFields(on){
+    $('nameRowView').classList.toggle('hidden', on);
+    $('nameRowEdit').classList.toggle('hidden', !on);
+
+    ['gender','year','course','birth','nat','contact','email','addr','rel','classSchedule','regularIrregular'].forEach(id=>{
+  $(id).classList.toggle('hidden', on);
+  const e = $(id+'Edit'); if (e) e.classList.toggle('hidden', !on);
+});
+
+    $('editPicWrap').style.display = on ? 'block' : 'none';
+
+    const infoPanels = document.querySelector('.info-panels');
+    if (infoPanels) infoPanels.style.display = on ? 'none' : 'flex';
+    $('requestButtons').classList.toggle('hidden', on);
+
+    $('btnEditProfile').classList.toggle('hidden', on);
+    $('editActions').classList.toggle('hidden', !on);
+
+    
+    if (currentTab === 'additional') {
+      $('additionalView').classList.toggle('hidden', on);
+      $('additionalEdit').classList.toggle('hidden', !on);
+    } else {
+      $('additionalView').classList.add('hidden');
+      $('additionalEdit').classList.add('hidden');
+    }
+  }
+
+  function setEditMode(on){ editMode = on; toggleEditFields(on); }
+
+  function setDisabledAndClear(ids, disabled, writeNone=false){
+    ids.forEach(id=>{
+      const el = $(id); if(!el) return;
+      el.disabled = disabled;
+      el.style.background = disabled ? '#ddd' : '#fff';
+      if (disabled) el.value = '';
+      if (writeNone && disabled) el.placeholder = 'NONE';
+      if (!disabled) el.placeholder = '';
+    });
+  }
+
+  function applyWorkingTypeRules(){
+    const t = $('workingTypeEdit').value;
+    const isSA = (t === 'Student SA');
+    $('workPlaceEditRow').classList.toggle('hidden', isSA);
+    $('departmentEditRow').classList.toggle('hidden', !isSA);
+  }
+
+  function applyWorkingStudentRules(){
+    const v = $('workingStudentEdit').value;
+    const off = (v === 'false');
+
+    setDisabledAndClear([
+      'workingTypeEdit','workPlaceEdit','departmentEdit',
+      'shiftStartEdit','shiftEndEdit','breadwinnerEdit','selfFinanceEdit',
+      'supervisorNameEdit','supervisorContactEdit'
+    ], off, true);
+
+    if (off){
+      $('workPlaceEditRow').classList.remove('hidden');
+      $('departmentEditRow').classList.add('hidden');
+    } else {
+      applyWorkingTypeRules();
+    }
+  }
+
+  function applyOrphanRules(){
+    const v = $('orphanEdit').value;
+    const off = (v === 'false');
+    setDisabledAndClear(
+      ['motherLossEdit','fatherLossEdit','motherNameEdit','fatherNameEdit','guardianNameEdit','guardianRelEdit','guardianOccEdit','guardianIncEdit'],
+      off, true
+    );
+  }
+  function applyNPRRules(){
+  const v = $('nprEdit').value;
+  const no = (v === 'false');
+  setDisabledAndClear(['currentAddressEdit','livingConditionEdit','regionEdit'], no, true);
+}
+
+  function refreshEditButton(){
+    const btn = $('btnEditProfile');
+    if(!btn) return;
+    if (!courseEditOpen){ btn.disabled = true; btn.textContent = 'Edit Disabled'; }
+    else if (hasUsedEdit){ btn.disabled = true; btn.textContent = 'Edit Used'; }
+    else { btn.disabled = false; btn.textContent = 'Edit Profile'; }
+  }
+
+  function setStatusPill(statusRaw){
+  const pill = document.getElementById('statusPill');
+  const status = (statusRaw || '').trim();
+
+  
+  pill.className = 'status-pill';
+
+  let label = status || 'NOT Currently Enrolled';
+  let cls   = 'status-not';
+
+  switch (status) {
+    case 'Currently Enrolled': cls = 'status-enrolled'; break;
+    case 'NOT Currently Enrolled': cls = 'status-not'; break;
+    case 'Inactive': cls = 'status-inactive'; break;
+    case 'Graduated': cls = 'status-graduated'; break;
+    default:
+      label = status || 'NOT Currently Enrolled';
+      cls = (status === 'Currently Enrolled') ? 'status-enrolled' : 'status-not';
+  }
+
+  pill.textContent = label;
+  pill.classList.add(cls);
+}
+
+  async function loadStudent(){
+    const params = new URLSearchParams(location.search);
+    accountId = params.get('accountId') || localStorage.getItem('accountId');
+    if (!accountId) return;
+
+    const res = await axios.get(`${API_BASE}/studentprofiling/student-full/${accountId}`, {
+      headers: { 'ngrok-skip-browser-warning': 'true' }
+    });
+    const data = res.data || {};
+    const s = data.student || {};
+    const ai = data.additionalInfo || {};
+    addlId = ai.id ?? null;
+
+    if (ai.editUsed === true) {
+      hasUsedEdit = true;
+      localStorage.setItem(LOCAL_USED_KEY(accountId), '1');
+    } else {
+      hasUsedEdit = false;
+      localStorage.removeItem(LOCAL_USED_KEY(accountId));
+    }
+
+    try{
+      const st = await axios.get(`${API_BASE}/studentprofiling/edit/state`, {
+        params:{ course: s.course }, headers:{ 'ngrok-skip-browser-warning':'true' }
+      });
+      courseEditOpen = !!(st.data && st.data.open);
+    }catch(e){ courseEditOpen = false; }
+    refreshEditButton();
+
+    const full = [s.firstName,s.middleName,s.lastName].filter(Boolean).join(' ');
+    setV('name', full);
+    setV('age', s.age); setV('gender', s.gender); setV('year', s.yearLevel);
+    setV('course', s.course); setV('birth', s.birthdate || ''); setV('nat', s.studentNationality);
+    setV('contact', s.contactInfo); setV('email', s.email || data.accountEmail); setV('addr', s.address); setV('rel', s.studentReligion);
+    setV('classSchedule', s.classSchedule || 'NONE');
+    setV('regularIrregular', s.regularOrIrregular || 'NONE');
+    setSel('classScheduleEdit', s.classSchedule || '');
+    setSel('regularIrregularEdit', toRegIrregOption(s.regularOrIrregular));
+    setV('workingStudentType', ai.workingStudentType || 'NONE');
+    setV('department', ai.department || 'NONE');
+    setV('workPlace', ai.placeOfWork || 'NONE');
+    setV('shiftHours', data.shiftHours || ai.shiftHours || 'NONE');
+    prevShiftHours = ai.shiftHours || data.shiftHours || null;
+    prefillShiftInputsFromHours(prevShiftHours);
+    setV('supervisorName', ai.supervisorName || 'NONE');
+    setV('supervisorContact', ai.supervisorContact || 'NONE');
+    setV('breadwinner', yn(ai.breadwinner));
+    setV('selfFinance', yn(ai.selfFinancing));
+    setV('motherLossDate', fmtDate(ai.dateLossMother));
+    setV('fatherLossDate', fmtDate(ai.dateLossFather));
+    const momName = ai.nameOfParentMother ?? ai.motherName ?? null; 
+    const dadName = ai.nameOfParentFather ?? ai.fatherName ?? null;
+
+    setV('motherName', momName || 'NONE');
+    setV('fatherName', dadName || 'NONE');
+    setV('guardianName', ai.currentGuardian || 'NONE');
+    setV('guardianRel', ai.guardianRelationship || 'NONE');
+    setV('guardianOcc', ai.guardianOccupation || 'NONE');
+    setV('guardianInc', ai.guardianIncome || 'NONE');
+    setV('scholarshipType', ai.scholarshipType || 'NONE');
+    setV('governmentScholarship', ai.governmentScholarship || 'NONE');
+    setV('region', ai.region || 'NONE');
+
+    setV('currentAddress', ai.currentAddress || 'NONE'); setV('livingCondition', ai.livingCondition || 'NONE');
+
+    await loadPhoto(s.profilePicture, full);
+
+    
+    setV('firstName', s.firstName || '');
+    setV('middleName', s.middleName || '');
+    setV('lastName', s.lastName || '');
+    setSel('genderEdit', s.gender || '');
+    setSel('yearEdit', s.yearLevel || '');
+    setSel('courseEdit', s.course || '');
+    setV('birthEdit', s.birthdate || '');
+    setV('natEdit', s.studentNationality || '');
+    setV('contactEdit', s.contactInfo || '');
+    setV('emailEdit', s.email || data.accountEmail || '');
+    setV('addrEdit', s.address || '');
+    setSel('relEdit', s.studentReligion || '');
+
+    
+    window.__CURRENT_AI__ = ai || {};
+
+    
+    setSel('workingStudentEdit',
+      ai.workingStudent === true ? 'true' :
+      (ai.workingStudent === false ? 'false' : '')
+    );
+    setSel('workingTypeEdit', ai.workingStudentType || '');
+    setV('workPlaceEdit', ai.placeOfWork || '');
+    setSel('departmentEdit', ai.department || '');
+    setV('supervisorNameEdit', ai.supervisorName || '');
+    setV('supervisorContactEdit', ai.supervisorContact || '');
+
+    setSel('breadwinnerEdit',
+      ai.breadwinner === true ? 'true' :
+      (ai.breadwinner === false ? 'false' : '')
+    );
+    setSel('selfFinanceEdit',
+      ai.selfFinancing === true ? 'true' :
+      (ai.selfFinancing === false ? 'false' : '')
+    );
+
+
+    setSel('orphanEdit',
+      ai.orphan === true ? 'true' :
+      (ai.orphan === false ? 'false' : '')
+    );
+    setV('motherLossEdit', ai.dateLossMother || '');
+    setV('fatherLossEdit', ai.dateLossFather || '');
+    setV('motherNameEdit', ai.nameOfParentMother || '');
+    setV('fatherNameEdit', ai.nameOfParentFather || '');
+    setV('guardianNameEdit', ai.currentGuardian || '');
+    setV('guardianRelEdit', ai.guardianRelationship || '');
+    setV('guardianOccEdit', ai.guardianOccupation || '');
+    setV('guardianIncEdit', ai.guardianIncome || '');
+
+    const hasScholar = !!(ai.scholarshipType && ai.scholarshipType !== 'NONE');
+    setSel('scholarshipHasEdit', hasScholar ? 'true' : '');
+    setSel('scholarshipTypeEdit', ai.scholarshipType || '');
+    setSel('governmentScholarshipEdit', ai.governmentScholarship || '');
+    setSel('regionEdit', ai.region || '');
+
+    setSel('nprEdit',
+      ai.davaoPermanentResidence === true ? 'false' :
+      (ai.davaoPermanentResidence === false ? 'true' : '')
+    );
+    setV('currentAddressEdit', ai.currentAddress || '');
+    setV('livingConditionEdit', ai.livingCondition || '');
+
+    setStatusPill(
+      ai.status
+      || s.status
+      || s.studentStatus
+      || s.enrollmentStatus
+      || data.enrollmentStatus
+      || s.studentEnrollmentStatus
+      || ''
+    );
+
+    applyWorkingStudentRules();
+    applyOrphanRules();
+    applyNPRRules();
+    applyScholarshipRules();
+
+    showTab(currentTab);
+  }
+
+  function collectStudent(){
+    return {
+      accountId: Number(accountId),
+      firstName: $('firstName').value.trim(),
+      middleName: $('middleName').value.trim(),
+      lastName: $('lastName').value.trim(),
+      course: $('courseEdit').value || '',
+      gender: $('genderEdit').value || '',
+      age: Number($('age').value || 0),
+      birthdate: $('birthEdit').value || null,
+      yearLevel: $('yearEdit').value || '',
+      contactInfo: $('contactEdit').value.trim(),
+      email: $('emailEdit').value.trim(),
+      address: $('addrEdit').value.trim(),
+      studentNationality: $('natEdit').value.trim(),
+      studentReligion: $('relEdit').value || '',
+      classSchedule: $('classScheduleEdit').value.trim(),
+      regularOrIrregular: (function(){
+      const edited = $('regularIrregularEdit').value.trim(); 
+      if (edited) return fromRegIrregOption(edited);
+      return $('regularIrregular').value || null;
+    })()
+    };
+  }
+
+  function collectAdditional(){
+    const ai0 = window.__CURRENT_AI__ || {};
+    const workingVal = $('workingStudentEdit').value;
+    const orphanVal  = $('orphanEdit').value;
+    const nprVal     = $('nprEdit').value;
+    const hasScholar = $('scholarshipHasEdit').value; 
+    const typeVal = $('scholarshipTypeEdit').value || '';
+    const govVal  = $('governmentScholarshipEdit').value || '';
+
+    const nprFlag =
+      (nprVal === '') ? !!ai0.davaoPermanentResidence :
+      (nprVal === 'false' ? true : false);
+
+    const workingType = $('workingTypeEdit').value || null;
+
+    const payload = {
+      id: addlId,
+      accountId: Number(accountId),
+
+      workingStudent: workingVal === '' ? ai0.workingStudent ?? null : (workingVal === 'true'),
+      workingStudentType: workingType,
+      placeOfWork: $('workPlaceEdit').value.trim() || null,
+      department: $('departmentEdit').value || null,
+      supervisorName: $('supervisorNameEdit').value.trim() || null,
+      supervisorContact: $('supervisorContactEdit').value.trim() || null,
+      shiftHours: (function(){
+      const s = $('shiftStartEdit').value || '';
+      const e = $('shiftEndEdit').value || '';
+      if (s && e) return `${s} - ${e}`;        // update only when BOTH are set
+      return prevShiftHours || ai0.shiftHours || null;  // otherwise keep what we had
+    })(),
+
+      breadwinner: $('breadwinnerEdit').value === '' ? null : $('breadwinnerEdit').value === 'true',
+      selfFinancing: $('selfFinanceEdit').value === '' ? null : $('selfFinanceEdit').value === 'true',
+
+      orphan: orphanVal === '' ? ai0.orphan ?? null : (orphanVal === 'true'),
+      dateLossMother: $('motherLossEdit').value || null,
+      dateLossFather: $('fatherLossEdit').value || null,
+      nameOfParentMother: $('motherNameEdit').value.trim() || null,
+      nameOfParentFather: $('fatherNameEdit').value.trim() || null,
+      currentGuardian: $('guardianNameEdit').value.trim() || null,
+      guardianRelationship: $('guardianRelEdit').value.trim() || null,
+      guardianOccupation: $('guardianOccEdit').value.trim() || null,
+      guardianIncome: $('guardianIncEdit').value.trim() || null,
+
+      scholarshipType: (hasScholar==='true') ? (typeVal || null) : null,
+      governmentScholarship:
+        (hasScholar==='true' && typeVal==='Government Scholarship') ? (govVal || null) : null,
+      region: $('regionEdit').value.trim() || null,
+
+      currentAddress: $('currentAddressEdit').value.trim() || null,
+      livingCondition: $('livingConditionEdit').value.trim() || null,
+      davaoPermanentResidence: nprFlag
+    };
+
+    if (payload.workingStudentType === 'Student SA') {
+      payload.placeOfWork = null;
+    } else if (payload.workingStudentType === 'Outside') {
+      payload.department = null;
+    }
+
+    if (payload.workingStudent === false) {
+      payload.workingStudentType = null;
+      payload.placeOfWork = null;
+      payload.department = null;
+      payload.shiftHours = null;
+      payload.breadwinner = null;
+      payload.selfFinancing = null;
+      payload.supervisorName = null;
+      payload.supervisorContact = null;
+    }
+    if (payload.orphan === false) {
+      payload.dateLossMother = null;
+      payload.dateLossFather = null;
+      payload.nameOfParentMother = null;
+      payload.nameOfParentFather = null;
+      payload.currentGuardian = null;
+      payload.guardianRelationship = null;
+      payload.guardianOccupation = null;
+      payload.guardianIncome = null;
+      $('motherNameEdit').value = '';
+      $('fatherNameEdit').value = '';
+    }
+    if (payload.davaoPermanentResidence === true) {
+      payload.currentAddress = null;
+      payload.livingCondition = null;
+    }
+    return payload;
+  }
+
+  function openReviewModal(student, addl){
+    const list = $('reviewList');
+    const rows = [
+      ['First Name', student.firstName],
+      ['Middle Name', student.middleName],
+      ['Last Name', student.lastName],
+      ['Age (view-only here)', $('age').value],
+      ['Gender', student.gender],
+      ['Year Level', student.yearLevel],
+      ['Course', student.course],
+      ['Birthdate', student.birthdate],
+      ['Contact Info', student.contactInfo],
+      ['Email', student.email],
+      ['Address', student.address],
+      ['Religion', student.studentReligion],
+      ['Nationality', student.studentNationality],
+      ['Working Student', addl.workingStudent==null?'':(addl.workingStudent?'Yes':'No')],
+      ['Working Student Type', addl.workingStudentType || ''],
+      ['Department', addl.department || ''],
+      ['Place of Work', addl.placeOfWork || ''],
+      ['Supervisor Name', addl.supervisorName || ''],
+      ['Supervisor Contact', addl.supervisorContact || ''],
+      ['Shift Hours', addl.shiftHours || ''],
+      ['Breadwinner', addl.breadwinner==null?'':(addl.breadwinner?'Yes':'No')],
+      ['Self Financing', addl.selfFinancing==null?'':(addl.selfFinancing?'Yes':'No')],
+      ['Class Schedule', student.classSchedule],
+      ['Regular/Irregular', student.regularOrIrregular],
+      ['Scholarship Type', addl.scholarshipType || ''],
+      ['Government Scholarship', addl.governmentScholarship || ''],
+      ['Orphan Student', addl.orphan==null?'':(addl.orphan?'Yes':'No')],
+      ['Mother Loss Date', addl.dateLossMother || ''],
+      ['Father Loss Date', addl.dateLossFather || ''],
+      ['Mother Name', addl.nameOfParentMother || ''],
+      ['Father Name', addl.nameOfParentFather || ''],
+      ['Guardian', addl.currentGuardian || ''],
+      ['Guardian Relationship', addl.guardianRelationship || ''],
+      ['Guardian Occupation', addl.guardianOccupation || ''],
+      ['Guardian Income', addl.guardianIncome || ''],
+      ['Non-Permanent Residence (flag)', addl.davaoPermanentResidence ? 'TRUE (Address cleared)' : 'FALSE'],
+      ['Current Address', addl.currentAddress || ''],
+      ['Region', addl.region || ''],
+      ['Living Condition', addl.livingCondition || '']
+    ];
+    list.innerHTML = rows.map(([k,v])=>`<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(String(v??''))}</dd>`).join('');
+    $('reviewModal').classList.add('open');
+  }
+
+  async function saveEdits(){
+    const student = collectStudent();
+    const addl = collectAdditional();
+    addl.editUsed = true;
+
+    openReviewModal(student, addl);
+
+    const confirm = async () => {
+      try{
+        let base64 = await fileToBase64NoPrefix(pickedPicFile);
+        if (base64) student.profilePictureBase64 = base64;
+
+        const headers = { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' };
+        await axios.put(`${API_BASE}/studentprofiling/student/${accountId}`, student, { headers });
+        await axios.put(`${API_BASE}/studentprofiling/additionalinfo/${accountId}`, addl, { headers });
+
+        hasUsedEdit = true;
+        localStorage.setItem(LOCAL_USED_KEY(accountId), '1');
+        refreshEditButton();
+
+        $('reviewModal').classList.remove('open');
+        setEditMode(false);
+        await loadStudent();
+        showNotice();
+      }catch(e){
+        console.error(e);
+        alert('Failed to save changes.');
+      }finally{
+        $('reviewConfirm').removeEventListener('click', confirm);
+      }
+    };
+    $('reviewConfirm').addEventListener('click', confirm, { once:true });
+  }
+
+  
+function calcAge(isoDateStr){
+  if(!isoDateStr) return '';
+  const dob = new Date(isoDateStr + 'T00:00:00');
+  if (isNaN(dob)) return '';
+  const now = new Date();
+  let age = now.getFullYear() - dob.getFullYear();
+  const m = now.getMonth() - dob.getMonth();
+  if (m < 0 || (m === 0 && now.getDate() < dob.getDate())) age--;
+  return age;
+}
+
+function setBirthLimitsAndBind(){
+  const birthEl = document.getElementById('birthEdit');
+  if (!birthEl) return;
+
+  
+  const today = new Date();
+  const maxBirth = new Date(today.getFullYear()-18, today.getMonth(), today.getDate());
+  birthEl.setAttribute('max', maxBirth.toISOString().slice(0,10));
+  birthEl.setAttribute('min', '1900-01-01');
+
+  birthEl.addEventListener('change', () => {
+    const v = birthEl.value;
+    const age = calcAge(v);
+    if (age !== '' && age < 18){
+      alert('Student must be at least 18 years old.');
+      birthEl.value = '';
+      document.getElementById('age').value = '';
+      birthEl.focus();
+      return;
+    }
+    document.getElementById('age').value = (age === '' ? '' : String(age));
+  });
+}
+
+
+function bindPhoneLimit(id){
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    el.value = el.value.replace(/\D/g,'').slice(0,11);
+  });
+  el.addEventListener('blur', () => {
+    if (el.value && el.value.length !== 11){
+      alert('Contact number must be exactly 11 digits.');
+      el.focus();
+    }
+  });
+}
+
+
+const NAME_SANITIZER = /[^A-Za-zÀ-ÿ' -]/g;
+function bindNameOnly(id){
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    el.value = el.value.replace(NAME_SANITIZER,'').replace(/\s{2,}/g,' ');
+  });
+}
+
+
+function setOrphanDateMax(){
+  const max = new Date().toISOString().slice(0,10);
+  ['motherLossEdit','fatherLossEdit'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute('max', max);
+  });
+}
+
+
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(location.search);
+  accountId = params.get('accountId') || localStorage.getItem('accountId');
+
+  $('accountBtn')?.addEventListener('click', ()=> location.href='StudentAccount.html');
+  $('logoutBtn')?.addEventListener('click', ()=> { localStorage.removeItem('session'); location.href='index.html'; });
+
+  $('tabPersonal')?.addEventListener('click', () => showTab('personal'));
+  $('tabAdditional')?.addEventListener('click', () => showTab('additional'));
+
+  $('btnAddAch')?.addEventListener('click', ()=> showView('achievementView'));
+  $('btnAddAuth')?.addEventListener('click', ()=> showView('authorshipView'));
+  $('backFromAch')?.addEventListener('click', backToProfile);
+  $('backFromAuth')?.addEventListener('click', backToProfile);
+
+  $('btnEditProfile')?.addEventListener('click', () => { if (!courseEditOpen || hasUsedEdit) return; setEditMode(true); showTab(currentTab); });
+  $('btnCancelEdit')?.addEventListener('click', () => { setEditMode(false); loadStudent(); pickedPicFile=null; $('profilePicInput').value=''; showTab(currentTab); });
+  $('btnSaveEdit')?.addEventListener('click', saveEdits);
+  $('profilePicInput')?.addEventListener('change', e => {
+  const file = e.target.files?.[0] || null;
+  pickedPicFile = file;
+
+  const img = $('photoImg');
+  if (!img) return;
+
+  // If no file selected, clear preview and fall back to whatever loadStudent will set
+  if (!file) {
+    if (previewPicUrl) {
+      URL.revokeObjectURL(previewPicUrl);
+      previewPicUrl = null;
+    }
+    img.removeAttribute('src');
+    img.alt = 'Profile Picture';
+    return;
+  }
+
+  // Revoke previous object URL if any
+  if (previewPicUrl) {
+    URL.revokeObjectURL(previewPicUrl);
+    previewPicUrl = null;
+  }
+
+  // Show instant preview
+  previewPicUrl = URL.createObjectURL(file);
+  img.src = previewPicUrl;
+  img.alt = 'Profile Picture (preview)';
+});
+
+  $('scholarshipHasEdit')?.addEventListener('change', applyScholarshipRules);
+  $('scholarshipTypeEdit')?.addEventListener('change', applyScholarshipRules);
+
+  $('reviewCancel')?.addEventListener('click', () => $('reviewModal').classList.remove('open'));
+
+  bindCounter('achTitle','achTitleCnt',20);
+  bindCounter('achDesc','achDescCnt',100);
+  bindCounter('authDesc','authDescCnt',100);
+  setupProof('achProofInput','achProofPreview','achProofBox');
+  setupProof('authProofInput','authProofPreview','authProofBox');
+
+  $('sendAch')?.addEventListener('click', async () => { const title = $('achTitle')?.value.trim() || '';
+      const desc  = $('achDesc')?.value.trim() || '';
+      const date  = $('achDate')?.value || '';
+      const file  = $('achProofInput')?.files?.[0];
+      if (!accountId) return alert('Missing accountId.');
+      if (!title) return alert('Please enter an achievement.');
+      if (!desc)  return alert('Please enter a description.');
+      if (title.length > 20) return alert('Achievement must be at most 20 characters.');
+      if (desc.length > 100) return alert('Description must be at most 100 characters.');
+      if (!file) return alert('Photographic proof is required.');
+      const base64 = await fileToBase64NoPrefix(file);
+      try{
+        await axios.post(`${API_BASE}/studentprofiling/achievements`, {
+          accountId: Number(accountId),
+          achievement: title,
+          description: desc,
+          date: date || null,
+          photoBase64: base64
+        }, { headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' }});
+        backToProfile(); showNotice();
+      }catch(e){ console.error(e); alert('Failed to send request.'); }});
+  $('sendAuth')?.addEventListener('click', async () => {
+      const type = $('authType')?.value.trim() || '';
+      const desc = $('authDesc')?.value.trim() || '';
+      const date = $('authDate')?.value || '';
+      const file = $('authProofInput')?.files?.[0];
+      if (!accountId) return alert('Missing accountId.');
+      if (!type) return alert('Please select a type.');
+      if (!desc) return alert('Please enter a description.');
+      if (desc.length > 100) return alert('Description must be at most 100 characters.');
+      if (!file) return alert('Photographic proof is required.');
+      const base64 = await fileToBase64NoPrefix(file);
+      try{
+        await axios.post(`${API_BASE}/studentprofiling/authorships`, {
+          accountId: Number(accountId),
+          type, description: desc, date: date || null, photoBase64: base64
+        }, { headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' }});
+        backToProfile(); showNotice();
+      }catch(e){ console.error(e); alert('Failed to send request.'); }
+    });
+
+  $('workingStudentEdit')?.addEventListener('change', applyWorkingStudentRules);
+  $('workingTypeEdit')?.addEventListener('change', applyWorkingTypeRules);
+  $('orphanEdit')?.addEventListener('change', applyOrphanRules);
+  $('nprEdit')?.addEventListener('change', applyNPRRules);
+
+  setBirthLimitsAndBind();
+  setOrphanDateMax();
+  bindPhoneLimit('contactEdit');
+  bindPhoneLimit('supervisorContactEdit');
+  ['firstName','middleName','lastName','supervisorNameEdit'].forEach(bindNameOnly);
+
+  if ($('birthEdit')?.value) {
+    $('age').value = String(calcAge($('birthEdit').value));
+  }
+
+  (async ()=>{ 
+    try{ 
+      await loadStudent(); 
+      if (accountId) await loadAcademicPanels(accountId);
+    } catch(e){ 
+      console.warn('Load failed:', e); 
+    } 
+  })();
+
+  $('imgClose')?.addEventListener('click', closeProofModal);
+  $('imgModal')?.addEventListener('click', (e) => { if (e.target.id === 'imgModal') closeProofModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeProofModal(); });
+});
+
+})();
+</script>
+</body>
+</html>
+
+

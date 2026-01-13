@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dean Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="Dean.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="avatar"></div>
+    <h2>Welcome<br>Back!</h2>
+    <button class="side-btn" id="accountBtn">Account</button>
+    <button class="side-btn" id="logoutBtn">Logout</button>
+    <button class="side-btn" id="backBtn">Back</button>
+  </aside>
+  <main class="main">
+    <section class="card">
+      <h1>Account Settings</h1>
+      <form id="accountForm" class="reg-form">
+        <label>Name<input type="text" name="name" value="Dean Name" required></label>
+        <label>Email<input type="email" name="email" value="dean@example.edu" required></label>
+        <label>Current Password<input type="password" name="password" required></label>
+        <label>New Password<input type="password" name="newPassword" required></label>
+        <button type="submit">Change Password</button>
+      </form>
+    </section>
+  </main>
+  <script>
+    document.getElementById('accountForm').addEventListener('submit', e => {
+      e.preventDefault()
+    })
+    document.getElementById('logoutBtn').onclick = () => location.href = 'index.html'
+    document.getElementById('backBtn').onclick  = () => history.back()
+  </script>
+</body>
+</html>

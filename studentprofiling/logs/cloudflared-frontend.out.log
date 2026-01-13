@@ -1,0 +1,84 @@
+{"level":"info","time":"2025-11-12T13:43:45Z","message":"Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee, are subject to the Cloudflare Online Services Terms of Use (https://www.cloudflare.com/website-terms/), and Cloudflare reserves the right to investigate your use of Tunnels for violations of such terms. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps"}
+{"level":"info","time":"2025-11-12T13:43:45Z","message":"Requesting new quick Tunnel on trycloudflare.com..."}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"+--------------------------------------------------------------------------------------------+"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"|  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"|  https://seat-file-condition-resolution.trycloudflare.com                                  |"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"+--------------------------------------------------------------------------------------------+"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp]"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"Version 2025.10.0 (Checksum 07ce5e7ffc805734797d37061654f5f0152de2a2da241bf52e90822e9b8fc724)"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"GOOS: windows, GOVersion: go1.24.6, GoArch: amd64"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"Settings: map[ha-connections:1 logfile:C:\\Users\\Admin\\Desktop\\studentprofiling\\logs\\cloudflared-frontend.out.log loglevel:info no-autoupdate:true protocol:quic url:http://localhost:5500]"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"cloudflared will not automatically update on Windows systems."}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"Generated Connector ID: 784e5f0d-3695-4a81-b467-f9f098ba3e6f"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"Initial protocol quic"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"ICMP proxy will use 192.168.1.11 as source for IPv4"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"ICMP proxy will use fe80::52dd:d7df:929:7646 in zone Ethernet 2 as source for IPv6"}
+{"level":"error","originCertPath":"","time":"2025-11-12T13:43:48Z","message":"Cannot determine default origin certificate path. No file cert.pem in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp]. You need to specify the origin certificate path by specifying the origincert option in the configuration file, or set TUNNEL_ORIGIN_CERT environment variable"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"cloudflared does not support loading the system root certificate pool on Windows. Please use --origin-ca-pool <PATH> to specify the path to the certificate pool"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"ICMP proxy will use 192.168.1.11 as source for IPv4"}
+{"level":"info","event":0,"ip":"198.41.200.233","connIndex":0,"time":"2025-11-12T13:43:48Z","message":"Tunnel connection curve preferences: [X25519MLKEM768 CurveP256]"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"ICMP proxy will use fe80::52dd:d7df:929:7646 in zone Ethernet 2 as source for IPv6"}
+{"level":"info","time":"2025-11-12T13:43:48Z","message":"Starting metrics server on 127.0.0.1:20241/metrics"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"context canceled","time":"2025-11-12T13:43:48Z","message":"failed to run the datagram handler"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"control stream encountered a failure while serving","time":"2025-11-12T13:43:48Z","message":"failed to serve tunnel connection"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"control stream encountered a failure while serving","time":"2025-11-12T13:43:48Z","message":"Serve tunnel error"}
+{"level":"info","event":0,"ip":"198.41.200.233","connIndex":0,"time":"2025-11-12T13:43:48Z","message":"Retrying connection in up to 2s"}
+{"level":"info","event":0,"ip":"198.41.200.233","connIndex":0,"time":"2025-11-12T13:43:50Z","message":"Tunnel connection curve preferences: [X25519MLKEM768 CurveP256]"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"context canceled","time":"2025-11-12T13:43:50Z","message":"failed to run the datagram handler"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"control stream encountered a failure while serving","time":"2025-11-12T13:43:50Z","message":"failed to serve tunnel connection"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"control stream encountered a failure while serving","time":"2025-11-12T13:43:50Z","message":"Serve tunnel error"}
+{"level":"info","event":0,"ip":"198.41.200.233","connIndex":0,"time":"2025-11-12T13:43:50Z","message":"Retrying connection in up to 4s"}
+{"level":"info","event":0,"ip":"198.41.200.233","connIndex":0,"time":"2025-11-12T13:43:52Z","message":"Tunnel connection curve preferences: [X25519MLKEM768 CurveP256]"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"context canceled","time":"2025-11-12T13:43:52Z","message":"failed to run the datagram handler"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"control stream encountered a failure while serving","time":"2025-11-12T13:43:52Z","message":"failed to serve tunnel connection"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"control stream encountered a failure while serving","time":"2025-11-12T13:43:52Z","message":"Serve tunnel error"}
+{"level":"info","event":0,"ip":"198.41.200.233","connIndex":0,"time":"2025-11-12T13:43:52Z","message":"Retrying connection in up to 8s"}
+{"level":"info","event":0,"ip":"198.41.200.233","connIndex":0,"time":"2025-11-12T13:43:59Z","message":"Tunnel connection curve preferences: [X25519MLKEM768 CurveP256]"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"context canceled","time":"2025-11-12T13:43:59Z","message":"failed to run the datagram handler"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"control stream encountered a failure while serving","time":"2025-11-12T13:43:59Z","message":"failed to serve tunnel connection"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"control stream encountered a failure while serving","time":"2025-11-12T13:43:59Z","message":"Serve tunnel error"}
+{"level":"info","event":0,"ip":"198.41.200.233","connIndex":0,"time":"2025-11-12T13:43:59Z","message":"Retrying connection in up to 16s"}
+{"level":"info","event":0,"ip":"198.41.200.233","connIndex":0,"time":"2025-11-12T13:44:05Z","message":"Tunnel connection curve preferences: [X25519MLKEM768 CurveP256]"}
+{"level":"info","event":0,"connection":"92b2611e-4d3a-44ed-89df-9c820296ac65","connIndex":0,"location":"sin13","ip":"198.41.200.233","protocol":"quic","time":"2025-11-12T13:44:06Z","message":"Registered tunnel connection"}
+{"level":"error","event":1,"connIndex":0,"originService":"http://localhost:5500","ingressRule":0,"error":"Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp [::1]:5500: connectex: No connection could be made because the target machine actively refused it.","time":"2025-11-12T13:56:23Z"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp [::1]:5500: connectex: No connection could be made because the target machine actively refused it.","type":"http","dest":"https://seat-file-condition-resolution.trycloudflare.com/","time":"2025-11-12T13:56:23Z","message":"Request failed"}
+{"level":"info","time":"2025-11-12T14:20:53Z","message":"Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee, are subject to the Cloudflare Online Services Terms of Use (https://www.cloudflare.com/website-terms/), and Cloudflare reserves the right to investigate your use of Tunnels for violations of such terms. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps"}
+{"level":"info","time":"2025-11-12T14:20:53Z","message":"Requesting new quick Tunnel on trycloudflare.com..."}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"+--------------------------------------------------------------------------------------------+"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"|  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"|  https://mel-smart-contacted-holland.trycloudflare.com                                     |"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"+--------------------------------------------------------------------------------------------+"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp]"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"Version 2025.10.0 (Checksum 07ce5e7ffc805734797d37061654f5f0152de2a2da241bf52e90822e9b8fc724)"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"GOOS: windows, GOVersion: go1.24.6, GoArch: amd64"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"Settings: map[ha-connections:1 logfile:C:\\Users\\Admin\\Desktop\\studentprofiling\\logs\\cloudflared-frontend.out.log loglevel:info no-autoupdate:true protocol:quic url:http://localhost:5500]"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"cloudflared will not automatically update on Windows systems."}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"Generated Connector ID: a63d2817-f33b-4223-9559-bd63eb96aa80"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"Initial protocol quic"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"ICMP proxy will use 192.168.1.11 as source for IPv4"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"ICMP proxy will use fe80::52dd:d7df:929:7646 in zone Ethernet 2 as source for IPv6"}
+{"level":"error","originCertPath":"","time":"2025-11-12T14:21:00Z","message":"Cannot determine default origin certificate path. No file cert.pem in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp]. You need to specify the origin certificate path by specifying the origincert option in the configuration file, or set TUNNEL_ORIGIN_CERT environment variable"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"cloudflared does not support loading the system root certificate pool on Windows. Please use --origin-ca-pool <PATH> to specify the path to the certificate pool"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"ICMP proxy will use 192.168.1.11 as source for IPv4"}
+{"level":"info","event":0,"ip":"198.41.200.233","connIndex":0,"time":"2025-11-12T14:21:00Z","message":"Tunnel connection curve preferences: [X25519MLKEM768 CurveP256]"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"ICMP proxy will use fe80::52dd:d7df:929:7646 in zone Ethernet 2 as source for IPv6"}
+{"level":"info","time":"2025-11-12T14:21:00Z","message":"Starting metrics server on 127.0.0.1:20242/metrics"}
+{"level":"info","event":0,"connection":"2cca3e06-1e6b-4c83-8879-9d83aa92fe26","connIndex":0,"location":"sin11","ip":"198.41.200.233","protocol":"quic","time":"2025-11-12T14:21:00Z","message":"Registered tunnel connection"}
+{"level":"info","time":"2025-11-12T16:46:24Z","message":"Initiating graceful shutdown due to signal terminated ..."}
+{"level":"info","time":"2025-11-12T16:46:24Z","message":"Initiating graceful shutdown due to signal terminated ..."}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"context canceled","time":"2025-11-12T16:46:24Z","message":"failed to run the datagram handler"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"accept stream listener encountered a failure while serving","time":"2025-11-12T16:46:24Z","message":"failed to serve tunnel connection"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"accept stream listener encountered a failure while serving","time":"2025-11-12T16:46:24Z","message":"Serve tunnel error"}
+{"level":"info","event":0,"ip":"198.41.200.233","connIndex":0,"time":"2025-11-12T16:46:24Z","message":"Retrying connection in up to 1s"}
+{"level":"error","connIndex":0,"time":"2025-11-12T16:46:24Z","message":"Connection terminated"}
+{"level":"error","time":"2025-11-12T16:46:24Z","message":"no more connections active and exiting"}
+{"level":"info","time":"2025-11-12T16:46:24Z","message":"Tunnel server stopped"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"Application error 0x0 (remote)","time":"2025-11-12T16:46:24Z","message":"failed to run the datagram handler"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"accept stream listener encountered a failure while serving","time":"2025-11-12T16:46:24Z","message":"failed to serve tunnel connection"}
+{"level":"error","event":0,"ip":"198.41.200.233","connIndex":0,"error":"accept stream listener encountered a failure while serving","time":"2025-11-12T16:46:24Z","message":"Serve tunnel error"}
+{"level":"info","event":0,"ip":"198.41.200.233","connIndex":0,"time":"2025-11-12T16:46:24Z","message":"Retrying connection in up to 1s"}
+{"level":"info","time":"2025-11-12T16:46:24Z","message":"Metrics server stopped"}
+{"level":"error","connIndex":0,"time":"2025-11-12T16:46:24Z","message":"Connection terminated"}
+{"level":"error","time":"2025-11-12T16:46:24Z","message":"no more connections active and exiting"}
+{"level":"info","time":"2025-11-12T16:46:24Z","message":"Tunnel server stopped"}
+{"level":"info","time":"2025-11-12T16:46:24Z","message":"Metrics server stopped"}
